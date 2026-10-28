@@ -1,0 +1,230 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "golemgarage:item/part/golem_fists/iron"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "golemgarage:material": 0.01
+      },
+      "model": "golemgarage:item/part/golem_fists/stone"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.02
+      },
+      "model": "golemgarage:item/part/golem_fists/copper"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.03
+      },
+      "model": "golemgarage:item/part/golem_fists/iron"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.04
+      },
+      "model": "golemgarage:item/part/golem_fists/gold"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.05
+      },
+      "model": "golemgarage:item/part/golem_fists/steel"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.06
+      },
+      "model": "golemgarage:item/part/golem_fists/diamond"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.07
+      },
+      "model": "golemgarage:item/part/golem_fists/netherite"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.08
+      },
+      "model": "golemgarage:item/part/golem_fists/aluminum"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.09
+      },
+      "model": "golemgarage:item/part/golem_fists/tin"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.1
+      },
+      "model": "golemgarage:item/part/golem_fists/zinc"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.11
+      },
+      "model": "golemgarage:item/part/golem_fists/lead"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.12
+      },
+      "model": "golemgarage:item/part/golem_fists/nickel"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.13
+      },
+      "model": "golemgarage:item/part/golem_fists/silver"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.14
+      },
+      "model": "golemgarage:item/part/golem_fists/bronze"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.15
+      },
+      "model": "golemgarage:item/part/golem_fists/brass"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.16
+      },
+      "model": "golemgarage:item/part/golem_fists/constantan"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.17
+      },
+      "model": "golemgarage:item/part/golem_fists/electrum"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.18
+      },
+      "model": "golemgarage:item/part/golem_fists/invar"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.19
+      },
+      "model": "golemgarage:item/part/golem_fists/platinum"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.2
+      },
+      "model": "golemgarage:item/part/golem_fists/osmium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.21
+      },
+      "model": "golemgarage:item/part/golem_fists/uranium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.22
+      },
+      "model": "golemgarage:item/part/golem_fists/signalum"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.23
+      },
+      "model": "golemgarage:item/part/golem_fists/lumium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.24
+      },
+      "model": "golemgarage:item/part/golem_fists/iridium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.25
+      },
+      "model": "golemgarage:item/part/golem_fists/enderium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.26
+      },
+      "model": "golemgarage:item/part/golem_fists/allthemodium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.27
+      },
+      "model": "golemgarage:item/part/golem_fists/vibranium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.28
+      },
+      "model": "golemgarage:item/part/golem_fists/unobtainium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.29
+      },
+      "model": "golemgarage:item/part/golem_fists/vibranium_allthemodium_alloy"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.3
+      },
+      "model": "golemgarage:item/part/golem_fists/unobtainium_allthemodium_alloy"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.31
+      },
+      "model": "golemgarage:item/part/golem_fists/unobtainium_vibranium_alloy"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.32
+      },
+      "model": "golemgarage:item/part/golem_fists/crimson_iron"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.33
+      },
+      "model": "golemgarage:item/part/golem_fists/crimson_steel"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.34
+      },
+      "model": "golemgarage:item/part/golem_fists/azure_silver"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.35
+      },
+      "model": "golemgarage:item/part/golem_fists/azure_electrum"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.36
+      },
+      "model": "golemgarage:item/part/golem_fists/tyrian_steel"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.37
+      },
+      "model": "golemgarage:item/part/golem_fists/blaze_gold"
+    }
+  ]
+}

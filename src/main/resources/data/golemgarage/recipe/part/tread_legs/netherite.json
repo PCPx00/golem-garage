@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "D D",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/netherite"
+    },
+    "D": {
+      "item": "minecraft:dried_kelp_block"
+    }
+  },
+  "result": {
+    "id": "golemgarage:tread_legs",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "netherite",
+      "minecraft:max_damage": 364
+    }
+  }
+}

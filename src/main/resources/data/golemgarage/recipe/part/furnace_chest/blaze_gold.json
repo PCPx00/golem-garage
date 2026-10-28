@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/blaze_gold"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MFM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/blaze_gold"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "result": {
+    "id": "golemgarage:furnace_chest",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "blaze_gold",
+      "minecraft:max_damage": 216
+    }
+  }
+}

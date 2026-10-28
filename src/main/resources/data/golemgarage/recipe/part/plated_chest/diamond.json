@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "MRM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:gems/diamond"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:plated_chest",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "diamond",
+      "minecraft:max_damage": 396
+    }
+  }
+}

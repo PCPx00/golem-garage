@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MRM",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:cobblestones"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:stub_legs",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "stone",
+      "minecraft:max_damage": 48
+    }
+  }
+}

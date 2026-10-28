@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:lime_wool"
+    },
+    {
+      "item": "minecraft:lime_wool"
+    },
+    {
+      "item": "minecraft:slime_ball"
+    }
+  ],
+  "result": {
+    "id": "golemgarage:outfit_frog_hat",
+    "count": 1
+  }
+}

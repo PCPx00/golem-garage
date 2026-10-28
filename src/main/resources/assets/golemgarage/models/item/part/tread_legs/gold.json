@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "golemgarage:item/part/tread_legs/gold"
+  }
+}

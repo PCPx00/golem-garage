@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:planks",
+    "minecraft:stone",
+    "minecraft:stone_bricks",
+    "minecraft:bricks",
+    "minecraft:copper_block",
+    "minecraft:deepslate_bricks"
+  ]
+}

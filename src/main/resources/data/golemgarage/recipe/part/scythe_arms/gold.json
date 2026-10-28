@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    " RM",
+    "  M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/gold"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:scythe_arms",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "gold",
+      "minecraft:max_damage": 84
+    }
+  }
+}

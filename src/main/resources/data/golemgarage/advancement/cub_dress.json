@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "id": "golemgarage:outfit_cap"
+    },
+    "title": {
+      "translate": "advancement.golemgarage.cub_dress"
+    },
+    "description": {
+      "translate": "advancement.golemgarage.cub_dress.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "golemgarage:golem_event",
+      "conditions": {
+        "event": "cub_dress"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "golemgarage:cub"
+}

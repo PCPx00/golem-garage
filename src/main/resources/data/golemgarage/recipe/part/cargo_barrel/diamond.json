@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MBM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:gems/diamond"
+    },
+    "B": {
+      "item": "minecraft:barrel"
+    }
+  },
+  "result": {
+    "id": "golemgarage:cargo_barrel",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "diamond",
+      "minecraft:max_damage": 396
+    }
+  }
+}

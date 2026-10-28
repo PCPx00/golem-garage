@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/unobtainium_vibranium_alloy"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MGM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/unobtainium_vibranium_alloy"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "result": {
+    "id": "golemgarage:visor_head",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "unobtainium_vibranium_alloy",
+      "minecraft:max_damage": 605
+    }
+  }
+}

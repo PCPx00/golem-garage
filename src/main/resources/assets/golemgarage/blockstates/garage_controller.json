@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "golemgarage:block/garage_controller"
+    },
+    "facing=east": {
+      "model": "golemgarage:block/garage_controller",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "golemgarage:block/garage_controller",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "golemgarage:block/garage_controller",
+      "y": 270
+    }
+  }
+}

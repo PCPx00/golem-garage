@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MRM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/iron"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:sentry_head",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "iron",
+      "minecraft:max_damage": 112
+    }
+  }
+}

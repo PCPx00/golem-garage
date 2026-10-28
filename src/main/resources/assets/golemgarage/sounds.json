@@ -1,0 +1,109 @@
+{
+  "golem.step": {
+    "sounds": [
+      "golemgarage:golem/step0",
+      "golemgarage:golem/step1",
+      "golemgarage:golem/step2"
+    ]
+  },
+  "golem.step_wheels": {
+    "sounds": [
+      "golemgarage:golem/wheels0",
+      "golemgarage:golem/wheels1"
+    ]
+  },
+  "golem.step_treads": {
+    "sounds": [
+      "golemgarage:golem/treads0",
+      "golemgarage:golem/treads1"
+    ]
+  },
+  "golem.hurt": {
+    "sounds": [
+      "golemgarage:golem/hurt0",
+      "golemgarage:golem/hurt1"
+    ],
+    "subtitle": "subtitles.golemgarage.golem.hurt"
+  },
+  "golem.attack": {
+    "sounds": [
+      "golemgarage:golem/attack"
+    ],
+    "subtitle": "subtitles.golemgarage.golem.attack"
+  },
+  "golem.breakdown": {
+    "sounds": [
+      "golemgarage:golem/breakdown"
+    ],
+    "subtitle": "subtitles.golemgarage.golem.breakdown"
+  },
+  "golem.work": {
+    "sounds": [
+      "golemgarage:golem/work"
+    ],
+    "subtitle": "subtitles.golemgarage.golem.work"
+  },
+  "golem.ambient": {
+    "sounds": [
+      "golemgarage:golem/ambient0",
+      "golemgarage:golem/ambient1"
+    ],
+    "subtitle": "subtitles.golemgarage.golem.ambient"
+  },
+  "golem.part_fit": {
+    "sounds": [
+      "golemgarage:golem/part_fit"
+    ],
+    "subtitle": "subtitles.golemgarage.golem.part_fit"
+  },
+  "golem.power_low": {
+    "sounds": [
+      "golemgarage:golem/power_low"
+    ],
+    "subtitle": "subtitles.golemgarage.golem.power_low"
+  },
+  "golem.module": {
+    "sounds": [
+      "golemgarage:golem/module"
+    ],
+    "subtitle": "subtitles.golemgarage.golem.module"
+  },
+  "garage.laser": {
+    "sounds": [
+      "golemgarage:garage/laser"
+    ],
+    "subtitle": "subtitles.golemgarage.garage.laser"
+  },
+  "garage.start": {
+    "sounds": [
+      "golemgarage:garage/start"
+    ],
+    "subtitle": "subtitles.golemgarage.garage.start"
+  },
+  "garage.done": {
+    "sounds": [
+      "golemgarage:garage/done"
+    ],
+    "subtitle": "subtitles.golemgarage.garage.done"
+  },
+  "cub.chirp": {
+    "sounds": [
+      "golemgarage:cub/chirp0",
+      "golemgarage:cub/chirp1",
+      "golemgarage:cub/chirp2"
+    ],
+    "subtitle": "subtitles.golemgarage.cub.chirp"
+  },
+  "cub.happy": {
+    "sounds": [
+      "golemgarage:cub/happy"
+    ],
+    "subtitle": "subtitles.golemgarage.cub.happy"
+  },
+  "cub.sleep": {
+    "sounds": [
+      "golemgarage:cub/sleep"
+    ],
+    "subtitle": "subtitles.golemgarage.cub.sleep"
+  }
+}

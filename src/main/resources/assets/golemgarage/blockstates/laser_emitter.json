@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "golemgarage:block/laser_emitter"
+    }
+  }
+}

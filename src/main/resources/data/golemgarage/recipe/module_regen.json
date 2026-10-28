@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "golemgarage:module_casing"
+    },
+    {
+      "item": "minecraft:glistering_melon_slice"
+    }
+  ],
+  "result": {
+    "id": "golemgarage:module_regen",
+    "count": 1
+  }
+}

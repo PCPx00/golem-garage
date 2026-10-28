@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "golemgarage:module_casing"
+    },
+    {
+      "item": "minecraft:compass"
+    },
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "result": {
+    "id": "golemgarage:module_magnet",
+    "count": 1
+  }
+}

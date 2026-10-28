@@ -1,0 +1,30 @@
+[
+ {
+  "scene": "lineup",
+  "start_tick": 70,
+  "ticks": 220
+ },
+ {
+  "scene": "garage",
+  "start_tick": 360,
+  "ticks": 220
+ },
+ {
+  "scene": "farm",
+  "start_tick": 650,
+  "ticks": 260
+ },
+ {
+  "scene": "guard",
+  "start_tick": 980,
+  "ticks": 220
+ },
+ {
+  "scene": "cubs",
+  "start_tick": 1270,
+  "ticks": 240
+ },
+ {
+  "end_tick": 1510
+ }
+]

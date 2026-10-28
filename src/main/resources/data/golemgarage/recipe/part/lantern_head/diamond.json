@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " L ",
+    "MMM",
+    "MRM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:gems/diamond"
+    },
+    "L": {
+      "item": "minecraft:lantern"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:lantern_head",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "diamond",
+      "minecraft:max_damage": 264
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "MCM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/gold"
+    },
+    "C": {
+      "tag": "minecraft:coals"
+    }
+  },
+  "result": {
+    "id": "golemgarage:furnace_core",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "gold",
+      "minecraft:max_damage": 76
+    }
+  }
+}

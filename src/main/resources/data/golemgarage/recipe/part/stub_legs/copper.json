@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MRM",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/copper"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:stub_legs",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "copper",
+      "minecraft:max_damage": 90
+    }
+  }
+}

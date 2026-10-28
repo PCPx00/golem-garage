@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "MSM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/steel"
+    },
+    "S": {
+      "item": "minecraft:soul_lantern"
+    }
+  },
+  "result": {
+    "id": "golemgarage:soul_core",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "steel",
+      "minecraft:max_damage": 211
+    }
+  }
+}

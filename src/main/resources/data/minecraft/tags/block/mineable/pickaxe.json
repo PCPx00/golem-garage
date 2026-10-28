@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "golemgarage:garage_controller",
+    "golemgarage:laser_emitter",
+    "golemgarage:steel_emitter",
+    "golemgarage:signal_plate"
+  ]
+}

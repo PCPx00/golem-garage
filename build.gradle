@@ -1,0 +1,97 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
+
+neoForge {
+    version = neo_version
+
+    runs {
+        client {
+            client()
+            // Dev testing: gradle runClient -Pquickplay=<world> opens that singleplayer world directly.
+            if (project.hasProperty('quickplay')) {
+                programArguments.addAll('--quickPlaySingleplayer', project.property('quickplay').toString(), '--width', '1280', '--height', '720')
+            }
+            if (project.hasProperty('golemdebug')) {
+                jvmArguments.add('-Dgolemgarage.debug=true')
+            }
+            if (project.hasProperty('mpserver')) {
+                programArguments.addAll('--quickPlayMultiplayer', project.property('mpserver').toString(),
+                        '--username', project.findProperty('mpname')?.toString() ?: 'Alice', '--width', '1280', '--height', '720')
+            }
+        }
+        server {
+            server()
+            // Dev testing: gradle runServer -Pgolemdebug prints golem activity to the log.
+            if (project.hasProperty('golemdebug')) {
+                jvmArguments.add('-Dgolemgarage.debug=true')
+            }
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+tasks.withType(ProcessResources).configureEach {
+    def replaceProperties = [
+            minecraft_version: minecraft_version,
+            neo_version      : neo_version,
+            mod_id           : mod_id,
+            mod_name         : mod_name,
+            mod_license      : mod_license,
+            mod_version      : mod_version,
+            mod_authors      : mod_authors,
+            mod_description  : mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    maven {
+        name = 'BlameJared (JEI)'
+        url = 'https://maven.blamejared.com/'
+        content { includeGroup 'mezz.jei' }
+    }
+    maven {
+        name = 'Modrinth (Jade)'
+        url = 'https://api.modrinth.com/maven'
+        content { includeGroup 'maven.modrinth' }
+    }
+}
+
+dependencies {
+    // Optional integrations: only compiled against, never bundled or required.
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    compileOnly "maven.modrinth:jade:${jade_version}"
+    // -Pcompat adds the real mods to the dev runs for testing.
+    if (project.hasProperty('compat')) {
+        runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}") { transitive = false }
+        runtimeOnly "maven.modrinth:jade:${jade_version}"
+    }
+}

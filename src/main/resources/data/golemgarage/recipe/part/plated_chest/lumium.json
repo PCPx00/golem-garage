@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/lumium"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "MRM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/lumium"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:plated_chest",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "lumium",
+      "minecraft:max_damage": 264
+    }
+  }
+}

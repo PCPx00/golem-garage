@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "MSM",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/iron"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "id": "golemgarage:spider_legs",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "iron",
+      "minecraft:max_damage": 140
+    }
+  }
+}

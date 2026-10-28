@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "golemgarage:module_casing"
+    },
+    {
+      "item": "minecraft:chest"
+    }
+  ],
+  "result": {
+    "id": "golemgarage:module_storage",
+    "count": 1
+  }
+}

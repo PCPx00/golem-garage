@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "MDM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/gold"
+    },
+    "D": {
+      "item": "minecraft:daylight_detector"
+    }
+  },
+  "result": {
+    "id": "golemgarage:solar_core",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "gold",
+      "minecraft:max_damage": 76
+    }
+  }
+}

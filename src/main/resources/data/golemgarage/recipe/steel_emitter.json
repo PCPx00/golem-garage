@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "golemgarage:laser_emitter" },
+    { "item": "golemgarage:steel_ingot" }
+  ],
+  "result": {
+    "id": "golemgarage:steel_emitter",
+    "count": 1
+  }
+}

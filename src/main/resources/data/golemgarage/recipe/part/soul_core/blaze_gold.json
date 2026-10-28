@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/blaze_gold"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "MSM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/blaze_gold"
+    },
+    "S": {
+      "item": "minecraft:soul_lantern"
+    }
+  },
+  "result": {
+    "id": "golemgarage:soul_core",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "blaze_gold",
+      "minecraft:max_damage": 162
+    }
+  }
+}

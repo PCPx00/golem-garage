@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/nickel"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MPM",
+    "M M",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/nickel"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    }
+  },
+  "result": {
+    "id": "golemgarage:strider_legs",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "nickel",
+      "minecraft:max_damage": 140
+    }
+  }
+}

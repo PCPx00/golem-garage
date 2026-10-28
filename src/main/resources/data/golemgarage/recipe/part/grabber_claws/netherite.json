@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "MCM",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/netherite"
+    },
+    "C": {
+      "item": "minecraft:chain"
+    }
+  },
+  "result": {
+    "id": "golemgarage:grabber_claws",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "netherite",
+      "minecraft:max_damage": 364
+    }
+  }
+}

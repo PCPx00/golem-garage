@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/brass"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    " RM",
+    "  M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/brass"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:scythe_arms",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "brass",
+      "minecraft:max_damage": 140
+    }
+  }
+}

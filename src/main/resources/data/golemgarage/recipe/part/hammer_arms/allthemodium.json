@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/allthemodium"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MMM",
+    "R R"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/allthemodium"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:hammer_arms",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "allthemodium",
+      "minecraft:max_damage": 390
+    }
+  }
+}

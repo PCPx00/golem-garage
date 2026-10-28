@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "golemgarage:block/garage_controller",
+    "top": "golemgarage:block/garage_controller_top",
+    "bottom": "golemgarage:block/garage_controller_top"
+  }
+}

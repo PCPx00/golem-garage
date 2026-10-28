@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "M M",
+    "MRM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/netherite"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:golem_fists",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "netherite",
+      "minecraft:max_damage": 364
+    }
+  }
+}

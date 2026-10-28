@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/vibranium"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MGM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/vibranium"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "result": {
+    "id": "golemgarage:visor_head",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "vibranium",
+      "minecraft:max_damage": 381
+    }
+  }
+}

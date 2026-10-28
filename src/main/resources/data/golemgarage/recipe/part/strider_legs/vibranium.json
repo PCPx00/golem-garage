@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/vibranium"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MPM",
+    "M M",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/vibranium"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    }
+  },
+  "result": {
+    "id": "golemgarage:strider_legs",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "vibranium",
+      "minecraft:max_damage": 476
+    }
+  }
+}

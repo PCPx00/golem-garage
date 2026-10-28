@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "MRM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:cobblestones"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:plated_chest",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "stone",
+      "minecraft:max_damage": 58
+    }
+  }
+}

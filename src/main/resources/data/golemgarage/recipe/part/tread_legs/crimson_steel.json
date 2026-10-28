@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/crimson_steel"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "D D",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/crimson_steel"
+    },
+    "D": {
+      "item": "minecraft:dried_kelp_block"
+    }
+  },
+  "result": {
+    "id": "golemgarage:tread_legs",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "crimson_steel",
+      "minecraft:max_damage": 297
+    }
+  }
+}

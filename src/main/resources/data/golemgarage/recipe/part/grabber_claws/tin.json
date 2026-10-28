@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/tin"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "MCM",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/tin"
+    },
+    "C": {
+      "item": "minecraft:chain"
+    }
+  },
+  "result": {
+    "id": "golemgarage:grabber_claws",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "tin",
+      "minecraft:max_damage": 85
+    }
+  }
+}

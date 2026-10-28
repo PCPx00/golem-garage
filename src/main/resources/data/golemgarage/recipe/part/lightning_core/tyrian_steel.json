@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/tyrian_steel"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "MLM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/tyrian_steel"
+    },
+    "L": {
+      "item": "minecraft:lightning_rod"
+    }
+  },
+  "result": {
+    "id": "golemgarage:lightning_core",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "tyrian_steel",
+      "minecraft:max_damage": 351
+    }
+  }
+}

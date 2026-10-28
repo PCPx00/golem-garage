@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MGM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:cobblestones"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "result": {
+    "id": "golemgarage:visor_head",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "stone",
+      "minecraft:max_damage": 38
+    }
+  }
+}

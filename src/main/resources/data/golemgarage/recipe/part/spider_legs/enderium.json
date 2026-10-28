@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/enderium"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "MSM",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/enderium"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "id": "golemgarage:spider_legs",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "enderium",
+      "minecraft:max_damage": 260
+    }
+  }
+}

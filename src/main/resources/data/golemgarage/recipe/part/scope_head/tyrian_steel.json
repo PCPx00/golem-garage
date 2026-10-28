@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/tyrian_steel"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MSM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/tyrian_steel"
+    },
+    "S": {
+      "item": "minecraft:spyglass"
+    }
+  },
+  "result": {
+    "id": "golemgarage:scope_head",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "tyrian_steel",
+      "minecraft:max_damage": 312
+    }
+  }
+}

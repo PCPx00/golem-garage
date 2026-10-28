@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "golemgarage:module_casing"
+    },
+    {
+      "item": "golemgarage:repair_kit"
+    },
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "result": {
+    "id": "golemgarage:module_self_repair",
+    "count": 1
+  }
+}

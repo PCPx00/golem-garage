@@ -1,0 +1,230 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "golemgarage:item/part/furnace_chest/iron"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "golemgarage:material": 0.01
+      },
+      "model": "golemgarage:item/part/furnace_chest/stone"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.02
+      },
+      "model": "golemgarage:item/part/furnace_chest/copper"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.03
+      },
+      "model": "golemgarage:item/part/furnace_chest/iron"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.04
+      },
+      "model": "golemgarage:item/part/furnace_chest/gold"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.05
+      },
+      "model": "golemgarage:item/part/furnace_chest/steel"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.06
+      },
+      "model": "golemgarage:item/part/furnace_chest/diamond"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.07
+      },
+      "model": "golemgarage:item/part/furnace_chest/netherite"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.08
+      },
+      "model": "golemgarage:item/part/furnace_chest/aluminum"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.09
+      },
+      "model": "golemgarage:item/part/furnace_chest/tin"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.1
+      },
+      "model": "golemgarage:item/part/furnace_chest/zinc"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.11
+      },
+      "model": "golemgarage:item/part/furnace_chest/lead"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.12
+      },
+      "model": "golemgarage:item/part/furnace_chest/nickel"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.13
+      },
+      "model": "golemgarage:item/part/furnace_chest/silver"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.14
+      },
+      "model": "golemgarage:item/part/furnace_chest/bronze"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.15
+      },
+      "model": "golemgarage:item/part/furnace_chest/brass"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.16
+      },
+      "model": "golemgarage:item/part/furnace_chest/constantan"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.17
+      },
+      "model": "golemgarage:item/part/furnace_chest/electrum"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.18
+      },
+      "model": "golemgarage:item/part/furnace_chest/invar"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.19
+      },
+      "model": "golemgarage:item/part/furnace_chest/platinum"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.2
+      },
+      "model": "golemgarage:item/part/furnace_chest/osmium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.21
+      },
+      "model": "golemgarage:item/part/furnace_chest/uranium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.22
+      },
+      "model": "golemgarage:item/part/furnace_chest/signalum"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.23
+      },
+      "model": "golemgarage:item/part/furnace_chest/lumium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.24
+      },
+      "model": "golemgarage:item/part/furnace_chest/iridium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.25
+      },
+      "model": "golemgarage:item/part/furnace_chest/enderium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.26
+      },
+      "model": "golemgarage:item/part/furnace_chest/allthemodium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.27
+      },
+      "model": "golemgarage:item/part/furnace_chest/vibranium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.28
+      },
+      "model": "golemgarage:item/part/furnace_chest/unobtainium"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.29
+      },
+      "model": "golemgarage:item/part/furnace_chest/vibranium_allthemodium_alloy"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.3
+      },
+      "model": "golemgarage:item/part/furnace_chest/unobtainium_allthemodium_alloy"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.31
+      },
+      "model": "golemgarage:item/part/furnace_chest/unobtainium_vibranium_alloy"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.32
+      },
+      "model": "golemgarage:item/part/furnace_chest/crimson_iron"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.33
+      },
+      "model": "golemgarage:item/part/furnace_chest/crimson_steel"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.34
+      },
+      "model": "golemgarage:item/part/furnace_chest/azure_silver"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.35
+      },
+      "model": "golemgarage:item/part/furnace_chest/azure_electrum"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.36
+      },
+      "model": "golemgarage:item/part/furnace_chest/tyrian_steel"
+    },
+    {
+      "predicate": {
+        "golemgarage:material": 0.37
+      },
+      "model": "golemgarage:item/part/furnace_chest/blaze_gold"
+    }
+  ]
+}

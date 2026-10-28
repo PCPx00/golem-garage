@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/silver"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "M M",
+    "MRM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/silver"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:golem_fists",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "silver",
+      "minecraft:max_damage": 140
+    }
+  }
+}

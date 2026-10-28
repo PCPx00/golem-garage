@@ -1,0 +1,104 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "golemgarage:item/cub/pink"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "golemgarage:color": 0.01
+      },
+      "model": "golemgarage:item/cub/white"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.02
+      },
+      "model": "golemgarage:item/cub/orange"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.03
+      },
+      "model": "golemgarage:item/cub/magenta"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.04
+      },
+      "model": "golemgarage:item/cub/light_blue"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.05
+      },
+      "model": "golemgarage:item/cub/yellow"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.06
+      },
+      "model": "golemgarage:item/cub/lime"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.07
+      },
+      "model": "golemgarage:item/cub/pink"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.08
+      },
+      "model": "golemgarage:item/cub/gray"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.09
+      },
+      "model": "golemgarage:item/cub/light_gray"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.1
+      },
+      "model": "golemgarage:item/cub/cyan"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.11
+      },
+      "model": "golemgarage:item/cub/purple"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.12
+      },
+      "model": "golemgarage:item/cub/blue"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.13
+      },
+      "model": "golemgarage:item/cub/brown"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.14
+      },
+      "model": "golemgarage:item/cub/green"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.15
+      },
+      "model": "golemgarage:item/cub/red"
+    },
+    {
+      "predicate": {
+        "golemgarage:color": 0.16
+      },
+      "model": "golemgarage:item/cub/black"
+    }
+  ]
+}

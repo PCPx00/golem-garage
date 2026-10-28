@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/tin"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MMM",
+    "R R"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/tin"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:hammer_arms",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "tin",
+      "minecraft:max_damage": 85
+    }
+  }
+}

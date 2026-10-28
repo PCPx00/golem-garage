@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "M M",
+    "MRM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/gold"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:golem_fists",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "gold",
+      "minecraft:max_damage": 84
+    }
+  }
+}

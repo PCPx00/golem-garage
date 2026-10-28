@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/azure_silver"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MKM",
+    "MMM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/azure_silver"
+    },
+    "K": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "id": "golemgarage:sealed_hold",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "azure_silver",
+      "minecraft:max_damage": 216
+    }
+  }
+}

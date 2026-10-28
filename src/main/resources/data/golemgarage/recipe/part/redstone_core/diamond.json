@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "MRM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:gems/diamond"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    }
+  },
+  "result": {
+    "id": "golemgarage:redstone_core",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "diamond",
+      "minecraft:max_damage": 297
+    }
+  }
+}

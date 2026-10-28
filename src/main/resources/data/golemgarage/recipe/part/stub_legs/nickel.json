@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/nickel"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MRM",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/nickel"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:stub_legs",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "nickel",
+      "minecraft:max_damage": 140
+    }
+  }
+}

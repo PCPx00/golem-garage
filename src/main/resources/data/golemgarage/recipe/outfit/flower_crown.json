@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:vine"
+    },
+    {
+      "tag": "minecraft:small_flowers"
+    },
+    {
+      "tag": "minecraft:small_flowers"
+    },
+    {
+      "tag": "minecraft:small_flowers"
+    }
+  ],
+  "result": {
+    "id": "golemgarage:outfit_flower_crown",
+    "count": 1
+  }
+}

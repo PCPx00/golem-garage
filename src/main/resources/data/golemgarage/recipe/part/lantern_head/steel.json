@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " L ",
+    "MMM",
+    "MRM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/steel"
+    },
+    "L": {
+      "item": "minecraft:lantern"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:lantern_head",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "steel",
+      "minecraft:max_damage": 187
+    }
+  }
+}

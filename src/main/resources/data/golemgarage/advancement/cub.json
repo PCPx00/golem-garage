@@ -1,0 +1,37 @@
+{
+  "display": {
+    "icon": {
+      "id": "golemgarage:cub"
+    },
+    "title": {
+      "translate": "advancement.golemgarage.cub"
+    },
+    "description": {
+      "translate": "advancement.golemgarage.cub.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "golemgarage:cub"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "golemgarage:root"
+}

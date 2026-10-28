@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ILI",
+    " R ",
+    "I I"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "L": { "item": "minecraft:lever" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": {
+    "id": "golemgarage:garage_controller",
+    "count": 1
+  }
+}

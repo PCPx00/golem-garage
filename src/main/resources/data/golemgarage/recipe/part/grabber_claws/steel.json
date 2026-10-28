@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "MCM",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/steel"
+    },
+    "C": {
+      "item": "minecraft:chain"
+    }
+  },
+  "result": {
+    "id": "golemgarage:grabber_claws",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "steel",
+      "minecraft:max_damage": 234
+    }
+  }
+}

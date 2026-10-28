@@ -1,0 +1,33 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/tin"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MRM",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/tin"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:stub_legs",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "tin",
+      "minecraft:max_damage": 85
+    }
+  }
+}

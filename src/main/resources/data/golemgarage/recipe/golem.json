@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC",
+    "CRC",
+    "C C"
+  ],
+  "key": {
+    "C": {
+      "tag": "c:cobblestones"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:golem",
+    "count": 1
+  }
+}

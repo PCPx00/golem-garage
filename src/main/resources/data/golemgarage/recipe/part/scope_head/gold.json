@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MSM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/gold"
+    },
+    "S": {
+      "item": "minecraft:spyglass"
+    }
+  },
+  "result": {
+    "id": "golemgarage:scope_head",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "gold",
+      "minecraft:max_damage": 67
+    }
+  }
+}

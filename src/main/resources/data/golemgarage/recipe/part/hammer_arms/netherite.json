@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MMM",
+    "MMM",
+    "R R"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/netherite"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:hammer_arms",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "netherite",
+      "minecraft:max_damage": 364
+    }
+  }
+}

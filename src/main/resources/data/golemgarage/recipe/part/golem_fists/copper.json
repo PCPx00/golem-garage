@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "M M",
+    "MRM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/copper"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:golem_fists",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "copper",
+      "minecraft:max_damage": 90
+    }
+  }
+}

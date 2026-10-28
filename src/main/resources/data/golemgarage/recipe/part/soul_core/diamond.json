@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "MSM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:gems/diamond"
+    },
+    "S": {
+      "item": "minecraft:soul_lantern"
+    }
+  },
+  "result": {
+    "id": "golemgarage:soul_core",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "diamond",
+      "minecraft:max_damage": 297
+    }
+  }
+}

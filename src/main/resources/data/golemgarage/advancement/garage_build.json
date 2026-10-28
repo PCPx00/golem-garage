@@ -1,0 +1,36 @@
+{
+  "display": {
+    "icon": {
+      "id": "golemgarage:garage_controller"
+    },
+    "title": {
+      "translate": "advancement.golemgarage.garage_build"
+    },
+    "description": {
+      "translate": "advancement.golemgarage.garage_build.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "golemgarage:garage_controller"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "golemgarage:root"
+}

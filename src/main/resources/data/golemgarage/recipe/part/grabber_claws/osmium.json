@@ -1,0 +1,34 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/osmium"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M M",
+    "MCM",
+    "M M"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/osmium"
+    },
+    "C": {
+      "item": "minecraft:chain"
+    }
+  },
+  "result": {
+    "id": "golemgarage:grabber_claws",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "osmium",
+      "minecraft:max_damage": 216
+    }
+  }
+}

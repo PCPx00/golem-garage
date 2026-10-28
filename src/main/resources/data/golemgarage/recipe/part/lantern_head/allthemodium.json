@@ -1,0 +1,37 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/allthemodium"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " L ",
+    "MMM",
+    "MRM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/allthemodium"
+    },
+    "L": {
+      "item": "minecraft:lantern"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:lantern_head",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "allthemodium",
+      "minecraft:max_damage": 312
+    }
+  }
+}

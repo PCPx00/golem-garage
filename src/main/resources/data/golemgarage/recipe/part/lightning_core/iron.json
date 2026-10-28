@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " M ",
+    "MLM",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "c:ingots/iron"
+    },
+    "L": {
+      "item": "minecraft:lightning_rod"
+    }
+  },
+  "result": {
+    "id": "golemgarage:lightning_core",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "iron",
+      "minecraft:max_damage": 126
+    }
+  }
+}

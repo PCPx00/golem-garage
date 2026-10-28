@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "id": "golemgarage:module_magnet"
+    },
+    "title": {
+      "translate": "advancement.golemgarage.two_modules"
+    },
+    "description": {
+      "translate": "advancement.golemgarage.two_modules.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "golemgarage:golem_event",
+      "conditions": {
+        "event": "two_modules"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "golemgarage:module"
+}
