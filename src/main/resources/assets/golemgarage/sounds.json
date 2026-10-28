@@ -1,70 +1,121 @@
 {
   "golem.step": {
     "sounds": [
-      "golemgarage:golem/step0",
-      "golemgarage:golem/step1",
-      "golemgarage:golem/step2"
+      {
+        "name": "golemgarage:golem/step0",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "golemgarage:golem/step1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "golemgarage:golem/step2",
+        "attenuation_distance": 12
+      }
     ]
   },
   "golem.step_wheels": {
     "sounds": [
-      "golemgarage:golem/wheels0",
-      "golemgarage:golem/wheels1"
+      {
+        "name": "golemgarage:golem/wheels0",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "golemgarage:golem/wheels1",
+        "attenuation_distance": 12
+      }
     ]
   },
   "golem.step_treads": {
     "sounds": [
-      "golemgarage:golem/treads0",
-      "golemgarage:golem/treads1"
+      {
+        "name": "golemgarage:golem/treads0",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "golemgarage:golem/treads1",
+        "attenuation_distance": 12
+      }
     ]
   },
   "golem.hurt": {
     "sounds": [
-      "golemgarage:golem/hurt0",
-      "golemgarage:golem/hurt1"
+      {
+        "name": "golemgarage:golem/hurt0",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "golemgarage:golem/hurt1",
+        "attenuation_distance": 12
+      }
     ],
     "subtitle": "subtitles.golemgarage.golem.hurt"
   },
   "golem.attack": {
     "sounds": [
-      "golemgarage:golem/attack"
+      {
+        "name": "golemgarage:golem/attack",
+        "attenuation_distance": 12
+      }
     ],
     "subtitle": "subtitles.golemgarage.golem.attack"
   },
   "golem.breakdown": {
     "sounds": [
-      "golemgarage:golem/breakdown"
+      {
+        "name": "golemgarage:golem/breakdown",
+        "attenuation_distance": 12
+      }
     ],
     "subtitle": "subtitles.golemgarage.golem.breakdown"
   },
   "golem.work": {
     "sounds": [
-      "golemgarage:golem/work"
+      {
+        "name": "golemgarage:golem/work",
+        "attenuation_distance": 12
+      }
     ],
     "subtitle": "subtitles.golemgarage.golem.work"
   },
   "golem.ambient": {
     "sounds": [
-      "golemgarage:golem/ambient0",
-      "golemgarage:golem/ambient1"
+      {
+        "name": "golemgarage:golem/ambient0",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "golemgarage:golem/ambient1",
+        "attenuation_distance": 12
+      }
     ],
     "subtitle": "subtitles.golemgarage.golem.ambient"
   },
   "golem.part_fit": {
     "sounds": [
-      "golemgarage:golem/part_fit"
+      {
+        "name": "golemgarage:golem/part_fit",
+        "attenuation_distance": 12
+      }
     ],
     "subtitle": "subtitles.golemgarage.golem.part_fit"
   },
   "golem.power_low": {
     "sounds": [
-      "golemgarage:golem/power_low"
+      {
+        "name": "golemgarage:golem/power_low",
+        "attenuation_distance": 12
+      }
     ],
     "subtitle": "subtitles.golemgarage.golem.power_low"
   },
   "golem.module": {
     "sounds": [
-      "golemgarage:golem/module"
+      {
+        "name": "golemgarage:golem/module",
+        "attenuation_distance": 12
+      }
     ],
     "subtitle": "subtitles.golemgarage.golem.module"
   },

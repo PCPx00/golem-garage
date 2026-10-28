@@ -100,6 +100,10 @@ public class BehaviorGoal extends Goal {
             golem.getNavigation().stop();
             return;
         }
+        if (golem.getMode() != GolemMode.RULES) {
+            runMode(golem.getMode(), golem.tickCount % CHECK == 0);
+            return;
+        }
         if (stoppedReason != null) {
             golem.setStatus(GolemText.of("stopped", stoppedReason));
             golem.setActiveRule(-1);
@@ -156,6 +160,72 @@ public class BehaviorGoal extends Goal {
             stoppedReason = failure;
             golem.getNavigation().stop();
         }
+    }
+
+    /** Guard mode: the mob that last attacked the owner, until it's dead or gone. */
+    private LivingEntity guardTarget;
+
+    /** Aggressive, Peaceful and Guard: follow the owner and fight (or not) by the mode's simple rule. */
+    private void runMode(GolemMode mode, boolean check) {
+        golem.setActiveRule(-1);
+        active = null;
+        LivingEntity target = golem.getTarget();
+        if (mode != GolemMode.GUARD) {
+            guardTarget = null;
+        }
+        switch (mode) {
+            case PEACEFUL -> {
+                golem.setTarget(null);
+                follow(check, true);
+                golem.setStatus(GolemText.of("mode_peaceful"));
+                return;
+            }
+            case AGGRESSIVE -> {
+                if (target == null || !target.isAlive() || golem.distanceToSqr(target) > 16 * 16) {
+                    target = null;
+                    if (check) {
+                        target = nearestThreat(GolemMode.AGGRO_RANGE);
+                    }
+                    golem.setTarget(target);
+                }
+            }
+            case GUARD -> {
+                // Only mobs that attack its owner. Being hit itself doesn't start a fight.
+                LivingEntity attacker = ownerAttacker();
+                if (attacker != null && !(attacker instanceof net.minecraft.world.entity.player.Player)
+                        && golem.canAttack(attacker)) {
+                    guardTarget = attacker;
+                }
+                if (guardTarget != null && (!guardTarget.isAlive() || golem.distanceToSqr(guardTarget) > 24 * 24)) {
+                    guardTarget = null;
+                }
+                target = guardTarget;
+                golem.setTarget(guardTarget);
+            }
+            default -> {
+            }
+        }
+        if (target != null && target.isAlive()) {
+            golem.setStatus(GolemText.of(mode == GolemMode.GUARD ? "defending" : "attacking", GolemText.name(target)));
+            return; // the melee goal closes in and fights
+        }
+        follow(check, true);
+        golem.setStatus(GolemText.of("mode_" + mode.id()));
+    }
+
+    /** The nearest hostile mob in sight within the range, ignoring work areas (modes don't use them). */
+    private Monster nearestThreat(float radius) {
+        Monster nearest = null;
+        double best = Double.MAX_VALUE;
+        for (Monster m : golem.level().getEntitiesOfClass(Monster.class, golem.getBoundingBox().inflate(radius),
+                m -> m.isAlive() && golem.canAttack(m) && golem.hasLineOfSight(m))) {
+            double d = golem.distanceToSqr(m);
+            if (d < best && d <= radius * radius) {
+                best = d;
+                nearest = m;
+            }
+        }
+        return nearest;
     }
 
     private boolean ownerTooFar;

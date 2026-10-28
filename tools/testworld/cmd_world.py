@@ -60,7 +60,24 @@ setup = [
     "say cmd setup done",
 ]
 open(os.path.join(pack, "setup.mcfunction"), "w").write("\n".join(setup) + "\n")
+modes = [
+    "kill @e[type=minecraft:husk]",
+    g % (-60, -60, "Aggro", alice, matched("iron"), ',Mode:"aggressive"'),
+    g % (-40, -60, "Calm", alice, matched("iron"), ',Mode:"peaceful"'),
+    g % (-20, -60, "Keeper", alice, matched("iron"), ',Mode:"guard"'),
+    'summon minecraft:husk -60 -60 -50 {PersistenceRequired:1b}',
+    'summon minecraft:husk -60 -60 -76 {PersistenceRequired:1b}',
+    'summon minecraft:husk -40 -60 -52 {PersistenceRequired:1b}',
+    'summon minecraft:husk -20 -60 -52 {PersistenceRequired:1b}',
+    "say modes placed",
+]
+open(os.path.join(pack, "modes.mcfunction"), "w").write("\n".join(modes) + "\n")
+crowd = ["kill @e[type=golemgarage:golem,tag=crowd]"]
+for i in range(20):
+    crowd.append('summon golemgarage:golem %d -60 %d {Tags:["crowd"],PersistenceRequired:1b,Owner:%s,Parts:%s,'
+                 'Rules:[{T:"ALWAYS",P:0,A:"STROLL",AP:0}]}' % (80 + (i % 5) * 2, 80 + (i // 5) * 2, alice, matched("iron")))
+open(os.path.join(pack, "crowd.mcfunction"), "w").write("\n".join(crowd) + "\n")
 open(os.path.join(pack, "unload.mcfunction"), "w").write("forceload remove 1990 1990 2010 2010\nsay far golem unloaded\n")
-json.dump({"values": ["cmdtest:setup"]},
+json.dump({"values": []},
           open(os.path.join(world, "datapacks", "cmdtest", "data", "minecraft", "tags", "function", "load.json"), "w"))
 print("command test world ready; Alice =", offline_uuid("Alice"))

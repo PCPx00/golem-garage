@@ -133,6 +133,7 @@ public final class Config {
     public static final ModConfigSpec CLIENT_SPEC;
     public static final ModConfigSpec.BooleanValue SHOW_GARAGE_PLAN;
     public static final ModConfigSpec.BooleanValue SHOW_STATUS_ICONS;
+    public static final ModConfigSpec.IntValue GOLEM_VOLUME;
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -140,6 +141,8 @@ public final class Config {
                 .define("showGaragePlan", true);
         SHOW_STATUS_ICONS = b.comment("Show little icons over golems that are stuck, out of power or have a broken part.")
                 .define("showStatusIcons", true);
+        GOLEM_VOLUME = b.comment("Volume of golem and cub sounds, in percent (on top of the Friendly Creatures slider).")
+                .defineInRange("golemVolume", 100, 0, 100);
         CLIENT_SPEC = b.build();
     }
 

@@ -131,6 +131,14 @@ public final class GolemCommands {
                                 .then(Commands.argument("name", StringArgumentType.greedyString())
                                         .executes(ctx -> rename(ctx.getSource(), StringArgumentType.getString(ctx, "golem"),
                                                 StringArgumentType.getString(ctx, "name"))))))
+                .then(Commands.literal("mode").requires(GolemCommands::playerCommands)
+                        .then(Commands.argument("golem", StringArgumentType.string()).suggests(golems)
+                                .then(Commands.argument("mode", StringArgumentType.word()).suggests((c, b) ->
+                                                SharedSuggestionProvider.suggest(java.util.Arrays.stream(
+                                                        com.xtrip.golemgarage.golem.GolemMode.values()).map(
+                                                        com.xtrip.golemgarage.golem.GolemMode::id), b))
+                                        .executes(ctx -> mode(ctx.getSource(), StringArgumentType.getString(ctx, "golem"),
+                                                StringArgumentType.getString(ctx, "mode"))))))
                 .then(Commands.literal("stop").requires(GolemCommands::playerCommands)
                         .then(Commands.argument("golem", StringArgumentType.string()).suggests(golems)
                                 .executes(ctx -> pause(ctx.getSource(), StringArgumentType.getString(ctx, "golem"), true))))
@@ -391,6 +399,28 @@ public final class GolemCommands {
         return found.size();
     }
 
+    private static int mode(CommandSourceStack s, String which, String modeName) throws CommandSyntaxException {
+        com.xtrip.golemgarage.golem.GolemMode mode = null;
+        for (var m : com.xtrip.golemgarage.golem.GolemMode.values()) {
+            if (m.id().equalsIgnoreCase(modeName)) {
+                mode = m;
+            }
+        }
+        if (mode == null) {
+            s.sendFailure(Component.translatable("golemgarage.cmd.bad_mode"));
+            return 0;
+        }
+        final var chosen = mode;
+        List<GolemRegistry.Entry> found = pick(s, which);
+        for (GolemRegistry.Entry e : found) {
+            withLoaded(s.getServer(), e, g -> g.setMode(chosen), () -> {
+            });
+        }
+        s.sendSuccess(() -> Component.translatable("golemgarage.cmd.mode_set", found.size(), chosen.title())
+                .withStyle(ChatFormatting.GREEN), false);
+        return found.size();
+    }
+
     // =================================================================== operator commands
     private static int giveGolem(CommandContext<CommandSourceStack> ctx, String presetName) throws CommandSyntaxException {
         String matId = StringArgumentType.getString(ctx, "material").toLowerCase(Locale.ROOT);
@@ -515,7 +545,8 @@ public final class GolemCommands {
                 .orElse(g.getOwnerUuid().toString()) : g.getOwnerUuid().toString();
         List<Component> lines = new ArrayList<>();
         lines.add(Component.literal("== " + g.getName().getString() + " (" + g.getUUID() + ")").withStyle(ChatFormatting.GOLD));
-        lines.add(Component.literal("owner " + owner + ", group " + g.getGroup() + (g.isPaused() ? ", PAUSED" : "")));
+        lines.add(Component.literal("owner " + owner + ", group " + g.getGroup() + ", mode " + g.getMode().id()
+                + (g.isPaused() ? ", PAUSED" : "")));
         lines.add(Component.literal(String.format(Locale.ROOT, "health %.0f/%.0f, power %d/%d, armor %d, attack %.1f, speed %.3f",
                 g.getHealth(), g.getMaxHealth(), g.readSyncedPower(), g.readSyncedCapacity(), g.getArmorValue(), st.attack, st.speed)));
         g.getEquipped().forEach((slot, p) -> lines.add(Component.literal("  " + slot.id() + ": " + p.shape().id() + " / "

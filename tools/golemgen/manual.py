@@ -678,6 +678,15 @@ def behaviors_chapter():
 
     return category("behaviors", "Jobs and Rules", MODID + ":golem_linker",
                     "Teach a golem a job with WHEN / DO / UNLESS rules, or start from a preset.", [
+        entry("modes", "Simple Modes", "minecraft:iron_sword", [
+            text("Don't want to write rules? Click " + B("Mode") + " under the golem's picture on the Status tab:\n\n"
+                 + B("Aggressive") + ": follows you and attacks every hostile mob within 12 blocks.\n"
+                 + B("Peaceful") + ": follows you and never attacks anything, even if it's hit.\n"
+                 + B("Guard") + ": follows you and only fights mobs that attack you.\n"
+                 + B("Rules") + ": runs its rules (the default).", "Modes"),
+            text("Any mode but Rules overrides the rules completely. The rules aren't lost: switch back to Rules and "
+                 "they run again.\n\nYou can also use " + B("/golemgarage mode <golem> <mode>") + ".", "Modes and Rules"),
+        ]),
         entry("rules_intro", "How Rules Work", "minecraft:comparator", [
             text("Open the golem's panel and go to " + B("Rules") + ". Each rule reads:\n\n" + B("WHEN")
                  + " something is true\n" + B("DO") + " an action\n" + B("UNLESS") + " something else (optional)"
@@ -975,6 +984,7 @@ def settings_chapter():
                 ("find <golem>", "Where it is, how far and which way. Loaded golems glow for 10 seconds."),
                 ("recall <golem>", "Brings it to you, even from unloaded areas or another dimension."),
                 ("rename <golem> <name>", "Gives it a new name."),
+                ("mode <golem> <mode>", "rules, aggressive, peaceful or guard."),
                 ("stop / resume <golem>", "Pauses its jobs, and starts them again."),
             ], "For Everyone"),
             table([
@@ -1004,8 +1014,9 @@ def settings_chapter():
                 ("showStatusIcons", "The little icons over golems that are stuck, stopped, out of power or "
                                     "have a broken part."),
             ], "golemgarage-client.toml"),
-            text("Golem sounds have their own subtitles and follow the Friendly Creatures volume slider.",
-                 "Sounds"),
+            text("Golem sounds are soft, fade out within 12 blocks, and get quieter when lots of golems are close "
+                 "together. " + B("golemVolume") + " (0 to 100) in golemgarage-client.toml turns golem and cub sounds "
+                 "down further, on top of the Friendly Creatures slider.", "Sounds"),
         ]),
         entry("jei_jade", "JEI and Jade", "minecraft:spyglass", [
             text(B("JEI") + ": every part material, golem build and cub color shows as its own item, each item "

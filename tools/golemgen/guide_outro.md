@@ -112,6 +112,19 @@ rules up and down, x deletes, and Undo puts back your last change. **Quick jobs*
 ready-made set of rules. Rules are checked top to bottom twice a second; the first one that's true runs
 and is highlighted in green. If none apply, the golem follows you.
 
+### Simple modes
+
+Don't want rules? Click **Mode** under the golem's picture on the Status tab (or use `/golemgarage mode`):
+
+| Mode | What it does |
+|---|---|
+| Rules | runs its rules (the default) |
+| Aggressive | follows you and attacks every hostile mob within 12 blocks |
+| Peaceful | follows you and never attacks anything, even if it's hit |
+| Guard | follows you and only fights mobs that attack you |
+
+Any mode but Rules overrides the rules completely; switch back to Rules and they run again.
+
 ### Triggers
 
 | Trigger | True when |
@@ -294,6 +307,7 @@ how many golems each player has out.
 | find &lt;golem&gt; | everyone | where it is, how far and which way; loaded golems glow for 10 seconds |
 | recall &lt;golem&gt; | everyone | brings it to you, even from unloaded areas or another dimension (60 s cooldown) |
 | rename &lt;golem&gt; &lt;name&gt; | everyone | renames it |
+| mode &lt;golem&gt; &lt;mode&gt; | everyone | rules, aggressive, peaceful or guard |
 | stop / resume &lt;golem&gt; | everyone | pauses its jobs / starts them again |
 | give &lt;players&gt; golem &lt;material&gt; [preset] | operators | a ready-built golem; presets: standard, guard, hauler, harvester, medic, night_guard |
 | give &lt;players&gt; cub [color] | operators | a cub in any dye color |
@@ -335,8 +349,9 @@ how many golems each player has out.
 | playerCommands | true | players can use the /golemgarage player commands |
 | recallCooldownSeconds | 60 | wait between recalls (operators skip it) |
 
-`golemgarage-client.toml`: `showGaragePlan` (the Garage build plan) and `showStatusIcons` (icons over golems that are
-stopped, stuck, out of power or have a broken part).
+`golemgarage-client.toml`: `showGaragePlan` (the Garage build plan), `showStatusIcons` (icons over golems that are
+stopped, stuck, out of power or have a broken part) and `golemVolume` (0 to 100: golem and cub sound volume, on top of
+the Friendly Creatures slider).
 
 ## For modpack makers
 
@@ -350,8 +365,9 @@ stopped, stuck, out of power or have a broken part).
 
 ## Sounds, advancements and helper mods
 
-- **Sounds:** golems have their own footsteps (feet, wheels or treads), work clanks, hurt and attack sounds, a power-low
-  beep and a breakdown sound; the Garage hums, zaps and chimes; cubs chirp. All have subtitles.
+- **Sounds:** soft footsteps (feet, wheels or treads), a quiet whirr while working, gentle beeps, and hurt, attack and
+  breakdown sounds; the Garage hums, zaps and chimes; cubs chirp. Golem sounds fade out within 12 blocks and get
+  quieter when many golems are close together, so a busy base stays calm. All have subtitles.
 - **Advancements:** a Golem Garage tab with 19 goals, from placing your first golem to dressing a cub in a matching
   set and having a golem take down a Warden.
 - **JEI:** part materials, golem builds and cub colors each show separately, every item has an info page, and the

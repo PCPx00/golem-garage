@@ -100,12 +100,14 @@ public class GolemEntity extends PathfinderMob {
     private static final int BREAKDOWN_TICKS = 30;
     private static final EntityDataAccessor<Integer> DATA_PAINT =
             SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.INT);
-    /** The owner, synced so clients know whose golem it is before opening its panel. */
+    private static final EntityDataAccessor<Integer> DATA_MODE =
+            SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_GROUP =
             SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.INT);
     private boolean paused;
     @Nullable
     private BlockPos dockedAt;
+    /** The owner, synced so clients know whose golem it is before opening its panel. */
     private static final EntityDataAccessor<java.util.Optional<UUID>> DATA_OWNER =
             SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private int workAnimationTick;
@@ -171,6 +173,7 @@ public class GolemEntity extends PathfinderMob {
         builder.define(DATA_PAINT, -1);
         builder.define(DATA_OWNER, java.util.Optional.empty());
         builder.define(DATA_GROUP, 0);
+        builder.define(DATA_MODE, 0);
         builder.define(DATA_STATUS, "");
         builder.define(DATA_FLAGS, (byte) 0);
     }
@@ -380,7 +383,7 @@ public class GolemEntity extends PathfinderMob {
         if (power != before) {
             this.entityData.set(DATA_POWER, power);
             if (power == 0 && before > 0 && !level().isClientSide) {
-                playSound(com.xtrip.golemgarage.ModSounds.GOLEM_POWER_LOW.get(), 0.8f, 1f);
+                playSound(com.xtrip.golemgarage.ModSounds.GOLEM_POWER_LOW.get(), 0.6f, 1f);
             }
         }
     }
@@ -562,7 +565,7 @@ public class GolemEntity extends PathfinderMob {
         workOps++;
         level().broadcastEntityEvent(this, EVENT_WORK);
         if (workOps % 3 == 0) {
-            playSound(com.xtrip.golemgarage.ModSounds.GOLEM_WORK.get(), 0.45f, 0.9f + random.nextFloat() * 0.2f);
+            crowdSound(com.xtrip.golemgarage.ModSounds.GOLEM_WORK.get(), com.xtrip.golemgarage.golem.SoundCrowd.Kind.WORK, 0.35f, 0.9f + random.nextFloat() * 0.2f);
         }
         drainPower(1);
         if (workOps % 12 == 0) {
@@ -720,6 +723,17 @@ public class GolemEntity extends PathfinderMob {
     }
 
     // =================================================================== groups, pausing, docking
+    /** Aggressive, Peaceful or Guard override the rules; Rules (the default) runs them. */
+    public com.xtrip.golemgarage.golem.GolemMode getMode() {
+        return com.xtrip.golemgarage.golem.GolemMode.byId(entityData.get(DATA_MODE));
+    }
+
+    public void setMode(com.xtrip.golemgarage.golem.GolemMode mode) {
+        entityData.set(DATA_MODE, mode.ordinal());
+        setTarget(null);
+        getNavigation().stop();
+    }
+
     public int getGroup() {
         return entityData.get(DATA_GROUP);
     }
@@ -774,6 +788,9 @@ public class GolemEntity extends PathfinderMob {
     /** Players are fair game only as the server's playerDamage setting allows, and never the owner. */
     @Override
     public boolean canAttack(LivingEntity target) {
+        if (getMode() == com.xtrip.golemgarage.golem.GolemMode.PEACEFUL) {
+            return false; // never fights, even when hit
+        }
         if (target instanceof Player p) {
             if (p.getUUID().equals(getOwnerUuid()) || p.isCreative() || p.isSpectator()) {
                 return false;
@@ -1185,7 +1202,7 @@ public class GolemEntity extends PathfinderMob {
             wearPart(PartSlot.ARMS, 1);
             drainPower(1);
         }
-        playSound(com.xtrip.golemgarage.ModSounds.GOLEM_ATTACK.get(), 1f, 0.9f + random.nextFloat() * 0.2f);
+        crowdSound(com.xtrip.golemgarage.ModSounds.GOLEM_ATTACK.get(), com.xtrip.golemgarage.golem.SoundCrowd.Kind.FIGHT, 0.7f, 0.9f + random.nextFloat() * 0.2f);
         return hit;
     }
 
@@ -1293,25 +1310,47 @@ public class GolemEntity extends PathfinderMob {
 
     @Override
     public int getAmbientSoundInterval() {
-        return 600;
+        return 900;
     }
 
     @Override
     protected float getSoundVolume() {
-        return 0.6f;
+        return 0.45f;
+    }
+
+    /** Ambient beeps share a budget with nearby golems, so a crowd doesn't chatter. */
+    @Override
+    public void playAmbientSound() {
+        crowdSound(getAmbientSound(), com.xtrip.golemgarage.golem.SoundCrowd.Kind.AMBIENT, getSoundVolume(), getVoicePitch());
+    }
+
+    @Override
+    protected void playHurtSound(DamageSource source) {
+        crowdSound(getHurtSound(source), com.xtrip.golemgarage.golem.SoundCrowd.Kind.FIGHT, getSoundVolume(), getVoicePitch());
+    }
+
+    /** Plays a sound quieter (or not at all) when many golems nearby just made the same kind of sound. */
+    private void crowdSound(@Nullable SoundEvent sound, com.xtrip.golemgarage.golem.SoundCrowd.Kind kind, float volume, float pitch) {
+        if (sound == null || isSilent()) {
+            return;
+        }
+        float f = com.xtrip.golemgarage.golem.SoundCrowd.factor(this, kind);
+        if (f > 0f) {
+            playSound(sound, volume * f, pitch);
+        }
     }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         PartInstance legs = parts.get(PartSlot.LEGS);
         if (legs != null && legs.shape().has(ShapeAbility.NO_JUMP)) {
-            playSound(com.xtrip.golemgarage.ModSounds.GOLEM_STEP_WHEELS.get(), 0.5f, 0.9f + random.nextFloat() * 0.2f);
+            crowdSound(com.xtrip.golemgarage.ModSounds.GOLEM_STEP_WHEELS.get(), com.xtrip.golemgarage.golem.SoundCrowd.Kind.STEP, 0.35f, 0.9f + random.nextFloat() * 0.2f);
             return;
         }
         if (legs != null && legs.shape().has(ShapeAbility.TREADS)) {
-            playSound(com.xtrip.golemgarage.ModSounds.GOLEM_STEP_TREADS.get(), 0.7f, 1f);
+            crowdSound(com.xtrip.golemgarage.ModSounds.GOLEM_STEP_TREADS.get(), com.xtrip.golemgarage.golem.SoundCrowd.Kind.STEP, 0.4f, 1f);
         } else {
-            playSound(com.xtrip.golemgarage.ModSounds.GOLEM_STEP.get(), 0.7f, legs != null && legs.shape().has(ShapeAbility.CLIMB) ? 1.4f : 0.95f + random.nextFloat() * 0.1f);
+            crowdSound(com.xtrip.golemgarage.ModSounds.GOLEM_STEP.get(), com.xtrip.golemgarage.golem.SoundCrowd.Kind.STEP, 0.45f, legs != null && legs.shape().has(ShapeAbility.CLIMB) ? 1.3f : 0.95f + random.nextFloat() * 0.1f);
         }
     }
 
@@ -1766,6 +1805,7 @@ public class GolemEntity extends PathfinderMob {
         tag.put("Modules", modulesTag());
         tag.putInt("Paint", getPaint());
         tag.putInt("Group", getGroup());
+        tag.putString("Mode", getMode().id());
         tag.putBoolean("Paused", paused);
         CompoundTag l = new CompoundTag();
         links.forEach((m, p) -> l.putLong(m.name(), p.asLong()));
@@ -1800,6 +1840,12 @@ public class GolemEntity extends PathfinderMob {
         setFlag(FLAG_VINES, tag.getBoolean("Vines"));
         setPaint(tag.contains("Paint") ? tag.getInt("Paint") : -1);
         setGroup(tag.getInt("Group"));
+        entityData.set(DATA_MODE, 0);
+        for (com.xtrip.golemgarage.golem.GolemMode m : com.xtrip.golemgarage.golem.GolemMode.values()) {
+            if (m.id().equals(tag.getString("Mode"))) {
+                entityData.set(DATA_MODE, m.ordinal());
+            }
+        }
         paused = tag.getBoolean("Paused");
         if (tag.contains("Modules")) {
             readModules(tag);

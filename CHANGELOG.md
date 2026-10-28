@@ -2,6 +2,24 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.9.0
+
+### Added
+- **Simple modes** for when you don't want to write rules. Click **Mode** on the golem's Status tab, or use
+  `/golemgarage mode <golem> <mode>`:
+  - **Aggressive:** follows you and attacks every hostile mob within 12 blocks.
+  - **Peaceful:** follows you and never attacks anything, even if it's hit.
+  - **Guard:** follows you and only fights mobs that attack you.
+  - **Rules:** runs its rules (the default).
+  Any mode but Rules overrides the rules completely; switch back and they run again. The mode shows in Jade.
+- **golemVolume** client setting (0 to 100) to turn golem and cub sounds down further.
+
+### Changed
+- **Softer, calmer golem sounds:** gentle thuds instead of clanks, rounder beeps, a quiet whirr while working, and
+  lower volumes overall. Golem sounds now fade out within 12 blocks.
+- **Crowds stay quiet:** when lots of golems are close together, each sound plays quieter, and repeats are skipped
+  once a few nearby golems have just made the same kind of sound. Ambient beeps come less often.
+
 ## 0.8.0
 
 ### Added

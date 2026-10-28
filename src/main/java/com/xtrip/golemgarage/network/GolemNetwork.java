@@ -73,6 +73,7 @@ public final class GolemNetwork {
                 case GolemActionPayload.SET_POST_HERE -> golem.setLink(GolemLinkerItem.Mode.POST, golem.blockPosition());
                 case GolemActionPayload.REMOVE_MODULE -> golem.removeModule(player, payload.arg());
                 case GolemActionPayload.COPY_RULES_TO_GROUP -> copyRulesToGroup(golem, player);
+                case GolemActionPayload.SET_MODE -> golem.setMode(com.xtrip.golemgarage.golem.GolemMode.byId(payload.arg()));
                 case GolemActionPayload.CLEAR_LINKS -> {
                     for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.MARKS) {
                         golem.setLink(m, null);

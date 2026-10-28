@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.8.0, by xTrip",
+ "subtitle": "Version 0.9.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -8775,6 +8775,23 @@
    "desc": "Teach a golem a job with WHEN / DO / UNLESS rules, or start from a preset.",
    "entries": [
     {
+     "id": "modes",
+     "title": "Simple Modes",
+     "icon": "minecraft:iron_sword",
+     "pages": [
+      {
+       "type": "text",
+       "text": "Don't want to write rules? Click §lMode§r under the golem's picture on the Status tab:\n\n§lAggressive§r: follows you and attacks every hostile mob within 12 blocks. §lPeaceful§r: follows you and never attacks anything, even if it's hit. §lGuard§r: follows you and only fights mobs that attack you. §lRules§r: runs its rules (the default).",
+       "title": "Modes"
+      },
+      {
+       "type": "text",
+       "text": "Any mode but Rules overrides the rules completely. The rules aren't lost: switch back to Rules and they run again.\n\nYou can also use §l/golemgarage mode <golem> <mode>§r.",
+       "title": "Modes and Rules"
+      }
+     ]
+    },
+    {
      "id": "rules_intro",
      "title": "How Rules Work",
      "icon": "minecraft:comparator",
@@ -10330,6 +10347,10 @@
          "Gives it a new name."
         ],
         [
+         "mode <golem> <mode>",
+         "rules, aggressive, peaceful or guard."
+        ],
+        [
          "stop / resume <golem>",
          "Pauses its jobs, and starts them again."
         ]
@@ -10410,7 +10431,7 @@
       },
       {
        "type": "text",
-       "text": "Golem sounds have their own subtitles and follow the Friendly Creatures volume slider.",
+       "text": "Golem sounds are soft, fade out within 12 blocks, and get quieter when lots of golems are close together. §lgolemVolume§r (0 to 100) in golemgarage-client.toml turns golem and cub sounds down further, on top of the Friendly Creatures slider.",
        "title": "Sounds"
       }
      ]

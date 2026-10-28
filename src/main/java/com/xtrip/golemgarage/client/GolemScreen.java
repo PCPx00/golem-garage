@@ -41,6 +41,8 @@ public class GolemScreen extends Screen {
     private final List<GolemRule> rules;
     private boolean rulesTab;
     private boolean dirty;
+    /** The mode just picked, shown until the server confirms it. */
+    private com.xtrip.golemgarage.golem.GolemMode modeShown;
 
     public GolemScreen(GolemEntity golem) {
         super(Component.translatable("entity.golemgarage.golem"));
@@ -103,6 +105,16 @@ public class GolemScreen extends Screen {
                     .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("screen.golemgarage.golem.remove_module")))
                     .build());
         }
+        // Mode: Rules / Aggressive / Peaceful / Guard. Click to cycle.
+        var mode = modeShown != null ? modeShown : golem.getMode();
+        addRenderableWidget(Button.builder(Component.translatable("screen.golemgarage.golem.mode", mode.title()), b -> {
+            var next = mode.next();
+            PacketDistributor.sendToServer(new GolemActionPayload(golem.getId(), GolemActionPayload.SET_MODE, next.ordinal()));
+            modeShown = next;
+            rebuildWidgets();
+        }).bounds(x0 + 12, y0 + H - 30, 122, 18).tooltip(net.minecraft.client.gui.components.Tooltip.create(
+                mode.help().copy().append("\n\n").append(Component.translatable("screen.golemgarage.golem.mode_tip"))))
+                .build());
         int bx = x0 + 300;
         addRenderableWidget(Button.builder(Component.translatable("screen.golemgarage.golem.post_here"), b ->
                 PacketDistributor.sendToServer(new GolemActionPayload(golem.getId(), GolemActionPayload.SET_POST_HERE, 0)))
@@ -116,7 +128,7 @@ public class GolemScreen extends Screen {
         // 3D preview.
         g.fill(x0 + 8, y0 + 28, x0 + 138, y0 + H - 8, PANEL);
         g.renderOutline(x0 + 8, y0 + 28, 130, H - 36, EDGE);
-        GuiPreview.render(g, x0 + 10, y0 + 30, x0 + 136, y0 + H - 10, 30, mouseX, mouseY, golem);
+        GuiPreview.render(g, x0 + 10, y0 + 30, x0 + 136, y0 + H - 34, 30, mouseX, mouseY, golem);
         String name = golem.hasCustomName() && golem.getCustomName() != null ? golem.getCustomName().getString() : I18n.get("entity.golemgarage.golem");
         g.drawCenteredString(font, name, x0 + 73, y0 + 32, TEXT);
         if (golem.getGroup() > 0) {
@@ -319,8 +331,21 @@ public class GolemScreen extends Screen {
                 r.render(g, mouseX, mouseY, partialTick);
             }
         }
+        if (modeShown != null && golem.getMode() == modeShown) {
+            modeShown = null;
+        }
         if (rulesTab) {
             editor().render(g, font, x0, y0, W, H, mouseX, mouseY, golem.readActiveRule(), dirty);
+            var mode = modeShown != null ? modeShown : golem.getMode();
+            if (mode != com.xtrip.golemgarage.golem.GolemMode.RULES && !editor().pickerOpen()) {
+                var lines = font.split(Component.translatable("screen.golemgarage.golem.mode_paused", mode.title()), W - 40);
+                int by = y0 + H - 30 - lines.size() * 10;
+                g.fill(x0 + 10, by - 4, x0 + W - 10, by + lines.size() * 10 + 2, 0xE0302010);
+                g.renderOutline(x0 + 10, by - 4, W - 20, lines.size() * 10 + 6, 0xFFFFC14A);
+                for (int i = 0; i < lines.size(); i++) {
+                    g.drawString(font, lines.get(i), x0 + 18, by + i * 10, 0xFFFFE27A);
+                }
+            }
         }
     }
 

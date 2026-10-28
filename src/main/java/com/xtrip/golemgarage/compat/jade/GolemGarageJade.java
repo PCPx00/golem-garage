@@ -61,6 +61,9 @@ public class GolemGarageJade implements IWailaPlugin {
                 ChatFormatting c = worst.isBroken() ? ChatFormatting.RED : pct < 50 ? ChatFormatting.GOLD : ChatFormatting.GREEN;
                 t.add(Component.translatable("jade.golemgarage.worst_part", worst.toStack().getHoverName(), pct).withStyle(c));
             }
+            if (golem.getMode() != com.xtrip.golemgarage.golem.GolemMode.RULES) {
+                t.add(Component.translatable("screen.golemgarage.golem.mode", golem.getMode().title()).withStyle(ChatFormatting.GOLD));
+            }
             if (golem.getGroup() > 0) {
                 t.add(Component.translatable("screen.golemgarage.golem.group", golem.getGroup()).withStyle(ChatFormatting.YELLOW));
             }

@@ -126,92 +126,90 @@ def fade(x, fin=0.005, fout=0.03):
 
 
 # ------------------------------------------------------------------ the sounds
+# Golem sounds are kept soft on purpose: rounded low thuds instead of clangs, sine tones instead of
+# square beeps, everything low-passed, and quiet peaks, so a yard full of golems stays pleasant.
+def soft(x, cutoff=1800):
+    return low(x, cutoff, 2)
+
+
 def golem_step(v):
-    d = 0.42
-    p = [1.0, 0.9, 1.12][v]
-    x = mix(thump(55 * p, d, 0.09) * 1.0,
-            band(noise(d), 80, 600) * env(d, 0.002, 0.04) * 0.6,
-            at(metal(820 * p, 0.25, 0.09) * 0.25, 0.01, d),
-            at(servo(260 * p, 420 * p, 0.18, 0.35), 0.06, d))
-    return fade(norm(x))
+    d = 0.32
+    p = [1.0, 0.92, 1.08][v]
+    x = mix(thump(62 * p, d, 0.06) * 1.0,
+            low(noise(d), 350) * env(d, 0.004, 0.035) * 0.35,
+            at(metal(520 * p, 0.12, 0.05) * 0.06, 0.01, d))
+    return fade(norm(soft(x, 1200), 0.42), 0.004, 0.06)
 
 
 def step_wheels(v):
-    d = 0.38
+    d = 0.34
     t = t_of(d)
-    r = low(noise(d), 180, 3) * (0.6 + 0.4 * np.sin(2 * np.pi * (28 + v * 4) * t))
-    hum = sweep(90, 120, d, "saw") * 0.15
-    x = (r + low(hum, 400)) * np.sin(np.pi * t / d) ** 0.6
-    return fade(norm(x, 0.7))
+    r = low(noise(d), 140, 3) * (0.7 + 0.3 * np.sin(2 * np.pi * (24 + v * 3) * t))
+    x = r * np.sin(np.pi * t / d) ** 0.8
+    return fade(norm(x, 0.3), 0.01, 0.08)
 
 
 def step_treads(v):
-    d = 0.45
-    parts = [low(noise(d), 220) * np.sin(np.pi * t_of(d) / d) * 0.5]
-    for i, s in enumerate((0.0, 0.11, 0.22)):
-        parts.append(at(metal(600 + 90 * i + v * 50, 0.12, 0.04) * 0.4, s, d))
-    return fade(norm(mix(*parts), 0.75))
+    d = 0.4
+    parts = [low(noise(d), 180) * np.sin(np.pi * t_of(d) / d) * 0.6]
+    for i, s in enumerate((0.0, 0.13)):
+        parts.append(at(thump(140 + 20 * i + v * 10, 0.08, 0.025) * 0.3, s, d))
+    return fade(norm(soft(mix(*parts), 900), 0.32), 0.005, 0.08)
 
 
 def golem_hurt(v):
-    d = 0.6
-    f = [240, 300][v]
-    x = mix(metal(f, d, 0.28) * 1.0, band(noise(d), 1500, 7000) * env(d, 0.001, 0.03) * 0.5,
-            thump(70, d, 0.1) * 0.6)
-    return fade(norm(x))
+    d = 0.45
+    f = [210, 250][v]
+    x = mix(metal(f, d, 0.16, amps=(1, 0.35, 0.12, 0.04)) * 0.8, thump(80, d, 0.07) * 0.7)
+    return fade(norm(soft(x, 1600), 0.5), 0.003, 0.1)
 
 
 def golem_attack():
-    d = 0.55
-    whoosh = band(noise(d), 300, 2500) * np.sin(np.pi * np.clip(t_of(d) / 0.3, 0, 1)) ** 2
-    whoosh[int(0.3 * SR):] = 0
-    x = mix(whoosh * 0.6, at(metal(180, 0.4, 0.22) * 0.9, 0.22, d), at(thump(60, 0.3, 0.1), 0.22, d))
-    return fade(norm(x))
+    d = 0.45
+    whoosh = low(noise(d), 1200) * np.sin(np.pi * np.clip(t_of(d) / 0.22, 0, 1)) ** 2
+    whoosh[int(0.22 * SR):] = 0
+    x = mix(whoosh * 0.35, at(thump(70, 0.25, 0.07), 0.18, d), at(metal(160, 0.2, 0.1, amps=(1, 0.2, 0.05, 0)) * 0.3, 0.18, d))
+    return fade(norm(soft(x, 1500), 0.5), 0.004, 0.08)
 
 
 def golem_breakdown():
-    d = 1.6
-    t = t_of(d)
-    down = sweep(900, 45, 1.2, "saw")
-    down = low(down, 2500) * np.exp(-t_of(1.2) / 0.9) * 0.6
-    crackle = np.zeros(len(t))
-    for _ in range(26):
-        i = int(rng.random() * 1.2 * SR)
-        crackle[i:i + 120] += rng.standard_normal(120) * rng.random()
-    crackle = band(crackle, 2000, 9000) * 0.5
-    clatter = mix(*[at(metal(250 + rng.random() * 400, 0.3, 0.1) * 0.5, 1.15 + i * 0.07, d) for i in range(4)])
-    x = mix(at(down, 0, d), crackle, clatter, at(thump(50, 0.4, 0.15), 1.15, d))
-    return fade(norm(x), 0.002, 0.15)
+    d = 1.5
+    down = sweep(520, 60, 1.1, "sine") * np.exp(-t_of(1.1) / 0.8) * 0.6
+    clatter = mix(*[at(thump(110 + i * 25, 0.2, 0.05) * 0.5, 1.05 + i * 0.09, d) for i in range(3)])
+    x = mix(at(down, 0, d), clatter, at(thump(55, 0.4, 0.12), 1.05, d))
+    return fade(norm(soft(x, 1500), 0.55), 0.004, 0.2)
 
 
 def golem_work():
-    d = 0.22
-    x = mix(servo(380, 620, 0.1, 1.0), at(servo(620, 420, 0.1, 0.8), 0.11, d), at(metal(1400, 0.08, 0.02) * 0.3, 0.0, d))
-    return fade(norm(x, 0.6))
+    d = 0.24
+    t = t_of(d)
+    whirr = (np.sin(2 * np.pi * np.cumsum(np.linspace(240, 360, len(t))) / SR) * 0.6
+             + np.sin(2 * np.pi * np.cumsum(np.linspace(480, 720, len(t))) / SR) * 0.15)
+    x = whirr * np.sin(np.pi * t / d) ** 1.5
+    return fade(norm(soft(x, 1200), 0.25), 0.01, 0.06)
 
 
 def golem_ambient(v):
-    d = 0.7
-    if v == 0:
-        b = mix(tone(660, 0.09, "tri") * env(0.09, 0.005, 0.06), at(tone(880, 0.12, "tri") * env(0.12, 0.005, 0.08), 0.13, d))
-    else:
-        b = mix(sweep(500, 820, 0.14, "tri") * env(0.14, 0.01, 0.1), at(tone(560, 0.1, "tri") * env(0.1, 0.005, 0.06), 0.2, d))
-    hum = low(sweep(110, 112, d, "saw"), 300) * np.sin(np.pi * t_of(d) / d) * 0.25
-    return fade(norm(mix(pad(b, d) * 0.7, hum), 0.5))
+    d = 0.6
+    notes = [(523.25, 659.25), (587.33, 783.99)][v]  # C5-E5 / D5-G5: a soft, friendly "boop-bip"
+    one = tone(notes[0], 0.16) * env(0.16, 0.012, 0.07)
+    two = tone(notes[1], 0.2) * env(0.2, 0.012, 0.09)
+    x = mix(at(one, 0, d), at(two, 0.15, d))
+    return fade(norm(soft(x, 2500), 0.28), 0.01, 0.1)
 
 
 def part_fit():
     d = 0.5
-    x = mix(thump(80, d, 0.06), metal(950, d, 0.08) * 0.4)
-    for i in range(5):
-        x = mix(x, at(band(noise(0.012), 2000, 6000) * 0.5, 0.15 + i * 0.045, d))
-    return fade(norm(x))
+    x = mix(thump(80, d, 0.06), metal(700, d, 0.07, amps=(1, 0.3, 0.1, 0.03)) * 0.3)
+    for i in range(3):
+        x = mix(x, at(low(noise(0.012), 2500) * 0.3, 0.15 + i * 0.05, d))
+    return fade(norm(soft(x, 2500), 0.55))
 
 
 def power_low():
-    d = 0.5
-    x = mix(tone(880, 0.13, "square") * env(0.13, 0.005, 0.1), at(tone(587, 0.2, "square") * env(0.2, 0.005, 0.15), 0.17, d))
-    return fade(norm(low(x, 3000), 0.45))
+    d = 0.6
+    x = mix(tone(659.25, 0.16) * env(0.16, 0.01, 0.08), at(tone(440, 0.26) * env(0.26, 0.01, 0.14), 0.18, d))
+    return fade(norm(soft(x, 2200), 0.3), 0.01, 0.1)
 
 
 def garage_laser():
@@ -323,7 +321,11 @@ def generate(assets, lang):
         for name, fn in files:
             write_ogg(fn(), os.path.join(sdir, name + ".ogg"))
             names.append("%s:%s" % (MODID, name))
-        entry = {"sounds": names}
+        if event.startswith("golem."):
+            # Golem sounds fade out sooner than vanilla's 16 blocks, so a busy base isn't a wall of noise.
+            entry = {"sounds": [{"name": n, "attenuation_distance": 12} for n in names]}
+        else:
+            entry = {"sounds": names}
         if subtitle:
             key = "subtitles.%s.%s" % (MODID, event)
             entry["subtitle"] = key
