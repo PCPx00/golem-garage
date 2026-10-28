@@ -1,0 +1,98 @@
+# Changelog
+
+Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
+
+## 0.8.0
+
+### Added
+- **Commands:** `/golemgarage` (or `/gg`). Pick a golem by its name, its number in the list, or `all`.
+  - For everyone: `list` (where your golems are, their health, power and what they're doing), `find` (distance
+    and direction; the golem glows for 10 seconds), `recall` (brings a golem to you, even from unloaded areas
+    or another dimension), `rename`, `stop` and `resume`.
+  - For operators: `give` (ready-built golems by material and preset, cubs by color), `repair`, `owner` (hand
+    golems to another player), `count`, `purge` (remove a player's golems, even unloaded ones) and `debug`.
+- **Golem Dock:** a craftable charging pad. Link it with the Golem Linker's new Home mode and use the new
+  "rest at its dock" job: the golem walks home, slowly recharges and heals, and the pad lights up.
+- **Groups:** the Linker's new Group mode. Shift + scroll picks a group from 1 to 9, and right-clicking golems
+  adds them. "Copy to group" in the Rules tab gives every golem in the group the same rules. The group shows
+  in the golem's panel, in Jade and in `/golemgarage list`.
+- **Custom materials from datapacks:** a small file adds a new golem material with its own tint, stats and
+  traits. Every part can be crafted from it and the Garage repairs it. An example pack is included.
+- **Item tags** for parts (and each part slot), modules, outfits (and each style), golems, cubs, Garage blocks
+  and tools, for modpack recipes and quests.
+- **New settings:**
+  - Most golems per chunk.
+  - Golems pause their jobs while their owner is offline or far away.
+  - Whether golems fight players: never, only with PvP on, or always. They never fight their owner.
+  - Golem kills can drop XP and player-only loot as if the owner got the kill.
+  - How long dropped golems and cubs last on the ground (forever by default).
+  - Turn off individual jobs, modules or part shapes.
+  - Block materials, or change health, durability, speed, power, work speed and damage per material.
+  - Cub magnet range and most cubs per player.
+  - Turn the player commands on or off, and set the recall cooldown.
+
+### Changed
+- Farms run faster: golems look for crops, chests and redstone blocks less often, which cut server time by
+  about a fifth in a test with 60 golems.
+- The manual has new pages for commands, the dock, groups, modpack support and every new setting.
+
+## 0.7.0
+
+### Changed
+- **Renamed to Golem Garage** (it was Modular Golems). Golems and items from older worlds don't carry over.
+
+### Added
+- **Cub outfits:** 24 craftable pieces in four styles (cool, goth, cute and fancy) for the head, body and
+  accessory slots. Right-click a cub with a piece or use its new wardrobe screen. Three pieces of one style make
+  a matching set with its own sparkles.
+- **Upgrade modules:** Magnet, Lamp, Speed, Storage, Plating, Regeneration and Self-Repair, with two sockets per
+  golem. Take them out from the golem's panel.
+- **Work areas:** mark two corners with the Linker and golems stay inside them. New "outside its area" rule and
+  "patrol its area" job.
+- **Teamwork:** the "give to a golem" job passes items to another of your golems.
+- **Modded storage:** chest jobs and Garage payments work with any storage block, including drawers, crates and
+  storage-system interfaces.
+- **Paint:** right-click a golem with a dye; a water bucket washes it off.
+- **Animations:** idle fidgets, a reach when working, and a slump before breaking down.
+- **Status icons** over golems that are stopped, stuck, out of power, low on power or have a broken part.
+- **Sounds** with subtitles: footsteps by leg type, work, hurt, attack, breakdown, the Garage, and cubs.
+- **Advancements:** a Golem Garage tab with 19 goals.
+- **Settings files** for servers and players.
+- **JEI and Jade support** (both optional): Garage Repair recipes, info pages, and golem and cub details.
+- Holding a Linker shows every golem's links and areas as outlines.
+- Everything on screen can now be translated.
+
+### Fixed
+- In multiplayer, other players could paint, link and fit parts on your golems. Now only the owner can, unless
+  the server allows it.
+
+## 0.6.0
+
+### Added
+- **Pick-up hotkey:** press G while looking at a golem or cub to pick it up (rebindable in Controls).
+- **Garage build plan:** holding a Garage Controller shows a see-through plan of the room and a checklist of
+  what's left. Sneak + scroll picks the room size.
+
+### Changed
+- **Friendlier Rules tab:** each rule reads like a sentence. Click a part to pick from a described list, move
+  or delete rules, add new ones in two steps, load Quick jobs, and undo changes.
+- **New item art:** every part, golem and cub icon is a small 3D render of the real model.
+- Picking up a golem or cub only works on your own, or on ones nobody owns.
+
+## 0.5.0
+
+### Added
+- **Golem Engineer's Manual:** a craftable in-game guide book, given to every player on their first join. It
+  covers every part, material, job and block, with 3D golem previews, crafting grids and a search box.
+
+## 0.4.0
+
+### Added
+- Parts look like what they're made of: 22 part shapes in 37 materials, each with its own look.
+- Shapes change the body: spider legs, wheels, treads, scythes, claws, hammers, lanterns, furnaces and more.
+- Per-part wear with cracks, copper aging (wax it with honeycomb), and vines.
+- Rules: up to 8 "when / do / unless" rules per golem, with 6 ready-made jobs.
+- The Golem Linker, harvesting and replanting, smelting, recharging, self-repair, walking to the Garage, and
+  the Golem Signal Plate.
+- Cubs: 16 colors, an item magnet, 9 slots, and they grow into a golem after three parts.
+- Extra materials from All The Ores, Allthemodium and Silent Gear when those mods are installed.
