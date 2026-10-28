@@ -1,0 +1,27 @@
+{
+  "replace": false,
+  "values": [
+    "golemgarage:sentry_head",
+    "golemgarage:scope_head",
+    "golemgarage:lantern_head",
+    "golemgarage:visor_head",
+    "golemgarage:plated_chest",
+    "golemgarage:cargo_barrel",
+    "golemgarage:sealed_hold",
+    "golemgarage:furnace_chest",
+    "golemgarage:golem_fists",
+    "golemgarage:grabber_claws",
+    "golemgarage:hammer_arms",
+    "golemgarage:scythe_arms",
+    "golemgarage:stub_legs",
+    "golemgarage:strider_legs",
+    "golemgarage:tread_legs",
+    "golemgarage:wheel_legs",
+    "golemgarage:spider_legs",
+    "golemgarage:redstone_core",
+    "golemgarage:furnace_core",
+    "golemgarage:lightning_core",
+    "golemgarage:solar_core",
+    "golemgarage:soul_core"
+  ]
+}

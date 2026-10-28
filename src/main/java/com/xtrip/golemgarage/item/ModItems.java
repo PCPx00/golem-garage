@@ -23,6 +23,8 @@ public final class ModItems {
             ITEMS.registerSimpleBlockItem("steel_emitter", ModBlocks.STEEL_EMITTER);
     public static final DeferredItem<BlockItem> SIGNAL_PLATE =
             ITEMS.registerSimpleBlockItem("signal_plate", ModBlocks.SIGNAL_PLATE);
+    public static final DeferredItem<BlockItem> GOLEM_DOCK =
+            ITEMS.registerSimpleBlockItem("golem_dock", ModBlocks.GOLEM_DOCK);
 
     public static final DeferredItem<GolemItem> GOLEM = ITEMS.registerItem("golem", GolemItem::new);
     public static final DeferredItem<CubItem> CUB = ITEMS.registerItem("cub", CubItem::new);

@@ -30,6 +30,12 @@ public final class ModBlocks {
             () -> new SignalPlateBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
                     .strength(0.5f).sound(SoundType.METAL).noCollission().noOcclusion()));
 
+    public static final DeferredBlock<GolemDockBlock> GOLEM_DOCK = BLOCKS.register(
+            "golem_dock",
+            () -> new GolemDockBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(2.0f, 6.0f).sound(SoundType.METAL).noOcclusion()
+                    .lightLevel(s -> s.getValue(GolemDockBlock.OCCUPIED) ? 9 : 3)));
+
     private ModBlocks() {
     }
 }

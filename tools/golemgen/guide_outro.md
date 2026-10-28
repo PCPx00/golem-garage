@@ -150,6 +150,7 @@ and is highlighted in green. If none apply, the golem follows you.
 | emit redstone | powers a Golem Signal Plate it stands on |
 | give to a golem | hands its items to the nearest of your golems with room (within 12 blocks) |
 | patrol its area | walks between random spots inside its work area |
+| rest at its dock | walks onto its Golem Dock and rests there, slowly recharging and healing |
 
 ### Presets
 
@@ -173,7 +174,8 @@ a log of its last ten activities. Repeated work has a short pause built in, shor
 
 The Linker (`··A / ·S· / S··`, A = amethyst shard, S = stick) tells golems where things are.
 
-1. **Shift + right-click the air** to choose a mode: Post, Chest A, Chest B, Garage, Area corner 1 or Area corner 2.
+1. **Shift + right-click the air** to choose a mode: Post, Chest A, Chest B, Garage, Area corner 1, Area corner 2,
+   Home or Group.
 2. **Right-click a block** to mark it. Any block that stores items works for Chest A and Chest B; Garage needs a
    Garage Controller; Post and the area corners mark the spot you click.
 3. **Right-click a golem** to give it every mark on the Linker. Shift + right-click a golem with the Linker clears
@@ -181,6 +183,15 @@ The Linker (`··A / ·S· / S··`, A = amethyst shard, S = stick) tells golems
 
 The panel also has "Post here" and "Clear links" buttons. While you hold a Linker, every golem's links and work
 areas show as colored outlines, along with the marks the Linker is holding.
+
+## Golem Dock and groups
+
+- **Golem Dock** (`CRC / III`, C = copper ingot, R = redstone block, I = iron ingot): a charging pad that gives a golem
+  a home. Link it with the Linker in Home mode and give the golem a "rest at its dock" rule (for example "night: rest
+  at its dock"). On the dock it slowly recharges and heals, and the pad lights up.
+- **Groups:** put the Linker in Group mode, shift + scroll to pick a group from 1 to 9, and right-click golems to add
+  them (shift + right-click takes one out). In a grouped golem's Rules tab, "Copy to group" saves its rules and gives a
+  copy to every one of your golems in that group.
 
 ## Work areas, teamwork and storage
 
@@ -273,6 +284,25 @@ Golems and cubs belong to the player who placed them. Other players can't open, 
 unless the server allows it (`othersCanEdit`, `othersCanPickUp`); operators can always edit. The server can also cap
 how many golems each player has out.
 
+## Commands
+
+`/golemgarage` (or `/gg`). Name a golem by its name, its number in the list, or `all`.
+
+| Command | Who | What it does |
+|---|---|---|
+| list | everyone | your golems: where they are, health, power and what they're doing |
+| find &lt;golem&gt; | everyone | where it is, how far and which way; loaded golems glow for 10 seconds |
+| recall &lt;golem&gt; | everyone | brings it to you, even from unloaded areas or another dimension (60 s cooldown) |
+| rename &lt;golem&gt; &lt;name&gt; | everyone | renames it |
+| stop / resume &lt;golem&gt; | everyone | pauses its jobs / starts them again |
+| give &lt;players&gt; golem &lt;material&gt; [preset] | operators | a ready-built golem; presets: standard, guard, hauler, harvester, medic, night_guard |
+| give &lt;players&gt; cub [color] | operators | a cub in any dye color |
+| repair &lt;golems&gt; | operators | full repair, health and power |
+| owner &lt;golems&gt; &lt;player&gt; | operators | hands golems to another player |
+| count | operators | golems on the server, by owner |
+| purge &lt;player&gt; | operators | removes all of a player's golems, even unloaded ones |
+| debug &lt;golem&gt; | operators | parts, links, rules and recent activity |
+
 ## Settings
 
 `golemgarage-server.toml` (per world, in `serverconfig`):
@@ -286,13 +316,37 @@ how many golems each player has out.
 | copperAging | true | copper parts oxidize |
 | powerDrainMultiplier | 1.0 | how fast golems use power (0 = never run out) |
 | maxGolemsPerPlayer | 0 | golems one player can have out (0 = no limit) |
+| maxGolemsPerChunk | 0 | golems allowed in one chunk (0 = no limit) |
+| workRangeFromOwner | 0 | jobs pause while the owner is offline or further away than this (0 = always work) |
 | othersCanPickUp | false | other players may pick up your golems and cubs |
 | othersCanEdit | false | other players may open, edit and link your golems |
+| playerDamage | PVP | whether golems fight players: NEVER, PVP (only when PvP is on) or ALWAYS; never their owner |
+| killsCountAsOwner | false | monsters killed by a golem drop XP and player-only loot as if the owner killed them |
 | harvestNeedsMobGriefing | false | harvesting follows the mobGriefing game rule |
+| itemDespawnMinutes | 0 | minutes a dropped golem or cub item lasts (0 = forever) |
+| disabledActions | [] | jobs golems can't use, such as `harvest_crops` |
+| disabledModules | [] | modules that can't be installed (installed ones stop working) |
+| disabledShapes | [] | part shapes that can't be fitted |
+| blockedMaterials | [] | materials whose parts can't be fitted |
+| materialStats | [] | per-material multipliers, e.g. `"diamond;durability=2;speed=0.9"` (health, durability, speed, power, work, damage) |
+| magnetRange | 3 | how far a cub's item magnet reaches (0 = off) |
+| maxCubsPerPlayer | 0 | cubs one player can have out (0 = no limit) |
 | giveManualOnJoin | true | new players get the manual |
+| playerCommands | true | players can use the /golemgarage player commands |
+| recallCooldownSeconds | 60 | wait between recalls (operators skip it) |
 
 `golemgarage-client.toml`: `showGaragePlan` (the Garage build plan) and `showStatusIcons` (icons over golems that are
 stopped, stuck, out of power or have a broken part).
+
+## For modpack makers
+
+- **Datapack materials:** a file at `data/<pack>/golem_material/<id>.json` adds a golem material: an item tag, a tier,
+  a built-in material to borrow the look from, a tint color, and optional stat multipliers and traits. Every part shape
+  can then be crafted from it with the usual patterns, and the Garage repairs it with the same item. See
+  `docs/examples/mythril_pack` for a working example.
+- **Item tags:** `golemgarage:golem_parts` (and `golem_parts/head`, `torso`, `arms`, `legs`, `core`), `modules`,
+  `outfits` (and `outfits/cool`, `goth`, `cute`, `fancy`), `golems`, `cubs`, `garage_blocks` and `tools`.
+- **Quest rewards:** `/golemgarage give <player> golem <material> <preset>` hands out a ready-built golem.
 
 ## Sounds, advancements and helper mods
 

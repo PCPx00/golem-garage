@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "scythe_arms",
+  "pattern": [
+    "MMM",
+    " RM",
+    "  M"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  }
+}

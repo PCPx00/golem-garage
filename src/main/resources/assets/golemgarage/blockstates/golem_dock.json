@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "occupied=false": {
+      "model": "golemgarage:block/golem_dock"
+    },
+    "occupied=true": {
+      "model": "golemgarage:block/golem_dock_on"
+    }
+  }
+}

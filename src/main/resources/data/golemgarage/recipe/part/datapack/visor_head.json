@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "visor_head",
+  "pattern": [
+    "MMM",
+    "MGM",
+    " M "
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:glass_pane"
+    }
+  }
+}

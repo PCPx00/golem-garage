@@ -60,7 +60,7 @@ public final class LinkOverlay {
                         Math.max(a1.getY(), a2.getY()) + 1, Math.max(a1.getZ(), a2.getZ()) + 1);
                 box(pose, lines, area, 0xD98CFF, 0.9f);
             }
-            for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.values()) {
+            for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.MARKS) {
                 BlockPos p = g.readSyncedLink(m);
                 if (p == null || m == GolemLinkerItem.Mode.AREA_1 || m == GolemLinkerItem.Mode.AREA_2) {
                     continue;
@@ -72,7 +72,7 @@ public final class LinkOverlay {
             }
         }
         // The Linker's own marks, pulsing.
-        for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.values()) {
+        for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.MARKS) {
             BlockPos p = GolemLinkerItem.mark(held, m);
             if (p != null) {
                 box(pose, lines, new AABB(p).inflate(0.06 + 0.04 * pulse), m.color, pulse);

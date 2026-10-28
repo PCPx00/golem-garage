@@ -39,6 +39,26 @@ public final class ModKeys {
 
     @EventBusSubscriber(modid = GolemGarage.MOD_ID, value = Dist.CLIENT)
     public static final class Handler {
+        /** Shift + scroll with a Golem Linker in Group mode picks the group number instead of the hotbar slot. */
+        @SubscribeEvent
+        public static void onScroll(net.neoforged.neoforge.client.event.InputEvent.MouseScrollingEvent event) {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.player == null || mc.screen != null || !mc.player.isShiftKeyDown() || event.getScrollDeltaY() == 0) {
+                return;
+            }
+            for (var hand : net.minecraft.world.InteractionHand.values()) {
+                var stack = mc.player.getItemInHand(hand);
+                if (stack.getItem() instanceof com.xtrip.golemgarage.item.GolemLinkerItem
+                        && com.xtrip.golemgarage.item.GolemLinkerItem.mode(stack)
+                        == com.xtrip.golemgarage.item.GolemLinkerItem.Mode.GROUP) {
+                    PacketDistributor.sendToServer(new com.xtrip.golemgarage.network.LinkerScrollPayload(
+                            hand == net.minecraft.world.InteractionHand.OFF_HAND, event.getScrollDeltaY() > 0 ? 1 : -1));
+                    event.setCanceled(true);
+                    return;
+                }
+            }
+        }
+
         @SubscribeEvent
         public static void onTick(ClientTickEvent.Post event) {
             Minecraft mc = Minecraft.getInstance();

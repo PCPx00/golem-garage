@@ -51,6 +51,17 @@ public final class ClientSetup {
         event.registerSpriteSet(ModParticles.SLEEP_Z.get(), SleepParticle.Provider::new);
     }
 
+    /** Parts and golems made of a datapack material show the borrowed icon in that material's tint. */
+    @SubscribeEvent
+    public static void itemColors(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Item event) {
+        for (DeferredItem<PartItem> part : ModItems.PARTS.values()) {
+            event.register((stack, layer) -> layer == 0 ? GolemMaterials.tintOf(
+                    stack.getOrDefault(ModDataComponents.MATERIAL.get(), "iron")) : 0xFFFFFFFF, part.get());
+        }
+        event.register((stack, layer) -> layer == 0 ? GolemMaterials.tintOf(GolemItem.iconMaterial(stack)) : 0xFFFFFFFF,
+                ModItems.GOLEM.get());
+    }
+
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {

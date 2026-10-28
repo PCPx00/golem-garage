@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "cargo_barrel",
+  "pattern": [
+    "MMM",
+    "MBM",
+    "MMM"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:barrel"
+    }
+  }
+}

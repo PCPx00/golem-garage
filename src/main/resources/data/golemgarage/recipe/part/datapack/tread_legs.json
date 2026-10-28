@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "tread_legs",
+  "pattern": [
+    "MMM",
+    "D D",
+    "MMM"
+  ],
+  "key": {
+    "D": {
+      "item": "minecraft:dried_kelp_block"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "golemgarage:module_magnet",
+    "golemgarage:module_lamp",
+    "golemgarage:module_speed",
+    "golemgarage:module_storage",
+    "golemgarage:module_plating",
+    "golemgarage:module_regen",
+    "golemgarage:module_self_repair"
+  ]
+}

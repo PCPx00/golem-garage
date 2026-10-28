@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "plated_chest",
+  "pattern": [
+    "M M",
+    "MRM",
+    "MMM"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  }
+}

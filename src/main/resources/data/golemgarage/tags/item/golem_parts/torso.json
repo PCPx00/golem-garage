@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "golemgarage:plated_chest",
+    "golemgarage:cargo_barrel",
+    "golemgarage:sealed_hold",
+    "golemgarage:furnace_chest"
+  ]
+}

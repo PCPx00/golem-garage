@@ -51,4 +51,9 @@ public enum GolemModule {
             case SELF_REPAIR -> s.selfRepair = true;
         }
     }
+
+    /** True if the server has turned this module off (disabledModules). */
+    public boolean isDisabled() {
+        return com.xtrip.golemgarage.Config.listed(com.xtrip.golemgarage.Config.DISABLED_MODULES, id);
+    }
 }

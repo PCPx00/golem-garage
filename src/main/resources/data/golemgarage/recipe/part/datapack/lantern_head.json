@@ -1,0 +1,17 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "lantern_head",
+  "pattern": [
+    " L ",
+    "MMM",
+    "MRM"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lantern"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  }
+}

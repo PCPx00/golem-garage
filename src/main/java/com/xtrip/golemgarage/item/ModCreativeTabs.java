@@ -54,6 +54,7 @@ public final class ModCreativeTabs {
                         out.accept(ModItems.LASER_EMITTER.get());
                         out.accept(ModItems.STEEL_EMITTER.get());
                         out.accept(ModItems.SIGNAL_PLATE.get());
+                        out.accept(ModItems.GOLEM_DOCK.get());
                         out.accept(ModItems.MODULE_CASING.get());
                         ModItems.MODULES.values().forEach(m -> out.accept(m.get()));
                         ModItems.OUTFITS.values().forEach(o -> out.accept(o.get()));

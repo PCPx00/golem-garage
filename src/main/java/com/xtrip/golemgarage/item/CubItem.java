@@ -60,6 +60,20 @@ public class CubItem extends Item {
         if (cub.getOwnerUuid() == null && player != null) {
             cub.setOwnerUuid(player.getUUID());
         }
+        int maxCubs = com.xtrip.golemgarage.Config.get(com.xtrip.golemgarage.Config.MAX_CUBS_PER_PLAYER::get, 0);
+        if (maxCubs > 0 && cub.getOwnerUuid() != null && level instanceof net.minecraft.server.level.ServerLevel sl) {
+            int count = 0;
+            for (net.minecraft.server.level.ServerLevel l : sl.getServer().getAllLevels()) {
+                count += l.getEntities(ModEntities.CUB.get(), c -> cub.getOwnerUuid().equals(c.getOwnerUuid())).size();
+            }
+            if (count >= maxCubs) {
+                if (player != null) {
+                    player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                            "golemgarage.msg.cub_limit", count, maxCubs).withStyle(net.minecraft.ChatFormatting.RED), true);
+                }
+                return InteractionResult.FAIL;
+            }
+        }
         Vec3 pos = Vec3.atBottomCenterOf(context.getClickedPos().relative(context.getClickedFace()));
         cub.moveTo(pos.x, pos.y, pos.z, player != null ? player.getYRot() + 180f : 0f, 0f);
         level.addFreshEntity(cub);
@@ -80,5 +94,12 @@ public class CubItem extends Item {
                 tooltip.add(Component.translatable("tooltip.golemgarage.carrying", count).withStyle(ChatFormatting.GRAY));
             }
         }
+    }
+
+    /** Dropped golems and cubs don't despawn unless the server sets itemDespawnMinutes. */
+    @Override
+    public int getEntityLifespan(ItemStack stack, net.minecraft.world.level.Level level) {
+        int minutes = com.xtrip.golemgarage.Config.get(com.xtrip.golemgarage.Config.ITEM_DESPAWN_MINUTES::get, 0);
+        return minutes <= 0 ? Integer.MAX_VALUE : minutes * 60 * 20;
     }
 }

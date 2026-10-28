@@ -666,6 +666,7 @@ def behaviors_chapter():
         ("emit redstone", "Powers a Golem Signal Plate it stands on."),
         ("give to a golem", "Hands its items to the nearest of your golems with room, within 12 blocks."),
         ("patrol its area", "Walks between random spots inside its work area."),
+        ("rest at its dock", "Walks onto its Golem Dock and rests, slowly recharging and healing."),
     ]
 
     def preset(eid, name, icon, rules, desc, setup, golem_snbt):
@@ -781,6 +782,15 @@ def behaviors_chapter():
             text("The harvester never leaves the field; the hauler with the Cargo Barrel does the walking to "
                  "storage.\n\n" + TIP("give the hauler a Storage Module for 9 more stacks."), "Why It Works"),
         ]),
+        entry("groups", "Groups", MODID + ":golem_linker", [
+            text("Put golems in numbered " + B("groups") + " to set them up together.\n\n" + B("1.") + " Shift + "
+                 "right-click the air with the Linker until it says Group.\n" + B("2.") + " Shift + scroll to pick a "
+                 "group, 1 to 9.\n" + B("3.") + " Right-click golems to add them; shift + right-click takes one out.",
+                 "Making a Group"),
+            text("In a grouped golem's Rules tab, " + B("Copy to group") + " saves its rules and gives a copy to every "
+                 "one of your golems in that group. Teach one harvester, and the whole crew knows the job.\n\n"
+                 "The group number shows in the panel, in Jade and in /golemgarage list.", "Sharing Rules"),
+        ]),
         entry("any_storage", "Any Storage", "minecraft:barrel", [
             text("Chest actions work with " + B("any block that stores items") + ": chests, barrels, shulker "
                  "boxes, hoppers, and storage from other mods such as drawers, crates, Create vaults and "
@@ -807,7 +817,7 @@ def tools_chapter():
         entry("linker", "Golem Linker", MODID + ":golem_linker", [
             craft(MODID + ":golem_linker", "An amethyst shard on two sticks.", "Golem Linker"),
             text("The Linker tells golems where things are.\n\n" + B("1.") + " Shift + right-click the air to "
-                 "choose a mode: Post, Chest A, Chest B, Garage, Area corner 1 or Area corner 2.\n" + B("2.") +
+                 "choose a mode: Post, Chest A, Chest B, Garage, Area corners, Home or Group.\n" + B("2.") +
                  " Right-click a block to mark it. Any storage block works for A and B; Garage needs a Garage "
                  "Controller; Post and area corners mark the spot you click.\n" + B("3.") + " Right-click a golem "
                  "to give it every mark.\n\nWhile you hold it, links and areas show as outlines.", "Using It"),
@@ -822,6 +832,12 @@ def tools_chapter():
                  "Use it to let golems open doors, ring bells, start machines, or tell your redstone that a "
                  "job is done.\n\n" + TIP("put the plate at the golem's post and use \"go to post\" then \"emit "
                  "redstone\" rules to signal on a schedule."), "Golems and Redstone"),
+        ]),
+        entry("dock", "Golem Dock", MODID + ":golem_dock", [
+            craft(MODID + ":golem_dock", "Copper, a redstone block and iron.", "Golem Dock"),
+            text("A charging pad that gives a golem a home. Link it with the Linker in " + B("Home") + " mode, then "
+                 "give the golem a " + B("rest at its dock") + " rule, for example \"night: rest at its dock\".\n\n"
+                 "While it stands on the dock it slowly recharges and heals, and the pad lights up.", "Home Sweet Home"),
         ]),
         entry("paint", "Paint", "minecraft:red_dye", [
             text("Right-click a golem with any " + B("dye") + " to paint its trim: the bands, plates and "
@@ -912,7 +928,7 @@ def modules_chapter():
 
 def settings_chapter():
     return category("settings", "Settings and Mods", "minecraft:comparator",
-                    "Server settings, client settings, and support for JEI and Jade.", [
+                    "Server settings, commands, modpack support, and JEI and Jade.", [
         entry("server_settings", "Server Settings", "minecraft:command_block", [
             text("Server owners can change these in " + B("golemgarage-server.toml") + " (in the world's "
                  "serverconfig folder, or the game's config folder for defaults).", "The Settings File"),
@@ -924,12 +940,63 @@ def settings_chapter():
                 ("copperAging", "Copper parts oxidize (on)."),
                 ("powerDrainMultiplier", "How fast golems use power (1; 0 never runs out)."),
                 ("maxGolemsPerPlayer", "Golems one player can have out (0 = no limit)."),
+                ("maxGolemsPerChunk", "Golems allowed in one chunk (0 = no limit)."),
+                ("workRangeFromOwner", "Jobs pause while the owner is offline or further than this (0 = off)."),
                 ("othersCanPickUp", "Others may pick up your golems and cubs (off)."),
                 ("othersCanEdit", "Others may open, edit and link your golems (off)."),
+                ("playerDamage", "Whether golems fight players: NEVER, PVP (default) or ALWAYS."),
+                ("killsCountAsOwner", "Golem kills drop XP and player loot as if the owner killed them (off)."),
                 ("harvestNeedsMobGriefing", "Harvesting follows the mobGriefing rule (off)."),
+                ("itemDespawnMinutes", "Minutes a dropped golem or cub item lasts (0 = forever)."),
+            ], "Golems and Players"),
+            table([
+                ("disabledActions", "Jobs golems can't use, such as harvest_crops."),
+                ("disabledModules", "Modules that can't be installed (or do nothing)."),
+                ("disabledShapes", "Part shapes that can't be fitted."),
+                ("blockedMaterials", "Materials whose parts can't be fitted."),
+                ("materialStats", "Per-material multipliers: \"diamond;durability=2;speed=0.9\". Stats: health, "
+                                  "durability, speed, power, work, damage."),
+            ], "Features and Balance"),
+            table([
+                ("magnetRange", "How far a cub's item magnet reaches (3; 0 = off)."),
+                ("maxCubsPerPlayer", "Cubs one player can have out (0 = no limit)."),
                 ("giveManualOnJoin", "New players get this book (on)."),
-            ], "Options"),
-            text("Operators can always edit any golem.", "Operators"),
+                ("playerCommands", "Players can use the /golemgarage player commands (on)."),
+                ("recallCooldownSeconds", "Wait between recalls (60)."),
+            ], "Cubs and Commands"),
+            text("Operators can always edit any golem, and skip the recall wait.", "Operators"),
+        ]),
+        entry("commands", "Commands", "minecraft:command_block", [
+            text(B("/golemgarage") + " (or " + B("/gg") + ") looks after your golems from anywhere. Name a golem by its "
+                 "name, its number in the list, or " + B("all") + ".", "Commands"),
+            table([
+                ("list", "Your golems: where they are, health, power and what they're doing. Click the "
+                         "coordinates to copy them."),
+                ("find <golem>", "Where it is, how far and which way. Loaded golems glow for 10 seconds."),
+                ("recall <golem>", "Brings it to you, even from unloaded areas or another dimension."),
+                ("rename <golem> <name>", "Gives it a new name."),
+                ("stop / resume <golem>", "Pauses its jobs, and starts them again."),
+            ], "For Everyone"),
+            table([
+                ("give <players> golem <material> [preset]", "A ready-built golem. Presets: standard, guard, "
+                                                              "hauler, harvester, medic, night_guard."),
+                ("give <players> cub [color]", "A cub in any dye color."),
+                ("repair <golems>", "Fully repairs, heals and charges them."),
+                ("owner <golems> <player>", "Hands golems to another player."),
+                ("count", "How many golems the server has, by owner."),
+                ("purge <player>", "Removes all of a player's golems, even unloaded ones."),
+                ("debug <golem>", "Its parts, links, rules and recent activity."),
+            ], "For Operators"),
+        ]),
+        entry("pack_makers", "For Modpacks", "minecraft:writable_book", [
+            text(B("Datapack materials") + ": add a file at data/<pack>/golem_material/<id>.json with an item tag, "
+                 "a tier, a built-in material to borrow the look from, a tint color, optional stat multipliers and "
+                 "traits. Every part shape can then be crafted from it with the usual patterns, and the Garage "
+                 "repairs it with the same item.", "New Materials"),
+            text(B("Item tags") + ": golemgarage:golem_parts (and golem_parts/head, torso, arms, legs, core), "
+                 "modules, outfits (and outfits/cool, goth, cute, fancy), golems, cubs, garage_blocks and tools. "
+                 "Use them in recipes, quests and filters.\n\nThe " + B("/golemgarage give") + " presets make "
+                 "good quest rewards.", "Tags and Rewards"),
         ]),
         entry("client_settings", "Client Settings", "minecraft:spyglass", [
             table([
@@ -1013,7 +1080,8 @@ def build_index():
         MODID + ":repair_kit": "repairing", MODID + ":garage_controller": "garage_intro",
         MODID + ":laser_emitter": "garage_blocks", MODID + ":steel_emitter": "garage_blocks",
         MODID + ":golem_linker": "linker", MODID + ":signal_plate": "signal_plate", MODID + ":blueprint": "blueprints",
-        MODID + ":steel_ingot": "mat_steel", MODID + ":module_casing": "modules_intro", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
+        MODID + ":steel_ingot": "mat_steel", MODID + ":module_casing": "modules_intro",
+        MODID + ":golem_dock": "dock", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
         "minecraft:redstone_block": "power_basics",
     }
     for sh in S.SHAPES:

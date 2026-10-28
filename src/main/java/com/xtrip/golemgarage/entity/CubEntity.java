@@ -302,8 +302,9 @@ public class CubEntity extends PathfinderMob {
         setFlag(FLAG_EXCITED, excitedTicks > 0);
 
         // Item magnet.
-        if (magnet && tickCount % 10 == 0) {
-            for (ItemEntity item : level().getEntitiesOfClass(ItemEntity.class, getBoundingBox().inflate(3),
+        int magnetRange = com.xtrip.golemgarage.Config.get(com.xtrip.golemgarage.Config.CUB_MAGNET_RANGE::get, 3);
+        if (magnet && magnetRange > 0 && tickCount % 10 == 0) {
+            for (ItemEntity item : level().getEntitiesOfClass(ItemEntity.class, getBoundingBox().inflate(magnetRange),
                     e -> e.isAlive() && !e.hasPickUpDelay())) {
                 ItemStack rest = storage.addItem(item.getItem().copy());
                 if (rest.getCount() != item.getItem().getCount()) {
@@ -374,6 +375,10 @@ public class CubEntity extends PathfinderMob {
             return InteractionResult.SUCCESS;
         }
         PartInstance part = PartInstance.fromStack(held);
+        if (part != null && part.blockedReason() != null) {
+            player.displayClientMessage(part.blockedReason().copy().withStyle(ChatFormatting.RED), true);
+            return InteractionResult.SUCCESS;
+        }
         if (part != null) {
             feed(player, part);
             consume(player, held);
@@ -426,7 +431,7 @@ public class CubEntity extends PathfinderMob {
         if (!(level() instanceof ServerLevel sl)) {
             return;
         }
-        if (!GolemEntity.canPlaceAnother(sl, ownerUuid != null ? ownerUuid : player.getUUID(), player)) {
+        if (!GolemEntity.canPlaceAnother(sl, ownerUuid != null ? ownerUuid : player.getUUID(), player, blockPosition())) {
             return;
         }
         Entity created = ModEntities.GOLEM.get().create(sl);

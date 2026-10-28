@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "lightning_core",
+  "pattern": [
+    " M ",
+    "MLM",
+    " M "
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lightning_rod"
+    }
+  }
+}

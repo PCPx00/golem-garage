@@ -198,4 +198,18 @@ public final class PartInstance {
     public PartInstance copy() {
         return new PartInstance(shape, materialId, damage, oxidation, waxed);
     }
+
+    /**
+     * Why this part can't be fitted on this server (a disabled shape or blocked material), or null if it can.
+     */
+    @org.jetbrains.annotations.Nullable
+    public net.minecraft.network.chat.Component blockedReason() {
+        if (com.xtrip.golemgarage.Config.listed(com.xtrip.golemgarage.Config.DISABLED_SHAPES, shape().id())) {
+            return net.minecraft.network.chat.Component.translatable("golemgarage.msg.shape_off", shape().displayName());
+        }
+        if (material().isBlocked()) {
+            return net.minecraft.network.chat.Component.translatable("golemgarage.msg.material_off", material().displayName());
+        }
+        return null;
+    }
 }

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "golemgarage:sentry_head",
+    "golemgarage:scope_head",
+    "golemgarage:lantern_head",
+    "golemgarage:visor_head"
+  ]
+}

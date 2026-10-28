@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "scope_head",
+  "pattern": [
+    "MMM",
+    "MSM",
+    " M "
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:spyglass"
+    }
+  }
+}

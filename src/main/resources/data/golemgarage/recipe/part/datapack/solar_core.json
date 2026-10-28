@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "solar_core",
+  "pattern": [
+    " M ",
+    "MDM",
+    " M "
+  ],
+  "key": {
+    "D": {
+      "item": "minecraft:daylight_detector"
+    }
+  }
+}

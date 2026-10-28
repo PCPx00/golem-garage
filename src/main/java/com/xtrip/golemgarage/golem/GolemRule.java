@@ -89,7 +89,8 @@ public record GolemRule(Trigger trigger, int param, Action action, int actionPar
         GO_TO_GARAGE("go to Garage"),
         EMIT_SIGNAL("emit redstone"),
         GIVE_TO_GOLEM("give items to a golem"),
-        PATROL("patrol its area");
+        PATROL("patrol its area"),
+        GO_HOME("rest at its dock");
 
         public final String label;
         public final boolean hasParam;
@@ -113,6 +114,12 @@ public record GolemRule(Trigger trigger, int param, Action action, int actionPar
             this.step = step;
             this.defaultParam = def;
             this.hasParam = hasParam;
+        }
+
+        /** True if the server has turned this job off (disabledActions). */
+        public boolean isDisabled() {
+            return com.xtrip.golemgarage.Config.listed(com.xtrip.golemgarage.Config.DISABLED_ACTIONS,
+                    name().toLowerCase(java.util.Locale.ROOT));
         }
     }
 

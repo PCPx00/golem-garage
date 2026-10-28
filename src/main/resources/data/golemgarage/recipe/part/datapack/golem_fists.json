@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "golem_fists",
+  "pattern": [
+    "M M",
+    "M M",
+    "MRM"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  }
+}

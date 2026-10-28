@@ -29,6 +29,7 @@ public class GolemGarage {
         com.xtrip.golemgarage.menu.ModMenus.MENUS.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
         com.xtrip.golemgarage.advancement.ModTriggers.TRIGGERS.register(modEventBus);
+        com.xtrip.golemgarage.data.ModRecipes.SERIALIZERS.register(modEventBus);
         modEventBus.addListener(ModEntities::onAttributes);
         modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, Config.SERVER_SPEC);
         modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, Config.CLIENT_SPEC);

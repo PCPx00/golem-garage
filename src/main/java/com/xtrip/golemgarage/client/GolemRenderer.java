@@ -140,8 +140,11 @@ public class GolemRenderer extends MobRenderer<GolemEntity, GolemModel> {
                 PartInstance part = golem.getPart(slot);
                 String mat = part == null ? "frame" : part.visualMaterialId();
                 int color = part != null && part.isBroken() ? 0xFF8A8A8A : 0xFFFFFFFF;
+                // Datapack materials borrow a built-in texture and tint it.
+                color = FastColor.ARGB32.multiply(color, com.xtrip.golemgarage.golem.GolemMaterials.tintOf(mat));
                 model.showOnly(slot);
-                model.renderToBuffer(pose, buffers.getBuffer(RenderType.entityCutoutNoCull(tex(mat))), light, overlay, color);
+                model.renderToBuffer(pose, buffers.getBuffer(RenderType.entityCutoutNoCull(
+                        tex(com.xtrip.golemgarage.golem.GolemMaterials.lookOf(mat)))), light, overlay, color);
                 if (part != null) {
                     float cond = part.condition();
                     int level = part.isBroken() || cond < 0.25f ? 2 : cond < 0.5f ? 1 : cond < 0.75f ? 0 : -1;

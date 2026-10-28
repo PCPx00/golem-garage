@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "golemgarage:stub_legs",
+    "golemgarage:strider_legs",
+    "golemgarage:tread_legs",
+    "golemgarage:wheel_legs",
+    "golemgarage:spider_legs"
+  ]
+}

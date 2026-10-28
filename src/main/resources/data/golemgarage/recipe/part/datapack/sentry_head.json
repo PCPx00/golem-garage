@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "sentry_head",
+  "pattern": [
+    "MMM",
+    "MRM",
+    " M "
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  }
+}

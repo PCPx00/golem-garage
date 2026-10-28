@@ -97,7 +97,8 @@ public class PartItem extends Item {
                     stat("health", Component.literal("+" + Math.round(shape.health() * mat.healthMult()))),
                     stat("carries", Component.translatable("tooltip.golemgarage.stacks", Math.min(36, shape.carry() + (mat.tier() >= 5 ? 9 : 0)))));
             case ARMS -> List.of(
-                    stat("damage", Component.literal(String.format("%.1f", shape.attack() + mat.attackBonus()))),
+                    stat("damage", Component.literal(String.format("%.1f", (shape.attack() + mat.attackBonus())
+                            * com.xtrip.golemgarage.Config.materialStat(mat.id(), "damage")))),
                     stat("work", Component.literal(Math.round(shape.work() * (1 + 0.1f * mat.tier()) * mat.workMult() * 100) + "%")));
             case LEGS -> List.of(
                     stat("speed", Component.literal(Math.round(shape.speed() * mat.speedMult() * 100) + "%")),

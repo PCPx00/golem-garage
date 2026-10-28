@@ -539,6 +539,12 @@ def generate(java_dir, assets, data):
         })
         _write_json(os.path.join(assets, "models/item/outfit_%s.json" % o["id"]),
                     {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/outfit/%s" % (MODID, o["id"])}})
+    tags = os.path.join(data, MODID, "tags", "item")
+    _write_json(os.path.join(tags, "outfits.json"),
+                {"replace": False, "values": ["%s:outfit_%s" % (MODID, o["id"]) for o in OUTFITS]})
+    for theme in THEMES:
+        _write_json(os.path.join(tags, "outfits", theme + ".json"), {"replace": False, "values": [
+            "%s:outfit_%s" % (MODID, o["id"]) for o in OUTFITS if o["theme"] == theme]})
     print("outfits: %d pieces" % len(OUTFITS))
 
 

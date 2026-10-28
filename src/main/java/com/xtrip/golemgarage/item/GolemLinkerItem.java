@@ -29,7 +29,11 @@ import java.util.List;
 public class GolemLinkerItem extends Item {
     public enum Mode {
         POST("Post", 0x77DD77), CHEST_A("Chest A", 0x77AAFF), CHEST_B("Chest B", 0xFFAA55), GARAGE("Garage", 0xFF7777),
-        AREA_1("Area corner 1", 0xD98CFF), AREA_2("Area corner 2", 0xD98CFF);
+        AREA_1("Area corner 1", 0xD98CFF), AREA_2("Area corner 2", 0xD98CFF), HOME("Home dock", 0x7AF0D8),
+        GROUP("Group", 0xFFE27A);
+
+        /** The modes that mark a place (everything except Group). */
+        public static final Mode[] MARKS = {POST, CHEST_A, CHEST_B, GARAGE, AREA_1, AREA_2, HOME};
 
         public final String label;
         public final int color;
@@ -62,6 +66,19 @@ public class GolemLinkerItem extends Item {
         int i = data(stack).getInt("Mode");
         Mode[] all = Mode.values();
         return all[Math.floorMod(i, all.length)];
+    }
+
+    /** The group number (1-9) the Linker hands out in Group mode. */
+    public static int group(ItemStack stack) {
+        int g = data(stack).getInt("Group");
+        return g < 1 || g > 9 ? 1 : g;
+    }
+
+    /** Shift + scroll in Group mode: pick the next or previous group number. */
+    public static void scrollGroup(ItemStack stack, int dir) {
+        CompoundTag t = data(stack);
+        t.putInt("Group", Math.floorMod(group(stack) - 1 + dir, 9) + 1);
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(t));
     }
 
     public static BlockPos mark(ItemStack stack, Mode mode) {
@@ -100,6 +117,14 @@ public class GolemLinkerItem extends Item {
             message(player, Component.translatable("golemgarage.msg.linker_need_storage"), ChatFormatting.RED);
             return InteractionResult.FAIL;
         }
+        if (m == Mode.GROUP) {
+            message(player, Component.translatable("golemgarage.msg.linker_group_hint", group(stack)), ChatFormatting.YELLOW);
+            return InteractionResult.FAIL;
+        }
+        if (m == Mode.HOME && !(level.getBlockState(pos).getBlock() instanceof com.xtrip.golemgarage.block.GolemDockBlock)) {
+            message(player, Component.translatable("golemgarage.msg.linker_need_dock"), ChatFormatting.RED);
+            return InteractionResult.FAIL;
+        }
         if (m == Mode.GARAGE && !(level.getBlockState(pos).getBlock() instanceof GarageControllerBlock)) {
             message(player, Component.translatable("golemgarage.msg.linker_need_garage"), ChatFormatting.RED);
             return InteractionResult.FAIL;
@@ -117,8 +142,15 @@ public class GolemLinkerItem extends Item {
     /** Called by the golem when the player right-clicks it with the linker. */
     public static void applyTo(GolemEntity golem, ItemStack stack, Player player) {
         com.xtrip.golemgarage.advancement.ModTriggers.award(player, "linked");
+        if (mode(stack) == Mode.GROUP) {
+            int g = player.isShiftKeyDown() ? 0 : group(stack);
+            golem.setGroup(g);
+            message(player, g == 0 ? Component.translatable("golemgarage.msg.group_cleared")
+                    : Component.translatable("golemgarage.msg.group_set", g), ChatFormatting.YELLOW);
+            return;
+        }
         if (player.isShiftKeyDown()) {
-            for (Mode m : Mode.values()) {
+            for (Mode m : Mode.MARKS) {
                 golem.setLink(m, null);
             }
             message(player, Component.translatable("golemgarage.msg.linker_cleared"), ChatFormatting.YELLOW);
@@ -126,7 +158,7 @@ public class GolemLinkerItem extends Item {
         }
         net.minecraft.network.chat.MutableComponent linked = Component.empty();
         boolean any = false;
-        for (Mode m : Mode.values()) {
+        for (Mode m : Mode.MARKS) {
             BlockPos pos = mark(stack, m);
             if (pos != null) {
                 golem.setLink(m, pos);
@@ -154,7 +186,11 @@ public class GolemLinkerItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         Mode current = mode(stack);
         tooltip.add(Component.translatable("tooltip.golemgarage.linker_mode", current.title()).withStyle(s -> s.withColor(current.color)));
-        for (Mode m : Mode.values()) {
+        if (current == Mode.GROUP) {
+            tooltip.add(Component.translatable("tooltip.golemgarage.linker_group", group(stack)).withStyle(ChatFormatting.YELLOW));
+            tooltip.add(Component.translatable("tooltip.golemgarage.linker_group_h").withStyle(ChatFormatting.DARK_GRAY));
+        }
+        for (Mode m : Mode.MARKS) {
             BlockPos p = mark(stack, m);
             tooltip.add(m.title().copy().append(": " + (p == null ? "-" : p.toShortString()))
                     .withStyle(ChatFormatting.GRAY));

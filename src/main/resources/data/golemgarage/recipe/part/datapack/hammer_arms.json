@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "hammer_arms",
+  "pattern": [
+    "MMM",
+    "MMM",
+    "R R"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  }
+}

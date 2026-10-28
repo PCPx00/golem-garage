@@ -35,6 +35,9 @@ neoForge {
         }
         server {
             server()
+            if (project.hasProperty('rescan')) {
+                jvmArguments.add('-Dgolemgarage.rescan=' + project.property('rescan'))
+            }
             // Dev testing: gradle runServer -Pgolemdebug prints golem activity to the log.
             if (project.hasProperty('golemdebug')) {
                 jvmArguments.add('-Dgolemgarage.debug=true')

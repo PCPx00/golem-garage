@@ -135,6 +135,13 @@ for i in range(3):
 # 15. No area set: reports why.
 L.append(golem(30, 26, "NoArea", matched("iron"), [rule("ALWAYS", "PATROL")]))
 
+# 16. Rest at its dock: walks home and recharges slowly.
+L += ["setblock 34 %d 34 golemgarage:golem_dock" % Y]
+L.append(golem(28, 32, "Docker", matched("iron"), [rule("ALWAYS", "GO_HOME")], links(HOME=(34, Y, 34)) + ",Power:5"))
+
+# 17. A job the server turned off (the test config disables pick_up_items).
+L.append(golem(-30, 34, "Blocked", claws, [rule("ALWAYS", "PICK_UP_ITEMS")]))
+
 later = ["say hitting Fragile", "damage @e[type=golemgarage:golem,name=Fragile,limit=1] 6 minecraft:generic"]
 
 world = sys.argv[1]

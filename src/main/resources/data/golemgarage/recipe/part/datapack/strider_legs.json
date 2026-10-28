@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "strider_legs",
+  "pattern": [
+    "MPM",
+    "M M",
+    "M M"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:piston"
+    }
+  }
+}

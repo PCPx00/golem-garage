@@ -111,6 +111,51 @@ def signal_plate(on):
     return c.img
 
 
+def dock_top(lit):
+    """Charging pad: steel plate, hazard border, a ring of contacts and a glowing core."""
+    c, pal = metal_panel("#5b6168", 41, rivets=False)
+    for i in range(16):
+        for j in (0, 1, 14, 15):
+            yellow = ((i + j) // 2) % 2 == 0
+            c.set(i, j, (232, 186, 48) if yellow else (34, 32, 36))
+            c.set(j, i, (232, 186, 48) if ((i + j) // 2) % 2 == 0 else (34, 32, 36))
+    core = (110, 240, 255) if lit else (40, 92, 104)
+    ring = (70, 190, 220) if lit else (30, 60, 70)
+    for y in range(16):
+        for x in range(16):
+            d = ((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5
+            if 4.2 < d < 5.2:
+                c.set(x, y, ring)
+            elif d < 2.2:
+                c.set(x, y, core)
+            elif d < 2.9:
+                c.set(x, y, pal[1])
+    c.set(7, 6, (230, 255, 255) if lit else (70, 130, 140))
+    return c.img
+
+
+def dock_side():
+    c, pal = metal_panel("#4a4f57", 42, rivets=False, border=False)
+    for x in range(16):
+        c.set(x, 12, pal[5])
+        for y in (13, 14):
+            c.set(x, y, (232, 186, 48) if ((x + y) // 2) % 2 == 0 else (34, 32, 36))
+        c.set(x, 15, pal[0])
+    return c.img
+
+
+def dock_model(top):
+    face = lambda tex, uv: {"texture": tex, "uv": uv}
+    return {"parent": "minecraft:block/block", "textures": {"particle": "golemgarage:block/" + top,
+                                                           "top": "golemgarage:block/" + top,
+                                                           "side": "golemgarage:block/golem_dock_side",
+                                                           "bottom": "golemgarage:block/emitter_side"},
+            "elements": [{"from": [0, 0, 0], "to": [16, 3, 16], "faces": {
+                "down": face("#bottom", [0, 0, 16, 16]), "up": face("#top", [0, 0, 16, 16]),
+                "north": face("#side", [0, 12, 16, 15]), "south": face("#side", [0, 12, 16, 15]),
+                "east": face("#side", [0, 12, 16, 15]), "west": face("#side", [0, 12, 16, 15])}}]}
+
+
 def emitter_model(lens_tex):
     side = "golemgarage:block/emitter_side"
     plate = "golemgarage:block/emitter_plate"
@@ -147,6 +192,9 @@ def generate(assets):
     _save(lens("#ffb23a"), os.path.join(tex, "lens_amber.png"))
     _save(signal_plate(False), os.path.join(tex, "signal_plate.png"))
     _save(signal_plate(True), os.path.join(tex, "signal_plate_on.png"))
+    _save(dock_top(False), os.path.join(tex, "golem_dock_top.png"))
+    _save(dock_top(True), os.path.join(tex, "golem_dock_top_on.png"))
+    _save(dock_side(), os.path.join(tex, "golem_dock_side.png"))
     for old in ("laser_emitter.png", "steel_emitter.png"):
         p = os.path.join(tex, old)
         if os.path.exists(p):
@@ -164,7 +212,9 @@ def generate(assets):
           {"parent": "minecraft:block/pressure_plate_up", "textures": {"texture": "golemgarage:block/signal_plate"}})
     _json(os.path.join(models, "block/signal_plate_down.json"),
           {"parent": "minecraft:block/pressure_plate_down", "textures": {"texture": "golemgarage:block/signal_plate_on"}})
-    for b in ("garage_controller", "laser_emitter", "steel_emitter", "signal_plate"):
+    _json(os.path.join(models, "block/golem_dock.json"), dock_model("golem_dock_top"))
+    _json(os.path.join(models, "block/golem_dock_on.json"), dock_model("golem_dock_top_on"))
+    for b in ("garage_controller", "laser_emitter", "steel_emitter", "signal_plate", "golem_dock"):
         _json(os.path.join(models, "item/%s.json" % b), {"parent": "golemgarage:block/%s" % b})
 
     bs = os.path.join(assets, "blockstates")
@@ -174,6 +224,9 @@ def generate(assets):
     _json(os.path.join(bs, "garage_controller.json"), {"variants": {
         "facing=%s" % f: dict({"model": "golemgarage:block/garage_controller"}, **({"y": r} if r else {}))
         for f, r in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
+    _json(os.path.join(bs, "golem_dock.json"), {"variants": {
+        "occupied=false": {"model": "golemgarage:block/golem_dock"},
+        "occupied=true": {"model": "golemgarage:block/golem_dock_on"}}})
     _json(os.path.join(bs, "signal_plate.json"), {"variants": {
         "powered=false": {"model": "golemgarage:block/signal_plate"},
         "powered=true": {"model": "golemgarage:block/signal_plate_down"}}})

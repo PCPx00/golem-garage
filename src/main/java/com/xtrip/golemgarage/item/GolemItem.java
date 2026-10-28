@@ -97,7 +97,7 @@ public class GolemItem extends Item {
             return InteractionResult.FAIL;
         }
         if (player != null && level instanceof net.minecraft.server.level.ServerLevel sl
-                && !GolemEntity.canPlaceAnother(sl, player.getUUID(), player)) {
+                && !GolemEntity.canPlaceAnother(sl, player.getUUID(), player, context.getClickedPos())) {
             return InteractionResult.FAIL;
         }
         GolemEntity golem = ModEntities.GOLEM.get().create(level);
@@ -142,5 +142,12 @@ public class GolemItem extends Item {
             tooltip.add(Component.literal("- ").append(name).append(" ").append(p.isBroken() ? Component.translatable("tooltip.golemgarage.part_broken") : Component.literal(pct + "%"))
                     .withStyle(color));
         }
+    }
+
+    /** Dropped golems and cubs don't despawn unless the server sets itemDespawnMinutes. */
+    @Override
+    public int getEntityLifespan(ItemStack stack, net.minecraft.world.level.Level level) {
+        int minutes = com.xtrip.golemgarage.Config.get(com.xtrip.golemgarage.Config.ITEM_DESPAWN_MINUTES::get, 0);
+        return minutes <= 0 ? Integer.MAX_VALUE : minutes * 60 * 20;
     }
 }

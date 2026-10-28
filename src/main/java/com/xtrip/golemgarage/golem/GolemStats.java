@@ -49,6 +49,9 @@ public final class GolemStats {
     /** Adds the effects of installed upgrade modules. */
     public GolemStats withModules(java.util.List<GolemModule> modules) {
         for (GolemModule m : modules) {
+            if (m.isDisabled()) {
+                continue; // turned off on this server: stays in its socket but does nothing
+            }
             m.apply(this);
         }
         return this;
@@ -120,7 +123,8 @@ public final class GolemStats {
                 case ARMS -> {
                     health += shape.health() * hm;
                     float brokenMult = broken ? 0.3f : 1f;
-                    s.attack = (shape.attack() + mat.attackBonus()) * brokenMult;
+                    s.attack = (shape.attack() + mat.attackBonus()) * brokenMult
+                            * com.xtrip.golemgarage.Config.materialStat(mat.id(), "damage");
                     s.work = shape.work() * (1f + 0.1f * mat.tier()) * mat.workMult() * brokenMult;
                     if (shape.has(ShapeAbility.KNOCKBACK)) {
                         s.attackKnockback += 1.0f;

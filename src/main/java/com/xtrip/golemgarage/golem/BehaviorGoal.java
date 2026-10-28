@@ -85,6 +85,21 @@ public class BehaviorGoal extends Goal {
         if (golem.tickCount % 200 == 0) {
             unreachable.values().removeIf(t -> t <= golem.tickCount);
         }
+        if (golem.isPaused()) {
+            golem.setStatus(GolemText.of("paused"));
+            golem.setActiveRule(-1);
+            golem.getNavigation().stop();
+            return;
+        }
+        if (golem.tickCount % CHECK == 0) {
+            ownerTooFar = ownerTooFar();
+        }
+        if (ownerTooFar) {
+            golem.setStatus(GolemText.of("owner_far"));
+            golem.setActiveRule(-1);
+            golem.getNavigation().stop();
+            return;
+        }
         if (stoppedReason != null) {
             golem.setStatus(GolemText.of("stopped", stoppedReason));
             golem.setActiveRule(-1);
@@ -141,6 +156,18 @@ public class BehaviorGoal extends Goal {
             stoppedReason = failure;
             golem.getNavigation().stop();
         }
+    }
+
+    private boolean ownerTooFar;
+
+    /** workRangeFromOwner: jobs pause while the owner is offline, elsewhere, or too far away. */
+    private boolean ownerTooFar() {
+        int range = com.xtrip.golemgarage.Config.get(com.xtrip.golemgarage.Config.WORK_RANGE_FROM_OWNER::get, 0);
+        if (range <= 0 || golem.getOwnerUuid() == null || golem.getServer() == null) {
+            return false;
+        }
+        net.minecraft.server.level.ServerPlayer owner = golem.getServer().getPlayerList().getPlayer(golem.getOwnerUuid());
+        return owner == null || owner.level() != golem.level() || owner.distanceToSqr(golem) > (double) range * range;
     }
 
     // =================================================================== evaluation
@@ -203,6 +230,10 @@ public class BehaviorGoal extends Goal {
     // =================================================================== actions
     /** Runs the rule's action. Returns null when fine, or the reason it can't run. */
     private String run(GolemRule rule, boolean check) {
+        if (rule.action().isDisabled()) {
+            golem.getNavigation().stop();
+            return GolemText.of("fail.action_off");
+        }
         return switch (rule.action()) {
             case FOLLOW_OWNER -> {
                 follow(check, false);
@@ -251,6 +282,7 @@ public class BehaviorGoal extends Goal {
             case GO_TO_GARAGE -> goToGarage(check);
             case GIVE_TO_GOLEM -> giveToGolem(check);
             case PATROL -> patrol(check);
+            case GO_HOME -> goHome(check);
             case EMIT_SIGNAL -> {
                 golem.emitSignal();
                 golem.getNavigation().stop();
@@ -323,6 +355,29 @@ public class BehaviorGoal extends Goal {
             return ARRIVED;
         }
         return NO_PATH;
+    }
+
+    /** Walks onto its linked Golem Dock and rests there, slowly recharging and healing. */
+    private String goHome(boolean check) {
+        BlockPos dock = golem.getLink(Mode.HOME);
+        if (dock == null) {
+            return GolemText.of("fail.no_dock");
+        }
+        if (!(golem.level().getBlockState(dock).getBlock() instanceof com.xtrip.golemgarage.block.GolemDockBlock)) {
+            return GolemText.of("fail.dock_missing");
+        }
+        Vec3 c = Vec3.atBottomCenterOf(dock).add(0, 0.19, 0);
+        if (golem.distanceToSqr(c) > 1.0) {
+            int a = approach(c, 0.5, check);
+            if (a != ARRIVED || golem.distanceToSqr(c) > 2.4) {
+                golem.setStatus(GolemText.of("to_dock"));
+                return a == NO_PATH ? GolemText.of("fail.no_path_dock") : null;
+            }
+        }
+        golem.getNavigation().stop();
+        golem.restOnDock(dock);
+        golem.setStatus(GolemText.of("resting", golem.getPowerPercent()));
+        return null;
     }
 
     private void stroll() {
@@ -627,7 +682,37 @@ public class BehaviorGoal extends Goal {
         return false;
     }
 
+    // Scan caches: a full area scan runs at most every RESCAN ticks; in between, a cached hit is just
+    // re-checked (one block lookup) and a cached miss is trusted.
+    private static final int RESCAN = Integer.getInteger("golemgarage.rescan", 40);
+    private int cropScanTick = -1000;
+    private int cropScanRadius = -1;
+    private BlockPos cropScanOrigin;
+    @org.jetbrains.annotations.Nullable
+    private BlockPos cropScanResult;
+    private final java.util.Map<Block, Object[]> blockScans = new java.util.HashMap<>();
+
     private BlockPos findCrop(int radius) {
+        BlockPos here = golem.blockPosition();
+        boolean fresh = golem.tickCount - cropScanTick < RESCAN && radius == cropScanRadius
+                && cropScanOrigin != null && cropScanOrigin.distManhattan(here) <= 2;
+        if (fresh) {
+            if (cropScanResult == null) {
+                return null;
+            }
+            Integer until = unreachable.get(cropScanResult);
+            if (isRipe(golem.level().getBlockState(cropScanResult), cropScanResult) && (until == null || until <= golem.tickCount)) {
+                return cropScanResult;
+            }
+        }
+        cropScanTick = golem.tickCount;
+        cropScanRadius = radius;
+        cropScanOrigin = here;
+        cropScanResult = scanCrop(radius);
+        return cropScanResult;
+    }
+
+    private BlockPos scanCrop(int radius) {
         BlockPos origin = golem.blockPosition();
         BlockPos best = null;
         double bestD = Double.MAX_VALUE;
@@ -770,18 +855,31 @@ public class BehaviorGoal extends Goal {
                 || (post != null && golem.level().hasNeighborSignal(post));
     }
 
+    /** The nearest storage block within 8 blocks. Walks only the block entities of nearby chunks. */
     private BlockPos nearestContainer() {
         BlockPos origin = golem.blockPosition();
         BlockPos best = null;
         double bestD = Double.MAX_VALUE;
-        for (BlockPos p : BlockPos.betweenClosed(origin.offset(-8, -2, -8), origin.offset(8, 3, 8))) {
-            if (golem.level().getBlockEntity(p) != null && !(golem.level().getBlockEntity(p)
-                    instanceof com.xtrip.golemgarage.block.entity.GarageControllerBlockEntity)
-                    && Storage.at(golem.level(), p) != null) {
-                double d = p.distSqr(origin);
-                if (d < bestD) {
-                    bestD = d;
-                    best = p.immutable();
+        int minX = origin.getX() - 8, maxX = origin.getX() + 8, minZ = origin.getZ() - 8, maxZ = origin.getZ() + 8;
+        int minY = origin.getY() - 2, maxY = origin.getY() + 3;
+        for (int cx = minX >> 4; cx <= maxX >> 4; cx++) {
+            for (int cz = minZ >> 4; cz <= maxZ >> 4; cz++) {
+                if (!(golem.level().getChunk(cx, cz, net.minecraft.world.level.chunk.status.ChunkStatus.FULL, false)
+                        instanceof net.minecraft.world.level.chunk.LevelChunk chunk)) {
+                    continue;
+                }
+                for (var e : chunk.getBlockEntities().entrySet()) {
+                    BlockPos p = e.getKey();
+                    if (p.getX() < minX || p.getX() > maxX || p.getZ() < minZ || p.getZ() > maxZ
+                            || p.getY() < minY || p.getY() > maxY
+                            || e.getValue() instanceof com.xtrip.golemgarage.block.entity.GarageControllerBlockEntity) {
+                        continue;
+                    }
+                    double d = p.distSqr(origin);
+                    if (d < bestD && Storage.at(golem.level(), p) != null) {
+                        bestD = d;
+                        best = p.immutable();
+                    }
                 }
             }
         }
@@ -789,6 +887,20 @@ public class BehaviorGoal extends Goal {
     }
 
     private BlockPos findBlock(Block block, int radius) {
+        Object[] c = blockScans.get(block);
+        BlockPos here = golem.blockPosition();
+        if (c != null && golem.tickCount - (Integer) c[0] < RESCAN && ((BlockPos) c[1]).distManhattan(here) <= 2) {
+            BlockPos hit = (BlockPos) c[2];
+            if (hit == null || golem.level().getBlockState(hit).is(block)) {
+                return hit;
+            }
+        }
+        BlockPos found = scanBlock(block, radius);
+        blockScans.put(block, new Object[]{golem.tickCount, here, found});
+        return found;
+    }
+
+    private BlockPos scanBlock(Block block, int radius) {
         BlockPos origin = golem.blockPosition();
         BlockPos best = null;
         double bestD = Double.MAX_VALUE;

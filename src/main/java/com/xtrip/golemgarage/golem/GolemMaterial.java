@@ -19,7 +19,52 @@ public record GolemMaterial(String id, int tier, String tag, int color,
                             Set<GolemTrait> traits, String family, boolean craftable) {
 
     public Component displayName() {
-        return Component.translatable("material.golemgarage." + id);
+        GolemMaterials.Extra x = GolemMaterials.extra(id);
+        return x == null ? Component.translatable("material.golemgarage." + id)
+                : Component.translatableWithFallback("material.golemgarage." + id, x.name());
+    }
+
+    // Unscaled multipliers, for syncing datapack materials.
+    public float durMultRaw() {
+        return durMult;
+    }
+
+    public float speedMultRaw() {
+        return speedMult;
+    }
+
+    public float powerMultRaw() {
+        return powerMult;
+    }
+
+    public float workMultRaw() {
+        return workMult;
+    }
+
+    // Server settings can scale each material (materialStats); these accessors apply that.
+    @Override
+    public float durMult() {
+        return durMult * com.xtrip.golemgarage.Config.materialStat(id, "durability");
+    }
+
+    @Override
+    public float speedMult() {
+        return speedMult * com.xtrip.golemgarage.Config.materialStat(id, "speed");
+    }
+
+    @Override
+    public float powerMult() {
+        return powerMult * com.xtrip.golemgarage.Config.materialStat(id, "power");
+    }
+
+    @Override
+    public float workMult() {
+        return workMult * com.xtrip.golemgarage.Config.materialStat(id, "work");
+    }
+
+    /** True if the server has blocked this material (blockedMaterials). */
+    public boolean isBlocked() {
+        return com.xtrip.golemgarage.Config.listed(com.xtrip.golemgarage.Config.BLOCKED_MATERIALS, id);
     }
 
     public boolean has(GolemTrait trait) {
@@ -28,7 +73,7 @@ public record GolemMaterial(String id, int tier, String tag, int color,
 
     /** Health multiplier for parts of this material. */
     public float healthMult() {
-        return 1.0f + 0.3f * tier;
+        return (1.0f + 0.3f * tier) * com.xtrip.golemgarage.Config.materialStat(id, "health");
     }
 
     /** Extra melee damage from arms of this material. */

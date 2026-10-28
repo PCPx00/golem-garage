@@ -76,7 +76,8 @@ public class RuleEditor {
         ACTION_GROUPS.put("rule.golemgarage.group.items", List.of(Action.TAKE_FROM_A, Action.DEPOSIT_TO_B, Action.TAKE_FROM_NEAREST,
                 Action.DEPOSIT_TO_NEAREST, Action.PICK_UP_ITEMS, Action.GIVE_TO_GOLEM));
         ACTION_GROUPS.put("rule.golemgarage.group.farming", List.of(Action.HARVEST_CROPS));
-        ACTION_GROUPS.put("rule.golemgarage.group.upkeep", List.of(Action.RECHARGE, Action.REPAIR_SELF, Action.GO_TO_GARAGE));
+        ACTION_GROUPS.put("rule.golemgarage.group.upkeep", List.of(Action.RECHARGE, Action.REPAIR_SELF, Action.GO_TO_GARAGE,
+                Action.GO_HOME));
         ACTION_GROUPS.put("rule.golemgarage.group.redstone", List.of(Action.EMIT_SIGNAL));
     }
 
@@ -419,6 +420,9 @@ public class RuleEditor {
                 String label = v instanceof Trigger t ? (t == Trigger.ALWAYS ? I18n.get("rule.golemgarage.ui.always") : cap(phrase(t)))
                         : cap(phrase((Action) v));
                 label = label.replace("{}", "N");
+                if (v instanceof Action act && act.isDisabled()) {
+                    label += " " + I18n.get("rule.golemgarage.ui.off");
+                }
                 hoverHelp = drawChoice(g, font, cx, colY[col], colW, v, label, accent, mx, my, hoverHelp);
                 colY[col] += 11;
             }

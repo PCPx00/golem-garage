@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "furnace_chest",
+  "pattern": [
+    "MMM",
+    "MFM",
+    "MMM"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:furnace"
+    }
+  }
+}

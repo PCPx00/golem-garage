@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "golemgarage:golem_linker",
+    "golemgarage:blueprint",
+    "golemgarage:repair_kit",
+    "golemgarage:manual"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "golemgarage:outfit_crown",
+    "golemgarage:outfit_astronaut_helmet",
+    "golemgarage:outfit_tuxedo",
+    "golemgarage:outfit_monocle",
+    "golemgarage:outfit_jetpack"
+  ]
+}

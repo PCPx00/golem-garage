@@ -1,0 +1,14 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "sealed_hold",
+  "pattern": [
+    "MMM",
+    "MKM",
+    "MMM"
+  ],
+  "key": {
+    "K": {
+      "item": "minecraft:bucket"
+    }
+  }
+}

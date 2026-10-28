@@ -1,0 +1,13 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "stub_legs",
+  "pattern": [
+    "MRM",
+    "M M"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  }
+}

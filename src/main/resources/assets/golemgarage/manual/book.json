@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.7.0, by xTrip",
+ "subtitle": "Version 0.8.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -8956,6 +8956,10 @@
         [
          "patrol its area",
          "Walks between random spots inside its work area."
+        ],
+        [
+         "rest at its dock",
+         "Walks onto its Golem Dock and rests, slowly recharging and healing."
         ]
        ],
        "title": "DO..."
@@ -9274,6 +9278,23 @@
      ]
     },
     {
+     "id": "groups",
+     "title": "Groups",
+     "icon": "golemgarage:golem_linker",
+     "pages": [
+      {
+       "type": "text",
+       "text": "Put golems in numbered §lgroups§r to set them up together.\n\n§l1.§r Shift + right-click the air with the Linker until it says Group. §l2.§r Shift + scroll to pick a group, 1 to 9. §l3.§r Right-click golems to add them; shift + right-click takes one out.",
+       "title": "Making a Group"
+      },
+      {
+       "type": "text",
+       "text": "In a grouped golem's Rules tab, §lCopy to group§r saves its rules and gives a copy to every one of your golems in that group. Teach one harvester, and the whole crew knows the job.\n\nThe group number shows in the panel, in Jade and in /golemgarage list.",
+       "title": "Sharing Rules"
+      }
+     ]
+    },
+    {
      "id": "any_storage",
      "title": "Any Storage",
      "icon": "minecraft:barrel",
@@ -9490,7 +9511,7 @@
       },
       {
        "type": "text",
-       "text": "The Linker tells golems where things are.\n\n§l1.§r Shift + right-click the air to choose a mode: Post, Chest A, Chest B, Garage, Area corner 1 or Area corner 2. §l2.§r Right-click a block to mark it. Any storage block works for A and B; Garage needs a Garage Controller; Post and area corners mark the spot you click.",
+       "text": "The Linker tells golems where things are.\n\n§l1.§r Shift + right-click the air to choose a mode: Post, Chest A, Chest B, Garage, Area corners, Home or Group. §l2.§r Right-click a block to mark it. Any storage block works for A and B; Garage needs a Garage Controller; Post and area corners mark the spot you click.",
        "title": "Using It"
       },
       {
@@ -9519,6 +9540,24 @@
        "type": "text",
        "text": "Outputs a redstone signal while a golem running §lemit redstone§r stands on it.\n\nUse it to let golems open doors, ring bells, start machines, or tell your redstone that a job is done.\n\n§2§lTip:§r put the plate at the golem's post and use \"go to post\" then \"emit redstone\" rules to signal on a schedule.",
        "title": "Golems and Redstone"
+      }
+     ]
+    },
+    {
+     "id": "dock",
+     "title": "Golem Dock",
+     "icon": "golemgarage:golem_dock",
+     "pages": [
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:golem_dock",
+       "text": "Copper, a redstone block and iron.",
+       "title": "Golem Dock"
+      },
+      {
+       "type": "text",
+       "text": "A charging pad that gives a golem a home. Link it with the Linker in §lHome§r mode, then give the golem a §lrest at its dock§r rule, for example \"night: rest at its dock\".\n\nWhile it stands on the dock it slowly recharges and heals, and the pad lights up.",
+       "title": "Home Sweet Home"
       }
      ]
     },
@@ -10124,7 +10163,7 @@
    "id": "settings",
    "title": "Settings and Mods",
    "icon": "minecraft:comparator",
-   "desc": "Server settings, client settings, and support for JEI and Jade.",
+   "desc": "Server settings, commands, modpack support, and JEI and Jade.",
    "entries": [
     {
      "id": "server_settings",
@@ -10168,6 +10207,14 @@
          "Golems one player can have out (0 = no limit)."
         ],
         [
+         "maxGolemsPerChunk",
+         "Golems allowed in one chunk (0 = no limit)."
+        ],
+        [
+         "workRangeFromOwner",
+         "Jobs pause while the owner is offline or further than this (0 = off)."
+        ],
+        [
          "othersCanPickUp",
          "Others may pick up your golems and cubs (off)."
         ],
@@ -10176,20 +10223,169 @@
          "Others may open, edit and link your golems (off)."
         ],
         [
+         "playerDamage",
+         "Whether golems fight players: NEVER, PVP (default) or ALWAYS."
+        ],
+        [
+         "killsCountAsOwner",
+         "Golem kills drop XP and player loot as if the owner killed them (off)."
+        ],
+        [
          "harvestNeedsMobGriefing",
          "Harvesting follows the mobGriefing rule (off)."
         ],
         [
-         "giveManualOnJoin",
-         "New players get this book (on)."
+         "itemDespawnMinutes",
+         "Minutes a dropped golem or cub item lasts (0 = forever)."
         ]
        ],
-       "title": "Options"
+       "title": "Golems and Players"
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "disabledActions",
+         "Jobs golems can't use, such as harvest_crops."
+        ],
+        [
+         "disabledModules",
+         "Modules that can't be installed (or do nothing)."
+        ],
+        [
+         "disabledShapes",
+         "Part shapes that can't be fitted."
+        ],
+        [
+         "blockedMaterials",
+         "Materials whose parts can't be fitted."
+        ],
+        [
+         "materialStats",
+         "Per-material multipliers: \"diamond;durability=2;speed=0.9\". Stats: health, durability, speed, power, work, damage."
+        ]
+       ],
+       "title": "Features and Balance"
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "magnetRange",
+         "How far a cub's item magnet reaches (3; 0 = off)."
+        ],
+        [
+         "maxCubsPerPlayer",
+         "Cubs one player can have out (0 = no limit)."
+        ],
+        [
+         "giveManualOnJoin",
+         "New players get this book (on)."
+        ],
+        [
+         "playerCommands",
+         "Players can use the /golemgarage player commands (on)."
+        ],
+        [
+         "recallCooldownSeconds",
+         "Wait between recalls (60)."
+        ]
+       ],
+       "title": "Cubs and Commands"
       },
       {
        "type": "text",
-       "text": "Operators can always edit any golem.",
+       "text": "Operators can always edit any golem, and skip the recall wait.",
        "title": "Operators"
+      }
+     ]
+    },
+    {
+     "id": "commands",
+     "title": "Commands",
+     "icon": "minecraft:command_block",
+     "pages": [
+      {
+       "type": "text",
+       "text": "§l/golemgarage§r (or §l/gg§r) looks after your golems from anywhere. Name a golem by its name, its number in the list, or §lall§r.",
+       "title": "Commands"
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "list",
+         "Your golems: where they are, health, power and what they're doing. Click the coordinates to copy them."
+        ],
+        [
+         "find <golem>",
+         "Where it is, how far and which way. Loaded golems glow for 10 seconds."
+        ],
+        [
+         "recall <golem>",
+         "Brings it to you, even from unloaded areas or another dimension."
+        ],
+        [
+         "rename <golem> <name>",
+         "Gives it a new name."
+        ],
+        [
+         "stop / resume <golem>",
+         "Pauses its jobs, and starts them again."
+        ]
+       ],
+       "title": "For Everyone"
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "give <players> golem <material> [preset]",
+         "A ready-built golem. Presets: standard, guard, hauler, harvester, medic, night_guard."
+        ],
+        [
+         "give <players> cub [color]",
+         "A cub in any dye color."
+        ],
+        [
+         "repair <golems>",
+         "Fully repairs, heals and charges them."
+        ],
+        [
+         "owner <golems> <player>",
+         "Hands golems to another player."
+        ],
+        [
+         "count",
+         "How many golems the server has, by owner."
+        ],
+        [
+         "purge <player>",
+         "Removes all of a player's golems, even unloaded ones."
+        ],
+        [
+         "debug <golem>",
+         "Its parts, links, rules and recent activity."
+        ]
+       ],
+       "title": "For Operators"
+      }
+     ]
+    },
+    {
+     "id": "pack_makers",
+     "title": "For Modpacks",
+     "icon": "minecraft:writable_book",
+     "pages": [
+      {
+       "type": "text",
+       "text": "§lDatapack materials§r: add a file at data/<pack>/golem_material/<id>.json with an item tag, a tier, a built-in material to borrow the look from, a tint color, optional stat multipliers and traits. Every part shape can then be crafted from it with the usual patterns, and the Garage repairs it with the same item.",
+       "title": "New Materials"
+      },
+      {
+       "type": "text",
+       "text": "§lItem tags§r: golemgarage:golem_parts (and golem_parts/head, torso, arms, legs, core), modules, outfits (and outfits/cool, goth, cute, fancy), golems, cubs, garage_blocks and tools. Use them in recipes, quests and filters.\n\nThe §l/golemgarage give§r presets make good quest rewards.",
+       "title": "Tags and Rewards"
       }
      ]
     },
@@ -10337,6 +10533,7 @@
   "golemgarage:blueprint": "blueprints",
   "golemgarage:steel_ingot": "mat_steel",
   "golemgarage:module_casing": "modules_intro",
+  "golemgarage:golem_dock": "dock",
   "minecraft:honeycomb": "copper_care",
   "minecraft:vine": "vines",
   "minecraft:redstone_block": "power_basics",

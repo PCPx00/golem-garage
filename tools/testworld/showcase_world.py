@@ -52,9 +52,15 @@ setup.append(g % ("1.5", Y, "9.5", matched("gold"), '{T:"ALWAYS",P:0,A:"TAKE_FRO
                   ',CustomName:\'"Stuck"\''))
 setup.append(g % ("4.5", Y, "9.5", matched("copper"), '{T:"ALWAYS",P:0,A:"WAIT",AP:5}',
                   ',NoAI:1b,Power:1,CustomName:\'"Tired"\''))
+# 0.8.0: a golem resting on its dock, and two golems in group 3.
+setup.append("setblock 7 %d 6 golemgarage:golem_dock" % Y)
+setup.append(g % ("7.5", Y, "6.5", matched("steel"), '{T:"ALWAYS",P:0,A:"GO_HOME",AP:0}',
+                  ',Power:20,Links:{HOME:%dL},CustomName:\'"Sleepy"\'' % pos_long(7, Y, 6)))
+setup.append(g % ("0.5", Y, "2.2", matched("gold"), '{T:"ALWAYS",P:0,A:"WAIT",AP:5}', ',NoAI:1b,Group:3,CustomName:\'"Crew A"\''))
+setup.append(g % ("-7.5", Y, "9.5", matched("gold"), '{T:"ALWAYS",P:0,A:"WAIT",AP:5}', ',NoAI:1b,Group:3,CustomName:\'"Crew B"\''))
 setup += [
     "clear @s",
-    'give @s golemgarage:golem_linker[minecraft:custom_data={Mode:5,POST:%dL,CHEST_A:%dL,AREA_1:%dL,AREA_2:%dL}] 1'
+    'give @s golemgarage:golem_linker[minecraft:custom_data={Mode:7,Group:3,POST:%dL,CHEST_A:%dL,AREA_1:%dL,AREA_2:%dL}] 1'
     % (pos_long(0, Y, 12), pos_long(3, Y, 12), pos_long(-6, Y, 6), pos_long(6, Y, 14)),
     "give @s golemgarage:module_speed 1", "give @s minecraft:blue_dye 1", "give @s golemgarage:outfit_crown 1",
     "give @s golemgarage:manual 1", "give @s minecraft:water_bucket 1",

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "golemgarage:redstone_core",
+    "golemgarage:furnace_core",
+    "golemgarage:lightning_core",
+    "golemgarage:solar_core",
+    "golemgarage:soul_core"
+  ]
+}

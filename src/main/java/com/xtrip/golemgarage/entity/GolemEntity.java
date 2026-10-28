@@ -101,6 +101,11 @@ public class GolemEntity extends PathfinderMob {
     private static final EntityDataAccessor<Integer> DATA_PAINT =
             SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.INT);
     /** The owner, synced so clients know whose golem it is before opening its panel. */
+    private static final EntityDataAccessor<Integer> DATA_GROUP =
+            SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.INT);
+    private boolean paused;
+    @Nullable
+    private BlockPos dockedAt;
     private static final EntityDataAccessor<java.util.Optional<UUID>> DATA_OWNER =
             SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private int workAnimationTick;
@@ -165,6 +170,7 @@ public class GolemEntity extends PathfinderMob {
         builder.define(DATA_ACTIVE_RULE, -1);
         builder.define(DATA_PAINT, -1);
         builder.define(DATA_OWNER, java.util.Optional.empty());
+        builder.define(DATA_GROUP, 0);
         builder.define(DATA_STATUS, "");
         builder.define(DATA_FLAGS, (byte) 0);
     }
@@ -291,6 +297,13 @@ public class GolemEntity extends PathfinderMob {
         if (hasFlag(FLAG_BREAKING)) {
             tickBreakdown();
             return;
+        }
+        if (tickCount % 100 == 7 && getServer() != null) {
+            com.xtrip.golemgarage.golem.GolemRegistry.get(getServer()).update(this);
+        }
+        if (dockedAt != null && tickCount % 20 == 0 && (distanceToSqr(Vec3.atBottomCenterOf(dockedAt)) > 2.5
+                || activeAction() != GolemRule.Action.GO_HOME)) {
+            undock();
         }
         if (stats.climb) {
             setFlag(FLAG_CLIMBING, horizontalCollision);
@@ -670,8 +683,113 @@ public class GolemEntity extends PathfinderMob {
     public void remove(RemovalReason reason) {
         if (!level().isClientSide) {
             clearLight();
+            undock();
+            if (getServer() != null) {
+                var registry = com.xtrip.golemgarage.golem.GolemRegistry.get(getServer());
+                if (reason.shouldDestroy()) {
+                    registry.remove(getUUID()); // picked up, broken down, repaired into an item, or killed
+                } else {
+                    registry.update(this); // unloaded or changing dimension: remember where it was
+                }
+            }
         }
         super.remove(reason);
+    }
+
+    @Override
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
+        if (!level().isClientSide && getServer() != null) {
+            var registry = com.xtrip.golemgarage.golem.GolemRegistry.get(getServer());
+            if (registry.takePurged(getUUID())) {
+                discard(); // removed by /golemgarage purge while it was unloaded
+                return;
+            }
+            registry.update(this);
+        }
+    }
+
+    /** Admin repair: every part like new, full health and power. */
+    public void repairFully() {
+        for (PartInstance p : parts.values()) {
+            p.repairFully();
+        }
+        refresh();
+        setHealth(getMaxHealth());
+        addPower(stats.capacity);
+    }
+
+    // =================================================================== groups, pausing, docking
+    public int getGroup() {
+        return entityData.get(DATA_GROUP);
+    }
+
+    public void setGroup(int group) {
+        entityData.set(DATA_GROUP, Math.max(0, Math.min(9, group)));
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+        if (paused) {
+            getNavigation().stop();
+            setTarget(null);
+        }
+    }
+
+    /** Called each work cycle while it stands on its dock: a slow top-up of power and health. */
+    public void restOnDock(BlockPos dock) {
+        if (dockedAt == null || !dockedAt.equals(dock)) {
+            undock();
+            dockedAt = dock.immutable();
+            BlockState s = level().getBlockState(dock);
+            if (s.hasProperty(com.xtrip.golemgarage.block.GolemDockBlock.OCCUPIED)) {
+                level().setBlock(dock, s.setValue(com.xtrip.golemgarage.block.GolemDockBlock.OCCUPIED, true), 3);
+            }
+        }
+        if (tickCount % 40 == 0) {
+            if (stats.capacity > 0) {
+                addPower(Math.max(1, stats.capacity / 50));
+            }
+            if (getHealth() < getMaxHealth()) {
+                heal(1f);
+            }
+        }
+    }
+
+    private void undock() {
+        if (dockedAt == null) {
+            return;
+        }
+        BlockState s = level().getBlockState(dockedAt);
+        if (s.hasProperty(com.xtrip.golemgarage.block.GolemDockBlock.OCCUPIED)) {
+            level().setBlock(dockedAt, s.setValue(com.xtrip.golemgarage.block.GolemDockBlock.OCCUPIED, false), 3);
+        }
+        dockedAt = null;
+    }
+
+    /** Players are fair game only as the server's playerDamage setting allows, and never the owner. */
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        if (target instanceof Player p) {
+            if (p.getUUID().equals(getOwnerUuid()) || p.isCreative() || p.isSpectator()) {
+                return false;
+            }
+            com.xtrip.golemgarage.Config.PlayerDamage mode = com.xtrip.golemgarage.Config.get(
+                    com.xtrip.golemgarage.Config.PLAYER_DAMAGE::get, com.xtrip.golemgarage.Config.PlayerDamage.PVP);
+            return switch (mode) {
+                case NEVER -> false;
+                case PVP -> getServer() != null && getServer().isPvpAllowed() && super.canAttack(target);
+                case ALWAYS -> super.canAttack(target);
+            };
+        }
+        if (target instanceof GolemEntity other && java.util.Objects.equals(other.getOwnerUuid(), getOwnerUuid())) {
+            return false;
+        }
+        return super.canAttack(target);
     }
 
     private void enderCatchUp() {
@@ -1321,6 +1439,10 @@ public class GolemEntity extends PathfinderMob {
             return InteractionResult.SUCCESS;
         }
         PartInstance part = PartInstance.fromStack(held);
+        if (part != null && part.blockedReason() != null) {
+            say(player, part.blockedReason(), ChatFormatting.RED);
+            return InteractionResult.SUCCESS;
+        }
         if (part != null) {
             PartInstance old = equipPart(part);
             consumeHeld(player, held);
@@ -1417,7 +1539,7 @@ public class GolemEntity extends PathfinderMob {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack s = player.getInventory().getItem(i);
             PartInstance p = PartInstance.fromStack(s);
-            if (p != null && p.shape() == e.shape() && p.materialId().equals(e.material())) {
+            if (p != null && p.shape() == e.shape() && p.materialId().equals(e.material()) && p.blockedReason() == null) {
                 s.shrink(1);
                 return p;
             }
@@ -1477,6 +1599,10 @@ public class GolemEntity extends PathfinderMob {
 
     /** Installs a module from the held item. */
     private boolean installModule(Player player, ItemStack held, com.xtrip.golemgarage.golem.GolemModule m) {
+        if (m.isDisabled()) {
+            say(player, Component.translatable("golemgarage.msg.module_off"), ChatFormatting.RED);
+            return false;
+        }
         if (modules.contains(m)) {
             say(player, Component.translatable("golemgarage.msg.module_dupe"), ChatFormatting.YELLOW);
             return false;
@@ -1553,14 +1679,32 @@ public class GolemEntity extends PathfinderMob {
 
     /** False (and tells the player) when they're at the server's golem limit. */
     public static boolean canPlaceAnother(net.minecraft.server.level.ServerLevel level, UUID owner, Player player) {
-        int max = com.xtrip.golemgarage.Config.MAX_GOLEMS_PER_PLAYER.get();
+        return canPlaceAnother(level, owner, player, null);
+    }
+
+    /** Checks the per-player and per-chunk golem limits; {@code at} is where the new golem would go. */
+    public static boolean canPlaceAnother(net.minecraft.server.level.ServerLevel level, UUID owner, Player player,
+                                          @Nullable BlockPos at) {
+        int perChunk = com.xtrip.golemgarage.Config.get(com.xtrip.golemgarage.Config.MAX_GOLEMS_PER_CHUNK::get, 0);
+        if (perChunk > 0 && at != null) {
+            net.minecraft.world.level.ChunkPos cp = new net.minecraft.world.level.ChunkPos(at);
+            int here = level.getEntities(ModEntities.GOLEM.get(), new net.minecraft.world.phys.AABB(
+                    cp.getMinBlockX(), level.getMinBuildHeight(), cp.getMinBlockZ(),
+                    cp.getMaxBlockX() + 1, level.getMaxBuildHeight(), cp.getMaxBlockZ() + 1), g -> true).size();
+            if (here >= perChunk) {
+                if (player != null) {
+                    player.displayClientMessage(Component.translatable("golemgarage.msg.chunk_limit", here, perChunk)
+                            .withStyle(ChatFormatting.RED), true);
+                }
+                return false;
+            }
+        }
+        int max = com.xtrip.golemgarage.Config.get(com.xtrip.golemgarage.Config.MAX_GOLEMS_PER_PLAYER::get, 0);
         if (max <= 0 || owner == null) {
             return true;
         }
-        int count = 0;
-        for (net.minecraft.server.level.ServerLevel l : level.getServer().getAllLevels()) {
-            count += l.getEntities(ModEntities.GOLEM.get(), g -> owner.equals(g.getOwnerUuid())).size();
-        }
+        // Count every golem the server knows of, loaded or not.
+        int count = com.xtrip.golemgarage.golem.GolemRegistry.get(level.getServer()).forOwner(owner).size();
         if (count >= max) {
             if (player != null) {
                 player.displayClientMessage(Component.translatable("golemgarage.msg.limit", count, max).withStyle(ChatFormatting.RED), true);
@@ -1621,6 +1765,8 @@ public class GolemEntity extends PathfinderMob {
         tag.putBoolean("Vines", hasVines());
         tag.put("Modules", modulesTag());
         tag.putInt("Paint", getPaint());
+        tag.putInt("Group", getGroup());
+        tag.putBoolean("Paused", paused);
         CompoundTag l = new CompoundTag();
         links.forEach((m, p) -> l.putLong(m.name(), p.asLong()));
         tag.put("Links", l);
@@ -1645,7 +1791,7 @@ public class GolemEntity extends PathfinderMob {
         setRules(loaded.isEmpty() ? GolemRule.followerPreset() : loaded);
         links.clear();
         CompoundTag l = tag.getCompound("Links");
-        for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.values()) {
+        for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.MARKS) {
             if (l.contains(m.name())) {
                 links.put(m, BlockPos.of(l.getLong(m.name())));
             }
@@ -1653,6 +1799,8 @@ public class GolemEntity extends PathfinderMob {
         syncLinks();
         setFlag(FLAG_VINES, tag.getBoolean("Vines"));
         setPaint(tag.contains("Paint") ? tag.getInt("Paint") : -1);
+        setGroup(tag.getInt("Group"));
+        paused = tag.getBoolean("Paused");
         if (tag.contains("Modules")) {
             readModules(tag);
         } else {

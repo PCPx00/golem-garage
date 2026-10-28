@@ -119,6 +119,9 @@ public class GolemScreen extends Screen {
         GuiPreview.render(g, x0 + 10, y0 + 30, x0 + 136, y0 + H - 10, 30, mouseX, mouseY, golem);
         String name = golem.hasCustomName() && golem.getCustomName() != null ? golem.getCustomName().getString() : I18n.get("entity.golemgarage.golem");
         g.drawCenteredString(font, name, x0 + 73, y0 + 32, TEXT);
+        if (golem.getGroup() > 0) {
+            g.drawCenteredString(font, I18n.get("screen.golemgarage.golem.group", golem.getGroup()), x0 + 73, y0 + 42, 0xFFFFE27A);
+        }
 
         // Parts.
         int px = x0 + 146;
@@ -208,14 +211,14 @@ public class GolemScreen extends Screen {
             }
         }
         int linkCount = 0;
-        for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.values()) {
+        for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.MARKS) {
             if (golem.readSyncedLink(m) != null) {
                 linkCount++;
             }
         }
         int ly = y0 + H - 30 - Math.max(2, linkCount) * 8;
         int lyStart = ly;
-        for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.values()) {
+        for (GolemLinkerItem.Mode m : GolemLinkerItem.Mode.MARKS) {
             BlockPos p = golem.readSyncedLink(m);
             if (p != null) {
                 g.drawString(font, fit(m.title().getString() + " " + p.toShortString(), 112), sx, ly, 0xFF000000 | m.color);
@@ -262,6 +265,16 @@ public class GolemScreen extends Screen {
 
     private void initRules(int x0, int y0) {
         editor();
+        int group = golem.getGroup();
+        if (group > 0) {
+            addRenderableWidget(Button.builder(Component.translatable("screen.golemgarage.golem.copy_group", group), b -> {
+                PacketDistributor.sendToServer(new SetGolemRulesPayload(golem.getId(), GolemRule.toTag(rules)));
+                PacketDistributor.sendToServer(new GolemActionPayload(golem.getId(), GolemActionPayload.COPY_RULES_TO_GROUP, 0));
+                dirty = false;
+                rebuildWidgets();
+            }).bounds(x0 + W - 200, y0 + 6, 108, 16).tooltip(net.minecraft.client.gui.components.Tooltip.create(
+                    Component.translatable("screen.golemgarage.golem.copy_group_tip", group))).build());
+        }
     }
 
     @Override

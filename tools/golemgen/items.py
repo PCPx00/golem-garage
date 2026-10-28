@@ -177,6 +177,32 @@ def generate(root, assets, data):
             })
             _write_json(os.path.join(recipe_dir, sh["id"], mat["id"] + ".json"), recipe)
 
+    # ---- one recipe per shape for datapack materials (see data/DatapackMaterials.java) ---
+    for sh in S.SHAPES:
+        pattern, extras = sh["recipe"]
+        _write_json(os.path.join(recipe_dir, "datapack", sh["id"] + ".json"), {
+            "type": "%s:datapack_part" % MODID,
+            "shape": sh["id"],
+            "pattern": pattern,
+            "key": {k: ingredient(ref) for k, ref in extras.items()},
+        })
+
+    # ---- item tags for modpacks (recipes, quests, filters) -----------------------------
+    tag_dir = os.path.join(data, MODID, "tags", "item")
+    _write_json(os.path.join(tag_dir, "golem_parts.json"),
+                {"replace": False, "values": ["%s:%s" % (MODID, sh["id"]) for sh in S.SHAPES]})
+    for slot in S.SLOT_ORDER:
+        _write_json(os.path.join(tag_dir, "golem_parts", slot.lower() + ".json"),
+                    {"replace": False, "values": ["%s:%s" % (MODID, sh["id"]) for sh in S.SHAPES if sh["slot"] == slot]})
+    _write_json(os.path.join(tag_dir, "modules.json"),
+                {"replace": False, "values": ["%s:module_%s" % (MODID, m) for m in MODULES]})
+    _write_json(os.path.join(tag_dir, "golems.json"), {"replace": False, "values": ["%s:golem" % MODID]})
+    _write_json(os.path.join(tag_dir, "cubs.json"), {"replace": False, "values": ["%s:cub" % MODID]})
+    _write_json(os.path.join(tag_dir, "garage_blocks.json"), {"replace": False, "values": [
+        "%s:%s" % (MODID, b) for b in ("garage_controller", "laser_emitter", "steel_emitter")]})
+    _write_json(os.path.join(tag_dir, "tools.json"), {"replace": False, "values": [
+        "%s:%s" % (MODID, b) for b in ("golem_linker", "blueprint", "repair_kit", "manual")]})
+
     # ---- other recipes ---------------------------------------------------------------
     rdir = os.path.join(data, MODID, "recipe")
     _write_json(os.path.join(rdir, "golem.json"), {
@@ -196,6 +222,12 @@ def generate(root, assets, data):
         "pattern": ["IRI"],
         "key": {"I": {"tag": "c:ingots/iron"}, "R": {"item": "minecraft:redstone"}},
         "result": {"id": "%s:signal_plate" % MODID, "count": 1},
+    })
+    _write_json(os.path.join(rdir, "golem_dock.json"), {
+        "type": "minecraft:crafting_shaped", "category": "misc",
+        "pattern": ["CRC", "III"],
+        "key": {"I": {"tag": "c:ingots/iron"}, "C": {"tag": "c:ingots/copper"}, "R": {"item": "minecraft:redstone_block"}},
+        "result": {"id": "%s:golem_dock" % MODID, "count": 1},
     })
     # ---- upgrade modules ---------------------------------------------------------------
     _write_json(os.path.join(rdir, "module_casing.json"), {
@@ -240,6 +272,7 @@ def generate(root, assets, data):
         "block.golemgarage.laser_emitter": "Laser Emitter",
         "block.golemgarage.steel_emitter": "Steel Emitter",
         "block.golemgarage.signal_plate": "Golem Signal Plate",
+        "block.golemgarage.golem_dock": "Golem Dock",
         "item.golemgarage.golem": "Golem",
         "item.golemgarage.golem.broken": "Broken Golem",
         "item.golemgarage.cub": "Cub",
