@@ -557,8 +557,9 @@ def garage_chapter(sizes):
             text("A repair gives back every part's durability, all health and all power, and polishes copper "
                  "to new.\n\nIt costs one unit of each damaged part's own material and takes 2 minutes (less "
                  "with set bonuses or a Steel Emitter).\n\nWhile it works, the golem rides a lift into the "
-                 "middle of the room and turns slowly as every emitter fires a pulsing beam that sweeps up and "
-                 "down it. Sparks fly and a scanning ring climbs its body.", "Repairs"),
+                 "middle of the room, hung from hoist chains, and turns slowly while the emitters take turns "
+                 "firing crackling red, blue, pink and amber laser bolts at it. Sparks and embers spray off where "
+                 "they hit, smoke drifts off its plating, and it shudders with every shot.", "Repairs"),
         ]),
         entry("garage_build", "Building One", "minecraft:stone_bricks", [
             image("garage_top", sizes["garage_top"], "Top view of a 5 x 5 Garage. The controller (left) is in "
@@ -584,7 +585,7 @@ def garage_chapter(sizes):
         entry("garage_look", "A Real Garage", MODID + ":garage_door", [
             text("When the room is complete it comes to life: the emitters glow brighter, a neon "
                  + B("GOLEM GARAGE") + " sign flickers on outside above the controller, the lift pad gets a "
-                 "hazard-striped ring and yellow bay lines appear on the floor.\n\nInside, a panel above the "
+                 "hazard-striped ring, yellow bay lines appear on the floor and lanterns hang from the roof.\n\nInside, a panel above the "
                  "controller shows READY, or the repair's progress. During a repair amber warning lights spin "
                  "inside and on the sign, and the sign counts up the percent.", "Coming to Life"),
             craft(MODID + ":garage_door", "Iron, an iron trapdoor and redstone make 4. Place several side by side "

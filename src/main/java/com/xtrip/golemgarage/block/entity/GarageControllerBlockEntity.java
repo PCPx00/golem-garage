@@ -338,18 +338,65 @@ public class GarageControllerBlockEntity extends BlockEntity {
             garage.progress++;
         }
         long time = level.getGameTime();
-        if (garage.isWorking() && time % 3 == 0) {
-            for (int i = 0; i < garage.emitters.size(); i++) {
-                Vec3 t = garage.beamTarget(i, time);
+        if (!garage.isWorking()) {
+            return;
+        }
+        var rnd = level.random;
+        for (int i = 0; i < garage.emitters.size(); i++) {
+            if (garage.firePower(i, time) < 0.5f) {
+                continue;
+            }
+            Vec3 t = garage.beamTarget(i, time);
+            // Sparks spray off where the bolt hits, with the odd glowing ember.
+            for (int k = 0; k < 2; k++) {
                 level.addParticle(ParticleTypes.ELECTRIC_SPARK, t.x, t.y, t.z,
-                        (level.random.nextDouble() - 0.5) * 0.2, 0.05, (level.random.nextDouble() - 0.5) * 0.2);
+                        (rnd.nextDouble() - 0.5) * 0.5, rnd.nextDouble() * 0.3, (rnd.nextDouble() - 0.5) * 0.5);
+            }
+            if (rnd.nextInt(3) == 0) {
+                level.addParticle(ParticleTypes.CRIT, t.x, t.y, t.z,
+                        (rnd.nextDouble() - 0.5) * 0.6, rnd.nextDouble() * 0.3, (rnd.nextDouble() - 0.5) * 0.6);
+            }
+            if (rnd.nextInt(7) == 0) {
+                level.addParticle(ParticleTypes.LAVA, t.x, t.y, t.z, 0, 0, 0);
             }
         }
-        if (garage.isWorking() && time % 20 == 0) {
+        // Smoke drifts up off the golem's hot plating.
+        if (time % 4 == 0) {
             Vec3 c = garage.golemBase(0);
-            level.addParticle(ParticleTypes.HAPPY_VILLAGER, c.x + (level.random.nextDouble() - 0.5),
-                    c.y + 1 + level.random.nextDouble() * 1.5, c.z + (level.random.nextDouble() - 0.5), 0, 0, 0);
+            level.addParticle(ParticleTypes.SMOKE, c.x + (rnd.nextDouble() - 0.5) * 1.2,
+                    c.y + 0.5 + rnd.nextDouble() * 2, c.z + (rnd.nextDouble() - 0.5) * 1.2, 0, 0.03, 0);
         }
+        if (time % 15 == 0) {
+            Vec3 c = garage.golemBase(0);
+            level.addParticle(ParticleTypes.LARGE_SMOKE, c.x + (rnd.nextDouble() - 0.5), c.y + 0.3,
+                    c.z + (rnd.nextDouble() - 0.5), 0, 0.02, 0);
+        }
+    }
+
+    /** Bolt colours, one per emitter: red-orange, electric blue, hot pink, amber. */
+    public static final float[][] BOLT_COLORS = {
+            {1.0f, 0.32f, 0.12f}, {0.35f, 0.55f, 1.0f}, {1.0f, 0.25f, 0.6f}, {1.0f, 0.62f, 0.15f}};
+    private static final int FIRE_CYCLE = 34;
+
+    /**
+     * How hard emitter i is firing right now, 0..1. Each emitter fires in bursts (a quick flare, about a second
+     * of crackling bolt, then a short pause), staggered so the lasers take turns.
+     */
+    public float firePower(int i, float time) {
+        if (!isWorking()) {
+            return 0f;
+        }
+        float phase = (time + i * 11) % FIRE_CYCLE;
+        if (phase < 2) {
+            return phase / 2f;
+        }
+        if (phase < 22) {
+            return 1f;
+        }
+        if (phase < 25) {
+            return (25 - phase) / 3f;
+        }
+        return 0f;
     }
 
     private void tickRepair(ServerLevel level) {
@@ -370,8 +417,14 @@ public class GarageControllerBlockEntity extends BlockEntity {
         if (progress == LIFT_TICKS) {
             level.playSound(null, worldPosition, com.xtrip.golemgarage.ModSounds.GARAGE_START.get(), SoundSource.BLOCKS, 1f, 1f);
         }
-        if (isWorking() && progress % 40 == 0) {
-            level.playSound(null, bayCenter, com.xtrip.golemgarage.ModSounds.GARAGE_LASER.get(), SoundSource.BLOCKS, 0.7f, 1f);
+        if (isWorking()) {
+            long now = level.getGameTime();
+            for (int i = 0; i < emitters.size(); i++) {
+                if ((now + i * 11) % FIRE_CYCLE == 0) {
+                    level.playSound(null, emitters.get(i), com.xtrip.golemgarage.ModSounds.GARAGE_LASER.get(),
+                            SoundSource.BLOCKS, 0.5f, 0.85f + 0.1f * i);
+                }
+            }
         }
         if (isWorking() && progress % 23 == 0) {
             level.playSound(null, bayCenter, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.15f, 1.8f);

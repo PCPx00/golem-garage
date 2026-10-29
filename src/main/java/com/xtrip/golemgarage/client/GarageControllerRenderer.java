@@ -95,35 +95,119 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
             golem.yHeadRot = yaw;
             golem.yHeadRotO = yaw;
             golem.setXRot(0);
-            entities.render(golem, cx, cy + lift + 0.125, cz, yaw, partial, pose, buffers, lightAt);
+            // It shudders while a bolt is hitting it.
+            float hitBy = 0f;
+            for (int i = 0; i < garage.getEmitters().size(); i++) {
+                hitBy = Math.max(hitBy, garage.firePower(i, time));
+            }
+            double jx = hitBy * 0.025 * Mth.sin(time * 9.1f);
+            double jz = hitBy * 0.025 * Mth.cos(time * 7.3f);
+            entities.render(golem, cx + jx, cy + lift + 0.125, cz + jz, yaw, partial, pose, buffers, lightAt);
+            // Hoist chains from the roof hold it up on the lift.
+            BlockPos max = garage.getBayMax();
+            if (max != null) {
+                double top = max.getY() + 1 - origin.getY();
+                double hook = cy + lift + 0.125 + golem.getBbHeight() * 0.8;
+                for (int side = -1; side <= 1; side += 2) {
+                    double a = Math.toRadians(yaw);
+                    double ox = Math.cos(a) * 0.42 * side;
+                    double oz = Math.sin(a) * 0.42 * side;
+                    chain(pose, buffers, cx + ox, hook, cz + oz, top, lightAt);
+                }
+            }
         }
 
-        // Beams and the scanning ring, faded in and out with the lift.
+        // Crackling laser bolts, fired in bursts, with a flash where each one hits.
         float fade = Mth.clamp(lift / 0.6f, 0f, 1f);
         if (fade <= 0.01f) {
             return;
         }
-        VertexConsumer vc = buffers.getBuffer(RenderType.lightning());
-        Matrix4f m = pose.last().pose();
         List<BlockPos> emitters = garage.getEmitters();
         for (int i = 0; i < emitters.size(); i++) {
+            float power = garage.firePower(i, time) * fade;
             BlockPos e = emitters.get(i);
             Vec3 from = new Vec3(e.getX() + 0.5 - origin.getX(), e.getY() + 0.47 - origin.getY(), e.getZ() + 0.5 - origin.getZ());
+            boolean steel = level.getBlockState(e).is(ModBlocks.STEEL_EMITTER.get());
+            float[] col = GarageControllerBlockEntity.BOLT_COLORS[i % GarageControllerBlockEntity.BOLT_COLORS.length];
+            VertexConsumer vc = buffers.getBuffer(RenderType.lightning());
+            Matrix4f m = pose.last().pose();
+            // The lens charges up and glows between shots.
+            float charge = 0.25f + 0.75f * power;
+            flash(vc, m, from.add(0, -0.05, 0), 0.12f + 0.1f * power, col, 0.5f * charge * fade);
+            if (power <= 0.01f) {
+                continue;
+            }
             Vec3 hit = garage.beamTarget(i, time);
             Vec3 to = new Vec3(hit.x - origin.getX(), hit.y - origin.getY(), hit.z - origin.getZ());
-            boolean steel = level.getBlockState(e).is(ModBlocks.STEEL_EMITTER.get());
-            float pulse = 0.75f + 0.25f * Mth.sin(time * 0.6f + i);
-            float r = steel ? 1.0f : 0.35f;
-            float g = steel ? 0.72f : 0.9f;
-            float b = steel ? 0.25f : 1.0f;
-            beam(vc, m, from, to, 0.11f, r, g, b, 0.28f * fade * pulse);
-            beam(vc, m, from, to, 0.04f, 0.9f + r * 0.1f, 0.95f, 1.0f, 0.85f * fade * pulse);
+            long seed = (long) (time / 2) * 7919L + i * 104729L;
+            // Steel emitters fire a fatter, wilder bolt.
+            bolt(vc, m, from, to, seed, steel ? 0.28f : 0.2f, col, power * (steel ? 1.25f : 1f));
+            flash(vc, m, to, 0.28f + 0.08f * Mth.sin(time * 2.3f + i), col, 0.55f * power);
+            flash(vc, m, to, 0.12f, new float[]{1f, 1f, 1f}, 0.8f * power);
         }
+    }
 
-        double base = cy + lift + 0.125;
-        double ringY = base + 0.15 + (Mth.sin(time * 0.05f) * 0.5f + 0.5f) * 2.5;
-        ring(vc, m, cx, ringY, cz, 0.85, 0.35f, 0.9f, 1.0f, 0.45f * fade);
-        ring(vc, m, cx, ringY, cz, 0.9, 0.35f, 0.9f, 1.0f, 0.2f * fade);
+    /** A jagged electric bolt from a to b: a coloured glow round a white-hot core, with a couple of forks. */
+    private static void bolt(VertexConsumer vc, Matrix4f m, Vec3 a, Vec3 b, long seed, float jag, float[] col, float power) {
+        java.util.Random rnd = new java.util.Random(seed);
+        int n = 9;
+        Vec3 dir = b.subtract(a);
+        Vec3 side = dir.cross(new Vec3(0, 1, 0));
+        if (side.lengthSqr() < 1e-6) {
+            side = new Vec3(1, 0, 0);
+        }
+        side = side.normalize();
+        Vec3 up = dir.cross(side).normalize();
+        Vec3[] pts = new Vec3[n + 1];
+        for (int k = 0; k <= n; k++) {
+            double t = (double) k / n;
+            double amp = jag * Math.sin(Math.PI * t);
+            pts[k] = a.add(dir.scale(t)).add(side.scale((rnd.nextDouble() - 0.5) * 2 * amp))
+                    .add(up.scale((rnd.nextDouble() - 0.5) * 2 * amp));
+        }
+        for (int k = 0; k < n; k++) {
+            beam(vc, m, pts[k], pts[k + 1], 0.34f, col[0], col[1], col[2], Math.min(1f, 0.12f * power));
+            beam(vc, m, pts[k], pts[k + 1], 0.18f, col[0], col[1], col[2], Math.min(1f, 0.45f * power));
+            beam(vc, m, pts[k], pts[k + 1], 0.06f, 0.75f + col[0] * 0.25f, 0.75f + col[1] * 0.25f,
+                    0.75f + col[2] * 0.25f, Math.min(1f, 0.9f * power));
+        }
+        // Forks that spit off the main bolt.
+        for (int f = 0; f < 2; f++) {
+            int k = 2 + rnd.nextInt(n - 3);
+            Vec3 p = pts[k];
+            Vec3 fdir = dir.normalize().scale(0.15).add(side.scale((rnd.nextDouble() - 0.5) * 0.7))
+                    .add(up.scale((rnd.nextDouble() - 0.5) * 0.7));
+            for (int s = 0; s < 3; s++) {
+                Vec3 q = p.add(fdir).add((rnd.nextDouble() - 0.5) * 0.1, (rnd.nextDouble() - 0.5) * 0.1, (rnd.nextDouble() - 0.5) * 0.1);
+                beam(vc, m, p, q, 0.035f, col[0], col[1], col[2], 0.7f * power * (1 - s / 3f));
+                p = q;
+            }
+        }
+    }
+
+    /** A soft star of light: three crossed glowing squares. */
+    private static void flash(VertexConsumer vc, Matrix4f m, Vec3 c, float r, float[] col, float a) {
+        if (a <= 0.01f) {
+            return;
+        }
+        quad(vc, m, c.add(-r, 0, 0), c.add(r, 0, 0), new Vector3f(0, r, 0), col[0], col[1], col[2], a);
+        quad(vc, m, c.add(0, 0, -r), c.add(0, 0, r), new Vector3f(0, r, 0), col[0], col[1], col[2], a);
+        quad(vc, m, c.add(-r, 0, 0), c.add(r, 0, 0), new Vector3f(0, 0, r), col[0], col[1], col[2], a);
+    }
+
+    /** A vertical run of chain from y0 up to y1, centred on (x, z). */
+    private void chain(PoseStack pose, MultiBufferSource buffers, double x, double y0, double z, double y1, int light) {
+        BlockState chain = Blocks.CHAIN.defaultBlockState();
+        double y = y1;
+        while (y > y0 + 0.01) {
+            double len = Math.min(1.0, y - y0);
+            pose.pushPose();
+            pose.translate(x - 0.5, y - len, z - 0.5);
+            pose.scale(1f, (float) len, 1f);
+            blocks.renderSingleBlock(chain, pose, buffers, light, OverlayTexture.NO_OVERLAY);
+            pose.popPose();
+            y -= len;
+        }
     }
 
     // =================================================================== the finished Garage
@@ -146,6 +230,22 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
             slab(pose, buffers, yellow, x0, y, z1 - w, x1, z1, floorLight);
             slab(pose, buffers, yellow, x0, y, z0, x0 + w, z1, floorLight);
             slab(pose, buffers, yellow, x1 - w, y, z0, x1, z1, floorLight);
+
+            // Workshop lanterns hanging on chains near the corners, swaying a little.
+            float roof = max.getY() + 1 - origin.getY();
+            BlockState lantern = Blocks.LANTERN.defaultBlockState()
+                    .setValue(net.minecraft.world.level.block.LanternBlock.HANGING, true);
+            float[][] spots = {{x0 + 0.55f, z0 + 0.55f}, {x1 - 0.55f, z0 + 0.55f}, {x0 + 0.55f, z1 - 0.55f}, {x1 - 0.55f, z1 - 0.55f}};
+            for (int k = 0; k < spots.length; k++) {
+                pose.pushPose();
+                pose.translate(spots[k][0], roof, spots[k][1]);
+                pose.mulPose(com.mojang.math.Axis.ZP.rotationDegrees(3f * Mth.sin(time * 0.05f + k * 1.7f)));
+                pose.mulPose(com.mojang.math.Axis.XP.rotationDegrees(2f * Mth.cos(time * 0.043f + k)));
+                chain(pose, buffers, 0, -0.6, 0, 0, FULL_BRIGHT - 0x500000);
+                pose.translate(-0.5, -1.6, -0.5);
+                blocks.renderSingleBlock(lantern, pose, buffers, FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                pose.popPose();
+            }
         }
 
         Direction out = garage.outside();

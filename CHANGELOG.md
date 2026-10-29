@@ -2,6 +2,17 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.11.0
+
+### Changed
+- **New Garage repair show:** the emitters now fire crackling, forking laser bolts in short bursts, taking turns,
+  each in its own colour (red-orange, electric blue, hot pink, amber). Steel Emitters fire fatter bolts.
+  - The lens glows as it charges, and each hit flashes, with sparks, crits and glowing embers spraying off.
+  - Smoke drifts up off the golem, which shudders with every shot.
+  - The golem hangs from two hoist chains while it's on the lift.
+  - Each emitter makes its laser sound when it fires.
+- A finished Garage has four lanterns hanging on chains from the roof, gently swaying.
+
 ## 0.10.0
 
 ### Added

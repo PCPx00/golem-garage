@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.10.0, by xTrip",
+ "subtitle": "Version 0.11.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -8586,7 +8586,7 @@
       },
       {
        "type": "text",
-       "text": "While it works, the golem rides a lift into the middle of the room and turns slowly as every emitter fires a pulsing beam that sweeps up and down it. Sparks fly and a scanning ring climbs its body."
+       "text": "While it works, the golem rides a lift into the middle of the room, hung from hoist chains, and turns slowly while the emitters take turns firing crackling red, blue, pink and amber laser bolts at it. Sparks and embers spray off where they hit, smoke drifts off its plating, and it shudders with every shot."
       }
      ]
     },
@@ -8652,12 +8652,12 @@
      "pages": [
       {
        "type": "text",
-       "text": "When the room is complete it comes to life: the emitters glow brighter, a neon §lGOLEM GARAGE§r sign flickers on outside above the controller, the lift pad gets a hazard-striped ring and yellow bay lines appear on the floor.\n\nInside, a panel above the controller shows READY, or the repair's progress.",
+       "text": "When the room is complete it comes to life: the emitters glow brighter, a neon §lGOLEM GARAGE§r sign flickers on outside above the controller, the lift pad gets a hazard-striped ring, yellow bay lines appear on the floor and lanterns hang from the roof.",
        "title": "Coming to Life"
       },
       {
        "type": "text",
-       "text": "During a repair amber warning lights spin inside and on the sign, and the sign counts up the percent."
+       "text": "Inside, a panel above the controller shows READY, or the repair's progress. During a repair amber warning lights spin inside and on the sign, and the sign counts up the percent."
       },
       {
        "type": "crafting",
