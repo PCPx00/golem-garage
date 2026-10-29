@@ -348,6 +348,9 @@ final class GarageSkin {
             box(vc, p, sx - 0.22f, sy + hgt - 0.12f, sz - 0.22f, sx + 0.22f, sy + hgt, sz + 0.22f, RUST, SOOT, sl);
         }
 
+        // The working parts: car, hoist trolley, gears, gauge, fan and grinder.
+        GarageProps.render(garage, blocks, time, s, pose, buffers, light);
+
         // Loose chains swaying from the roof beside the walls.
         float[][] loose = {{ix0 + 0.4f, pcz, 1.3f}, {ix1 - 0.4f, pcz + 0.6f, 1.7f}, {pcx - 0.7f, iz0 + 0.4f, 1.1f}};
         for (int k = 0; k < loose.length; k++) {
@@ -387,11 +390,6 @@ final class GarageSkin {
         pose.translate(cx - 0.35, top, cz - 0.3);
         pose.scale(0.32f * s, 0.32f * s, 0.32f * s);
         blocks.renderSingleBlock(Blocks.ANVIL.defaultBlockState(), pose, buffers, light, OverlayTexture.NO_OVERLAY);
-        pose.popPose();
-        pose.pushPose();
-        pose.translate(cx + 0.05, top, cz + 0.05);
-        pose.scale(0.6f * s, 0.6f * s, 0.6f * s);
-        blocks.renderSingleBlock(Blocks.REDSTONE_TORCH.defaultBlockState(), pose, buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
         pose.popPose();
         pose.pushPose();
         pose.translate(cx + 0.12, top, cz - 0.4);

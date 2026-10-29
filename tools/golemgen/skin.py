@@ -383,6 +383,124 @@ def generate(assets):
     for i in range(16):
         t.set(i, 0, PANEL[0]); t.set(i, 15, PANEL[0]); t.set(0, i, PANEL[0]); t.set(15, i, PANEL[0])
 
+    # ---- rustic pass: everything weathered back down to rust and grime ----
+    RP = [(52, 34, 26), (74, 46, 30), (98, 60, 36), (122, 76, 44), (146, 96, 56), (168, 118, 72)]
+
+    # 0: rusted ribbed sheet, flaking, with streaks and grime at the foot
+    t = Tile(img, 0, 201)
+    ribbed(t, RP, drip=6)
+    t.rust_spots(4, [(44, 26, 18)] + RUST)
+    for _ in range(4):
+        x, y = t.rng.randint(0, 15), t.rng.randint(2, 13)
+        t.set(x, y, PANEL[2]); t.set(x, y + 1, PANEL[1])
+    for y in range(12, 16):
+        for x in range(16):
+            if t.rng.random() < (y - 11) * 0.22:
+                t.darken(x, y, 0.65)
+
+    # 2: bolted plates, rust bleeding from every seam
+    t = Tile(img, 2, 202)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, RP[3] if (x // 8 + y // 8) % 2 == 0 else RP[2])
+    for i in range(16):
+        t.set(i, 7, RP[0]); t.set(7, i, RP[0]); t.set(i, 8, RP[4]); t.set(8, i, RP[4])
+    rivets(t, [(2, 2), (12, 2), (2, 12), (12, 12)], PANEL[5], RP[0])
+    t.rust_spots(3)
+    t.streaks(4, RP[0], 6)
+
+    # 6: stained concrete: oil, tyre marks and grime
+    t = Tile(img, 6, 203)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, CONCRETE[t.rng.choice([2, 3, 3, 2, 1])])
+    cx, cy = t.rng.randint(4, 11), t.rng.randint(4, 11)
+    for y in range(16):
+        for x in range(16):
+            d = (x - cx) ** 2 + (y - cy) ** 2
+            if d < 9 * t.rng.uniform(0.5, 1.0):
+                t.set(x, y, (34, 30, 32))
+            elif d < 16 and t.rng.random() < 0.4:
+                t.set(x, y, (50, 46, 46))
+    for y in range(16):
+        if t.rng.random() < 0.7:
+            t.set(3, y, CONCRETE[0]); t.set(12, y, CONCRETE[0])
+    for i in range(16):
+        t.set(i, 15, CONCRETE[0]); t.set(15, i, CONCRETE[0])
+
+    # 20: rusted I-beam pillar
+    t = Tile(img, 20, 204)
+    for y in range(16):
+        for x in range(16):
+            c = RP[1] if x < 2 or x > 13 else RP[4] if x < 4 or x > 11 else RP[2]
+            t.set(x, y, c)
+    for y in (3, 11):
+        t.set(2, y, PANEL[5]); t.set(13, y, PANEL[5])
+    t.rust_spots(3, [(44, 26, 18)] + RUST)
+    t.streaks(2, RP[0], 8)
+
+    # 23: car body, flat black paint worn through to rust, scratched
+    t = Tile(img, 23, 205)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, (28 + t.rng.randint(0, 8), 26 + t.rng.randint(0, 6), 26 + t.rng.randint(0, 6)))
+    t.rust_spots(4)
+    for _ in range(4):
+        x, y = t.rng.randint(0, 12), t.rng.randint(0, 15)
+        for k in range(t.rng.randint(2, 5)):
+            t.set(x + k, y, (96, 92, 88))
+    rivets(t, [(1, 1), (14, 1), (1, 14), (14, 14)], PANEL[4], (10, 10, 10))
+
+    # 24: cracked, grimy windscreen
+    t = Tile(img, 24, 206)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, (36, 48, 52) if y > 1 else (24, 22, 22))
+    for k in range(3, 12):
+        t.set(k, 14 - k, (120, 140, 140))
+    x, y = 8, 7
+    for _ in range(6):
+        t.set(x, y, (150, 170, 170)); x += t.rng.choice([-1, 1]); y += t.rng.choice([-1, 0, 1])
+    for x in range(16):
+        t.set(x, 15, (60, 44, 34))
+
+    # 25: gear: dark iron, worn bright on the edges
+    t = Tile(img, 25, 207)
+    for y in range(16):
+        for x in range(16):
+            edge = x in (0, 15) or y in (0, 15)
+            t.set(x, y, PANEL[4] if edge else RP[t.rng.randint(1, 2)])
+    t.rust_spots(1)
+
+    # 26: pressure gauge face
+    t = Tile(img, 26, 208)
+    for y in range(16):
+        for x in range(16):
+            d = ((x - 7.5) ** 2 + (y - 7.5) ** 2) ** 0.5
+            t.set(x, y, (40, 34, 30) if d > 7 else (60, 56, 50) if d > 6.2 else (222, 214, 190))
+    for a in range(0, 360, 30):
+        import math
+        x = int(round(7.5 + math.cos(math.radians(a)) * 5)); y = int(round(7.5 + math.sin(math.radians(a)) * 5))
+        t.set(x, y, (30, 30, 30))
+    for (x, y) in ((11, 3), (12, 4), (12, 5)):
+        t.set(x, y, (200, 40, 30))
+
+    # 27: dirty chrome
+    t = Tile(img, 27, 209)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, PANEL[5] if (x + y) % 7 == 0 else PANEL[4] if x % 4 < 2 else PANEL[3])
+    t.rust_spots(1)
+    t.streaks(2, (40, 34, 30), 5)
+
+    # 28: radiator grille
+    t = Tile(img, 28, 210)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, (20, 18, 18) if x % 3 != 0 else PANEL[4])
+    for x in range(16):
+        t.set(x, 0, PANEL[5]); t.set(x, 15, PANEL[1])
+
     path = os.path.join(assets, "textures/entity/garage_skin.png")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     img.save(path)

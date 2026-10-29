@@ -129,7 +129,7 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
             Vec3 from = new Vec3(e.getX() + 0.5 - origin.getX(), e.getY() + 0.47 - origin.getY(), e.getZ() + 0.5 - origin.getZ());
             boolean steel = level.getBlockState(e).is(ModBlocks.STEEL_EMITTER.get());
             float[] col = GarageControllerBlockEntity.BOLT_COLORS[i % GarageControllerBlockEntity.BOLT_COLORS.length];
-            VertexConsumer vc = buffers.getBuffer(RenderType.lightning());
+            VertexConsumer vc = buffers.getBuffer(GlowRenderType.GLOW);
             Matrix4f m = pose.last().pose();
             // The lens charges up and glows between shots.
             float charge = 0.25f + 0.75f * power;
@@ -196,7 +196,7 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
     }
 
     /** A round glow that fades to nothing at its edge: three crossed discs, bright in the middle. */
-    private static void softGlow(VertexConsumer vc, Matrix4f m, Vec3 c, float r, float[] col, float a) {
+    static void softGlow(VertexConsumer vc, Matrix4f m, Vec3 c, float r, float[] col, float a) {
         int seg = 10;
         float cx = (float) c.x, cy = (float) c.y, cz = (float) c.z;
         for (int plane = 0; plane < 3; plane++) {
@@ -278,7 +278,7 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
                 blocks.renderSingleBlock(lantern, pose, buffers, FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
                 // A warm, gently flickering glow round the flame.
                 float flick = 0.85f + 0.1f * Mth.sin(time * 0.37f + k * 2f) + 0.05f * Mth.sin(time * 1.3f + k);
-                VertexConsumer glow = buffers.getBuffer(RenderType.lightning());
+                VertexConsumer glow = buffers.getBuffer(GlowRenderType.GLOW);
                 Matrix4f lm = pose.last().pose();
                 Vec3 flame = new Vec3(0.5, 0.3, 0.5);
                 softGlow(glow, lm, flame, 0.75f, new float[]{1f, 0.6f, 0.22f}, 0.35f * flick);
@@ -301,7 +301,7 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
         GarageSkin.box(buffers.getBuffer(RenderType.entityCutoutNoCull(GarageSkin.TEX)), pose.last(),
                 -1.5f, -0.52f, 0.004f, 1.5f, 0.52f, 0.055f, GarageSkin.SIGN, GarageSkin.RUST, 0xD000D0);
         float neon = flickerOn ? 0.8f + 0.2f * Mth.sin(time * 0.9f) * Mth.sin(time * 0.31f) : 0.12f;
-        frame(buffers.getBuffer(RenderType.lightning()), pose.last().pose(), -1.4f, -0.45f, 1.4f, 0.45f, 0.06f, 0.035f,
+        frame(buffers.getBuffer(GlowRenderType.GLOW), pose.last().pose(), -1.4f, -0.45f, 1.4f, 0.45f, 0.06f, 0.035f,
                 1f * neon, 0.42f * neon, 0.1f * neon, 0.9f);
         text(pose, buffers, Component.translatable("golemgarage.sign.title"), 0f, 0.1f, 2.5f, 0.06f,
                 flickerOn ? 0xFF8A2A : 0x4A2410, flickerOn ? 0x5A1400 : 0x1A0A04);
@@ -320,7 +320,7 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
         faceWall(pose, in, 1.55f);
         slabXY(pose, buffers, Blocks.BLACK_CONCRETE.defaultBlockState(), -0.7f, -0.28f, 0.7f, 0.28f, 0.04f);
         Matrix4f m = pose.last().pose();
-        VertexConsumer glow2 = buffers.getBuffer(RenderType.lightning());
+        VertexConsumer glow2 = buffers.getBuffer(GlowRenderType.GLOW);
         frame(glow2, m, -0.66f, -0.24f, 0.66f, 0.24f, 0.05f, 0.025f, 0.35f, 0.9f, 1f, 0.7f);
         float fill = busy ? Mth.clamp(pct / 100f, 0f, 1f) : 1f;
         float r = busy ? 1f : 0.3f, g = busy ? 0.7f : 1f, b = busy ? 0.2f : 0.45f;
@@ -361,7 +361,7 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
         blocks.renderSingleBlock(Blocks.ORANGE_STAINED_GLASS.defaultBlockState(), pose, buffers, FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         pose.popPose();
         Matrix4f m = pose.last().pose();
-        VertexConsumer glow = buffers.getBuffer(RenderType.lightning());
+        VertexConsumer glow = buffers.getBuffer(GlowRenderType.GLOW);
         Vec3 c = new Vec3(x, y, z);
         float a = time * 0.22f;
         for (int i = 0; i < 2; i++) {

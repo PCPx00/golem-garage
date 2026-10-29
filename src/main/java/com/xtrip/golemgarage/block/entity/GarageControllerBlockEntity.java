@@ -460,6 +460,76 @@ public class GarageControllerBlockEntity extends BlockEntity {
         return best;
     }
 
+    // ------------------------------------------------------------------ workshop layout (shared by renderer and particles)
+    /** The way into the room from the controller. */
+    public Direction inward() {
+        return outside().getOpposite();
+    }
+
+    /** True when the room is big enough (5 x 5 or more) for the car and the corner props. */
+    public boolean roomyEnough() {
+        return formed && bayMin != null && bayMax != null
+                && bayMax.getX() - bayMin.getX() >= 4 && bayMax.getZ() - bayMin.getZ() >= 4;
+    }
+
+    /** Interior corner cell centres at floor height, nearest to the controller first. */
+    public List<Vec3> corners() {
+        List<Vec3> out = new ArrayList<>();
+        if (bayMin == null || bayMax == null) {
+            return out;
+        }
+        double y = bayMin.getY();
+        out.add(new Vec3(bayMin.getX() + 0.5, y, bayMin.getZ() + 0.5));
+        out.add(new Vec3(bayMax.getX() + 0.5, y, bayMin.getZ() + 0.5));
+        out.add(new Vec3(bayMin.getX() + 0.5, y, bayMax.getZ() + 0.5));
+        out.add(new Vec3(bayMax.getX() + 0.5, y, bayMax.getZ() + 0.5));
+        Vec3 c = Vec3.atCenterOf(worldPosition);
+        out.sort(java.util.Comparator.comparingDouble(v -> (v.x - c.x) * (v.x - c.x) + (v.z - c.z) * (v.z - c.z)));
+        return out;
+    }
+
+    /** The side wall the car is parked against. */
+    public Direction carSide() {
+        return inward().getClockWise();
+    }
+
+    /** Where the car stands: centre of its footprint at floor height, alongside the lift, facing the back wall. */
+    @Nullable
+    public Vec3 carCenter() {
+        if (!roomyEnough()) {
+            return null;
+        }
+        Direction side = carSide();
+        double cx = (bayMin.getX() + bayMax.getX() + 1) / 2.0;
+        double cz = (bayMin.getZ() + bayMax.getZ() + 1) / 2.0;
+        double half = (side.getAxis() == Direction.Axis.X ? bayMax.getX() - bayMin.getX() + 1 : bayMax.getZ() - bayMin.getZ() + 1) / 2.0;
+        double off = half - 0.78;
+        return new Vec3(cx + side.getStepX() * off, bayMin.getY(), cz + side.getStepZ() * off);
+    }
+
+    /** A point on the car, from car-local coordinates (x forward towards the back wall, z towards the wall). */
+    public Vec3 onCar(double lx, double ly, double lz) {
+        Vec3 c = carCenter();
+        Direction f = inward();
+        Direction s = carSide();
+        return new Vec3(c.x + f.getStepX() * lx + s.getStepX() * lz, c.y + ly, c.z + f.getStepZ() * lx + s.getStepZ() * lz);
+    }
+
+    /** The bench grinder runs in bursts: on for a second and a half, then off for a while. */
+    public static boolean grinding(float time) {
+        return time % 90 < 30;
+    }
+
+    /** The grinder wheel on the workbench, in world space. */
+    @Nullable
+    public Vec3 grinderPos() {
+        if (!roomyEnough()) {
+            return null;
+        }
+        Vec3 c = corners().get(0);
+        return new Vec3(c.x + 0.18, c.y + 1.08, c.z + 0.2);
+    }
+
     /** Height of the exhaust stack above its base block. */
     public static final double EXHAUST_HEIGHT = 1.8;
 
@@ -480,6 +550,42 @@ public class GarageControllerBlockEntity extends BlockEntity {
                 }
                 level.addParticle(rnd.nextInt(3) == 0 ? ParticleTypes.SMOKE : ParticleTypes.ELECTRIC_SPARK, x, y, z,
                         (rnd.nextDouble() - 0.5) * 0.2, rnd.nextDouble() * 0.1, (rnd.nextDouble() - 0.5) * 0.2);
+            }
+        }
+        // The car idles: its twin stacks puff smoke. The bench grinder throws sparks while it runs.
+        if (carCenter() != null) {
+            long t = level.getGameTime();
+            for (int side = -1; side <= 1; side += 2) {
+                Vec3 top = onCar(-0.62, 1.5, 0.36 * side);
+                if ((t + side) % 5 == 0) {
+                    level.addParticle(ParticleTypes.SMOKE, top.x, top.y, top.z, 0, 0.06, 0);
+                }
+                if ((t + side * 7) % 37 == 0) {
+                    level.addParticle(ParticleTypes.LARGE_SMOKE, top.x, top.y, top.z, 0, 0.03, 0);
+                }
+            }
+            // Now and then the engine backfires out of the side pipes.
+            if (t % 140 < 3) {
+                for (int side = -1; side <= 1; side += 2) {
+                    Vec3 pipe = onCar(-0.32, 0.34, 0.56 * side);
+                    Vec3 back = onCar(-1, 0, 0).subtract(onCar(0, 0, 0)).scale(0.12);
+                    level.addParticle(ParticleTypes.FLAME, pipe.x, pipe.y, pipe.z, back.x, 0.01, back.z);
+                    level.addParticle(ParticleTypes.SMOKE, pipe.x, pipe.y, pipe.z, back.x * 0.5, 0.02, back.z * 0.5);
+                }
+                if (t % 140 == 0) {
+                    Vec3 c = carCenter();
+                    level.playLocalSound(c.x, c.y + 0.5, c.z, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.25f, 0.6f, false);
+                }
+            }
+            Vec3 g = grinderPos();
+            if (g != null && t % 90 == 0) {
+                level.playLocalSound(g.x, g.y, g.z, SoundEvents.GRINDSTONE_USE, SoundSource.BLOCKS, 0.3f, 1.3f, false);
+            }
+            if (g != null && grinding(t)) {
+                for (int k = 0; k < 2; k++) {
+                    level.addParticle(rnd.nextInt(4) == 0 ? ParticleTypes.CRIT : ParticleTypes.ELECTRIC_SPARK,
+                            g.x, g.y, g.z, (rnd.nextDouble() - 0.2) * 0.25, rnd.nextDouble() * 0.15, (rnd.nextDouble() - 0.5) * 0.25);
+                }
             }
         }
         BlockPos stack = exhaustBase();

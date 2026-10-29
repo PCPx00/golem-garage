@@ -2,6 +2,25 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.14.0
+
+### Added
+- **A wasteland car** in every transformed Garage that's 5 x 5 or bigger, parked against a side wall facing
+  the door. It has a spiked ram, a supercharger with a spinning belt pulley, a roll cage, side pipes, twin
+  smoke stacks, a spare tyre and a jerry can. It idles: the body shakes on its springs, the headlights flicker,
+  the stacks puff smoke, and every few seconds it backfires flames out of its side pipes.
+- **Moving parts:**
+  - A hoist trolley rolls back and forth along the roof beam, wheels turning and hook swinging. During a repair
+    it parks over the lift.
+  - Three meshing gears turn high on the wall, next to a pressure gauge with a twitching needle.
+  - An exhaust fan spins on the controller wall.
+  - A bench grinder on the workbench spins up every few seconds and throws sparks, with sound.
+
+### Changed
+- **Much rustier:** walls, plates and pillars are rusted and streaked again, and the floor is stained with oil
+  and tyre marks.
+- Glows (lasers, lanterns, headlights) no longer blank out windows behind them at night.
+
 ## 0.13.0
 
 ### Changed

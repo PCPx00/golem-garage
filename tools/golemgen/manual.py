@@ -588,6 +588,10 @@ def garage_chapter(sizes):
                  "workshop. Corrugated metal, grimy brick and bolted plates inside, a plank roof with a hoist "
                  "beam, an oily concrete floor, and a weathered shell outside with spikes on the roof and a "
                  "smoking exhaust stack. A workbench, tyres, oil drums and jerry cans fill the corners.\n\n"
+                 "In a room 5 x 5 or bigger a spiked wasteland car idles against the side wall, shaking on its "
+                 "springs with its blower belt spinning, smoke puffing from its stacks and the odd backfire. A hoist "
+                 "trolley rolls along the roof beam with its hook swinging, gears turn and a gauge twitches high "
+                 "on the wall, an exhaust fan spins, and the bench grinder throws sparks.\n\n"
                  "It also lights itself: hidden light blocks under the roof by the lanterns keep it bright day and "
                  "night. Break any part of the room and it goes back to how you built it, lights and all.",
                  "The Transformation"),
