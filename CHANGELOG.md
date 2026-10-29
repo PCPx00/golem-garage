@@ -2,6 +2,22 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.12.0
+
+### Added
+- **The Garage transforms when it's complete**, like a formed multiblock. Rusty panels sweep across every wall,
+  floor and ceiling face, starting at the controller, and the blocks you built with disappear behind a
+  wasteland workshop:
+  - Inside: rusty corrugated sheets, grimy brick and bolted plates, a hazard-striped kick plate, a dark plank
+    roof with a hoist beam over the lift, and an oily concrete floor with drain grates.
+  - Outside: a weathered metal shell with hazard bands, a rusty roof lined with spikes, and a smoking exhaust
+    stack (it smokes harder during a repair).
+  - Props: a workbench with a vice, torch and lantern, a stack of tyres, oil drums, jerry cans and loose chains.
+  - Sparks and smoke while it transforms, and the clank of it being bolted together.
+  - Windows, doors, emitters and the controller keep their own look. Break any block of the room and it goes
+    straight back to how you built it.
+- The outside sign is now fire-orange neon on a rusty scrap-metal board.
+
 ## 0.11.0
 
 ### Changed

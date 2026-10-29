@@ -1,6 +1,6 @@
 # Golem Garage: Player Guide
 
-Version 0.11.0 for Minecraft 1.21.1 (NeoForge). By xTrip.
+Version 0.12.0 for Minecraft 1.21.1 (NeoForge). By xTrip.
 
 Build golems from parts. Every golem has five slots (head, torso, arms, legs and core), and every
 part is a **shape** made from a **material**. Iron arms look like iron and gold legs look like gold, and each

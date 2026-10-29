@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.11.0, by xTrip",
+ "subtitle": "Version 0.12.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -8652,12 +8652,21 @@
      "pages": [
       {
        "type": "text",
-       "text": "When the room is complete it comes to life: the emitters glow brighter, a neon §lGOLEM GARAGE§r sign flickers on outside above the controller, the lift pad gets a hazard-striped ring, yellow bay lines appear on the floor and lanterns hang from the roof.",
+       "text": "When the room is complete it §ltransforms§r: rusty panels sweep across every wall, floor and ceiling, starting at the controller, and your blocks disappear behind a wasteland workshop.",
+       "title": "The Transformation"
+      },
+      {
+       "type": "text",
+       "text": "Corrugated metal, grimy brick and bolted plates inside, a plank roof with a hoist beam, an oily concrete floor, and a weathered shell outside with spikes on the roof and a smoking exhaust stack. A workbench, tyres, oil drums and jerry cans fill the corners.\n\nNothing really changes: break any part of the room and it goes back to how you built it."
+      },
+      {
+       "type": "text",
+       "text": "Once complete, the emitters glow brighter, a neon §lGOLEM GARAGE§r sign flickers on outside above the controller, the lift pad gets a hazard-striped ring, yellow bay lines appear on the floor and lanterns hang from the roof.\n\nInside, a panel above the controller shows READY, or the repair's progress.",
        "title": "Coming to Life"
       },
       {
        "type": "text",
-       "text": "Inside, a panel above the controller shows READY, or the repair's progress. During a repair amber warning lights spin inside and on the sign, and the sign counts up the percent."
+       "text": "During a repair amber warning lights spin inside and on the sign, and the sign counts up the percent."
       },
       {
        "type": "crafting",

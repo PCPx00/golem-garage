@@ -583,7 +583,14 @@ def garage_chapter(sizes):
                  "golem out.", "Checking It"),
         ]),
         entry("garage_look", "A Real Garage", MODID + ":garage_door", [
-            text("When the room is complete it comes to life: the emitters glow brighter, a neon "
+            text("When the room is complete it " + B("transforms") + ": rusty panels sweep across every wall, "
+                 "floor and ceiling, starting at the controller, and your blocks disappear behind a wasteland "
+                 "workshop. Corrugated metal, grimy brick and bolted plates inside, a plank roof with a hoist "
+                 "beam, an oily concrete floor, and a weathered shell outside with spikes on the roof and a "
+                 "smoking exhaust stack. A workbench, tyres, oil drums and jerry cans fill the corners.\n\n"
+                 "Nothing really changes: break any part of the room and it goes back to how you built it.",
+                 "The Transformation"),
+            text("Once complete, the emitters glow brighter, a neon "
                  + B("GOLEM GARAGE") + " sign flickers on outside above the controller, the lift pad gets a "
                  "hazard-striped ring, yellow bay lines appear on the floor and lanterns hang from the roof.\n\nInside, a panel above the "
                  "controller shows READY, or the repair's progress. During a repair amber warning lights spin "

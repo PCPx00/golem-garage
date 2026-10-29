@@ -346,6 +346,8 @@ def main():
     items.generate(ROOT, ASSETS, DATA)
     import blocks  # noqa: E402
     blocks.generate(ASSETS)
+    import skin  # noqa: E402
+    skin.generate(ASSETS)
     import cub  # noqa: E402
     cub.generate(JAVA, ASSETS)
     import outfits  # noqa: E402

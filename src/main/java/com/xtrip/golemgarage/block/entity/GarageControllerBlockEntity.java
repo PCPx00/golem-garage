@@ -299,6 +299,11 @@ public class GarageControllerBlockEntity extends BlockEntity {
         }
         if (nowFormed && !formed) {
             level.playSound(null, worldPosition, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 0.6f, 1.3f);
+            // The clank of the room being bolted into a garage.
+            BlockPos mid = bay.center().above();
+            level.playSound(null, mid, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.35f, 0.6f);
+            level.playSound(null, mid, SoundEvents.SMITHING_TABLE_USE, SoundSource.BLOCKS, 0.8f, 0.8f);
+            level.playSound(null, mid, SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 0.8f, 0.7f);
         } else if (!nowFormed && formed) {
             level.playSound(null, worldPosition, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 0.6f, 1.3f);
         }
@@ -331,6 +336,9 @@ public class GarageControllerBlockEntity extends BlockEntity {
     }
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, GarageControllerBlockEntity garage) {
+        if (garage.formed) {
+            garage.formedParticles(level);
+        }
         if (!garage.isBusy() || garage.bayCenter == null) {
             return;
         }
@@ -370,6 +378,63 @@ public class GarageControllerBlockEntity extends BlockEntity {
             Vec3 c = garage.golemBase(0);
             level.addParticle(ParticleTypes.LARGE_SMOKE, c.x + (rnd.nextDouble() - 0.5), c.y + 0.3,
                     c.z + (rnd.nextDouble() - 0.5), 0, 0.02, 0);
+        }
+    }
+
+    /** The roof corner of the finished Garage farthest from the controller, where the exhaust stack stands. */
+    @Nullable
+    public BlockPos exhaustBase() {
+        if (!formed || bayMin == null || bayMax == null) {
+            return null;
+        }
+        BlockPos best = null;
+        double bestD = -1;
+        for (int x : new int[]{bayMin.getX() - 1, bayMax.getX() + 1}) {
+            for (int z : new int[]{bayMin.getZ() - 1, bayMax.getZ() + 1}) {
+                BlockPos p = new BlockPos(x, bayMax.getY() + 2, z);
+                double d = p.distSqr(worldPosition);
+                if (d > bestD) {
+                    bestD = d;
+                    best = p;
+                }
+            }
+        }
+        return best;
+    }
+
+    /** Height of the exhaust stack above its base block. */
+    public static final double EXHAUST_HEIGHT = 1.8;
+
+    /** Client: sparks and smoke while the room transforms, then a smoking exhaust stack on the roof. */
+    private void formedParticles(Level level) {
+        var rnd = level.random;
+        long since = formedFor(level.getGameTime());
+        if (since < 50 && bayMin != null && bayMax != null) {
+            for (int k = 0; k < 4; k++) {
+                double x = bayMin.getX() + rnd.nextDouble() * (bayMax.getX() + 1 - bayMin.getX());
+                double y = bayMin.getY() + rnd.nextDouble() * (bayMax.getY() + 1 - bayMin.getY());
+                double z = bayMin.getZ() + rnd.nextDouble() * (bayMax.getZ() + 1 - bayMin.getZ());
+                // Snap to the nearest wall so it looks like the panels are being welded on.
+                switch (rnd.nextInt(3)) {
+                    case 0 -> x = rnd.nextBoolean() ? bayMin.getX() + 0.05 : bayMax.getX() + 0.95;
+                    case 1 -> z = rnd.nextBoolean() ? bayMin.getZ() + 0.05 : bayMax.getZ() + 0.95;
+                    default -> y = rnd.nextBoolean() ? bayMin.getY() + 0.05 : bayMax.getY() + 0.95;
+                }
+                level.addParticle(rnd.nextInt(3) == 0 ? ParticleTypes.SMOKE : ParticleTypes.ELECTRIC_SPARK, x, y, z,
+                        (rnd.nextDouble() - 0.5) * 0.2, rnd.nextDouble() * 0.1, (rnd.nextDouble() - 0.5) * 0.2);
+            }
+        }
+        BlockPos stack = exhaustBase();
+        if (stack != null && level.getBlockState(stack).isAir()) {
+            double top = stack.getY() + EXHAUST_HEIGHT + 0.1;
+            if (level.getGameTime() % 3 == 0) {
+                level.addParticle(ParticleTypes.SMOKE, stack.getX() + 0.5, top, stack.getZ() + 0.5,
+                        (rnd.nextDouble() - 0.5) * 0.02, 0.08, (rnd.nextDouble() - 0.5) * 0.02);
+            }
+            if (level.getGameTime() % (isBusy() ? 8 : 20) == 0) {
+                level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, stack.getX() + 0.5, top, stack.getZ() + 0.5,
+                        0, 0.04, 0);
+            }
         }
     }
 

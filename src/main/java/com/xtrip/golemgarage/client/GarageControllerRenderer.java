@@ -219,6 +219,7 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
         BlockPos origin = garage.getBlockPos();
         BlockPos min = garage.getBayMin();
         BlockPos max = garage.getBayMax();
+        GarageSkin.render(garage, blocks, time, pose, buffers);
         if (min != null && max != null) {
             int floorLight = LevelRenderer.getLightColor(level, min);
             float y = min.getY() - origin.getY();
@@ -258,11 +259,14 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
         // Outside: a neon sign on the wall above the controller.
         pose.pushPose();
         faceWall(pose, out, 2.05f);
-        slabXY(pose, buffers, Blocks.BLACK_CONCRETE.defaultBlockState(), -1.45f, -0.5f, 1.45f, 0.5f, 0.05f);
-        float neon = flickerOn ? 1f : 0.15f;
-        frame(buffers.getBuffer(RenderType.lightning()), pose.last().pose(), -1.4f, -0.45f, 1.4f, 0.45f, 0.06f, 0.035f, 0.35f * neon, 0.9f * neon, 1f * neon, 0.9f);
+        // A rusty scrap-metal board, bolted on, with flickering fire-orange neon.
+        GarageSkin.box(buffers.getBuffer(RenderType.entityCutoutNoCull(GarageSkin.TEX)), pose.last(),
+                -1.5f, -0.52f, 0.004f, 1.5f, 0.52f, 0.055f, GarageSkin.SIGN, GarageSkin.RUST, 0xD000D0);
+        float neon = flickerOn ? 0.8f + 0.2f * Mth.sin(time * 0.9f) * Mth.sin(time * 0.31f) : 0.12f;
+        frame(buffers.getBuffer(RenderType.lightning()), pose.last().pose(), -1.4f, -0.45f, 1.4f, 0.45f, 0.06f, 0.035f,
+                1f * neon, 0.42f * neon, 0.1f * neon, 0.9f);
         text(pose, buffers, Component.translatable("golemgarage.sign.title"), 0f, 0.1f, 2.5f, 0.06f,
-                flickerOn ? 0x9CF6FF : 0x1B4650, flickerOn ? 0x0E6A86 : 0x0A1A20);
+                flickerOn ? 0xFF8A2A : 0x4A2410, flickerOn ? 0x5A1400 : 0x1A0A04);
         Component status = busy ? Component.translatable("golemgarage.sign.repairing", pct)
                 : Component.translatable("golemgarage.sign.open");
         boolean blink = !busy || ((int) (time / 10)) % 2 == 0;
