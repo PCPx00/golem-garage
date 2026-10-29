@@ -55,7 +55,7 @@ public final class GaragePlanOverlay {
 
     enum Kind {
         WALL(0xE8E8F0), FLOOR(0x8FA4C8), CEILING(0x8FA4C8),
-        EMITTER(0x5FE8FF), CONTROLLER(0xFFD84A), CLEAR(0xFF4A4A);
+        EMITTER(0x5FE8FF), CONTROLLER(0xFFD84A), DOOR(0xFF9A3C), CLEAR(0xFF4A4A);
         final int color;
 
         Kind(int color) {
@@ -202,6 +202,9 @@ public final class GaragePlanOverlay {
                     } else if (sideWall && y >= 0 && y < h) {
                         if (d == 0 && l == 0 && y == 0) {
                             add(p, Kind.CONTROLLER, s.is(ModBlocks.GARAGE_CONTROLLER.get()), false);
+                        } else if (d == depth + 1 && Math.abs(l) <= (w >= 5 ? 1 : 0) && y <= Math.min(2, h - 2)) {
+                            // A doorway in the back wall: Garage Doors, or plain wall.
+                            add(p, Kind.DOOR, s.is(GarageBay.WALLS), !s.isAir() && !s.canBeReplaced() && !s.is(GarageBay.WALLS));
                         } else {
                             add(p, Kind.WALL, s.is(GarageBay.WALLS), !s.isAir() && !s.canBeReplaced() && !s.is(GarageBay.WALLS));
                         }

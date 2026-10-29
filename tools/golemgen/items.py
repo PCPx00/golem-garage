@@ -199,7 +199,8 @@ def generate(root, assets, data):
     _write_json(os.path.join(tag_dir, "golems.json"), {"replace": False, "values": ["%s:golem" % MODID]})
     _write_json(os.path.join(tag_dir, "cubs.json"), {"replace": False, "values": ["%s:cub" % MODID]})
     _write_json(os.path.join(tag_dir, "garage_blocks.json"), {"replace": False, "values": [
-        "%s:%s" % (MODID, b) for b in ("garage_controller", "laser_emitter", "steel_emitter")]})
+        "%s:%s" % (MODID, b) for b in ("garage_controller", "laser_emitter", "steel_emitter",
+                                         "garage_door", "garage_window")]})
     _write_json(os.path.join(tag_dir, "tools.json"), {"replace": False, "values": [
         "%s:%s" % (MODID, b) for b in ("golem_linker", "blueprint", "repair_kit", "manual")]})
 
@@ -228,6 +229,18 @@ def generate(root, assets, data):
         "pattern": ["CRC", "III"],
         "key": {"I": {"tag": "c:ingots/iron"}, "C": {"tag": "c:ingots/copper"}, "R": {"item": "minecraft:redstone_block"}},
         "result": {"id": "%s:golem_dock" % MODID, "count": 1},
+    })
+    _write_json(os.path.join(rdir, "garage_door.json"), {
+        "type": "minecraft:crafting_shaped", "category": "building",
+        "pattern": ["ITI", "IRI"],
+        "key": {"I": {"tag": "c:ingots/iron"}, "T": {"item": "minecraft:iron_trapdoor"}, "R": {"item": "minecraft:redstone"}},
+        "result": {"id": "%s:garage_door" % MODID, "count": 4},
+    })
+    _write_json(os.path.join(rdir, "garage_window.json"), {
+        "type": "minecraft:crafting_shaped", "category": "building",
+        "pattern": [" G ", "GNG", " G "],
+        "key": {"G": {"tag": "c:glass_blocks/colorless"}, "N": {"tag": "c:nuggets/iron"}},
+        "result": {"id": "%s:garage_window" % MODID, "count": 4},
     })
     # ---- upgrade modules ---------------------------------------------------------------
     _write_json(os.path.join(rdir, "module_casing.json"), {
@@ -273,6 +286,8 @@ def generate(root, assets, data):
         "block.golemgarage.steel_emitter": "Steel Emitter",
         "block.golemgarage.signal_plate": "Golem Signal Plate",
         "block.golemgarage.golem_dock": "Golem Dock",
+        "block.golemgarage.garage_door": "Garage Door",
+        "block.golemgarage.garage_window": "Garage Window",
         "item.golemgarage.golem": "Golem",
         "item.golemgarage.golem.broken": "Broken Golem",
         "item.golemgarage.cub": "Cub",

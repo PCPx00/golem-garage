@@ -6,6 +6,23 @@
     "minecraft:stone_bricks",
     "minecraft:bricks",
     "minecraft:copper_block",
-    "minecraft:deepslate_bricks"
+    "minecraft:deepslate_bricks",
+    "golemgarage:garage_door",
+    "golemgarage:garage_window",
+    {
+      "id": "#c:glass_blocks",
+      "required": false
+    },
+    {
+      "id": "#c:glass_panes",
+      "required": false
+    },
+    {
+      "id": "#c:concretes",
+      "required": false
+    },
+    "minecraft:smooth_stone",
+    "minecraft:polished_andesite",
+    "minecraft:iron_block"
   ]
 }

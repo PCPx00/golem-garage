@@ -39,6 +39,7 @@ public final class ClientSetup {
         event.registerEntityRenderer(ModEntities.GOLEM.get(), GolemRenderer::new);
         event.registerEntityRenderer(ModEntities.CUB.get(), CubRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.GARAGE_CONTROLLER.get(), GarageControllerRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.GARAGE_DOOR.get(), GarageDoorRenderer::new);
     }
 
     @SubscribeEvent

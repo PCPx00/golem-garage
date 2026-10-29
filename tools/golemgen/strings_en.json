@@ -199,7 +199,7 @@
   "jei.golemgarage.info.blueprint": "Use it on a golem to record its build and rules. Use it on another golem to rebuild that build from parts in your inventory.",
   "jei.golemgarage.info.cub": "A small golem friend. Dye it, dress it in outfits (right-click it with one, or open its wardrobe with an empty hand), and feed it three golem parts for different slots to grow it into a full golem.",
   "jei.golemgarage.info.dock": "A golem's home. Link a golem to it with the Golem Linker in Home mode and give it a \"rest at its dock\" rule: on the dock it slowly recharges and heals, and the pad lights up.",
-  "jei.golemgarage.info.garage": "Build a sealed room 3 to 9 blocks wide and deep and 4 to 8 tall, with 2 to 4 Laser Emitters in the ceiling and the Garage Controller in a wall. Hold the controller to see a building plan. Right-click the controller with a broken golem to repair it.",
+  "jei.golemgarage.info.garage": "Build a sealed room 3 to 9 blocks wide and deep and 4 to 8 tall, with 2 to 4 Laser Emitters in the ceiling and the Garage Controller in a wall. Hold the controller to see a building plan. Right-click the controller with a broken golem to repair it. Add Garage Doors and Windows (or any glass) to the walls so golems can drive in and you can watch.",
   "jei.golemgarage.info.golem": "Place it, then right-click it with parts to build it up: a head, torso, arms, legs and a core. Right-click it with an empty hand to open its panel, where you can give it rules. Press G while looking at it (or sneak + right-click with an empty hand) to pick it up again.",
   "jei.golemgarage.info.linker": "Shift + right-click the air to pick a mode, right-click a block to mark it, then right-click a golem to link it: a post, chest A, chest B, a Garage, two corners of a work area, or a Golem Dock home. In Group mode, shift + scroll picks a group and right-clicking a golem adds it. Hold it to see every golem's links.",
   "jei.golemgarage.info.manual": "The Golem Engineer's Manual explains everything in Golem Garage. You get one the first time you join a world, and you can craft more from a book and an iron ingot.",
@@ -453,5 +453,12 @@
   "trait.golemgarage.luminous": "Luminous: gives off light",
   "trait.golemgarage.oxidizes": "Oxidizes over time (wax with honeycomb)",
   "trait.golemgarage.smite": "Smite: arms hit undead harder",
-  "trait.golemgarage.thorns": "Thorns: reflects melee damage"
+  "trait.golemgarage.thorns": "Thorns: reflects melee damage",
+  "golemgarage.sign.title": "GOLEM GARAGE",
+  "golemgarage.sign.open": "● OPEN",
+  "golemgarage.sign.ready": "READY",
+  "golemgarage.sign.repairing": "REPAIRING %s%%",
+  "golemgarage.plan.kind.door": "Wall or Garage Door",
+  "jei.golemgarage.info.garage_door": "A roller door for your Garage. Place several side by side and stacked to make one big door; they open and close together. It rolls up by itself when a golem or cub comes near, with a redstone signal, or when you right-click it (right-click again to let it close). It counts as Garage wall, so the room stays complete with the door open.",
+  "jei.golemgarage.info.garage_window": "Steel-framed glass for Garage walls and roofs, so you can watch the lasers at work. Any glass block or pane also works in a Garage wall or roof."
 }

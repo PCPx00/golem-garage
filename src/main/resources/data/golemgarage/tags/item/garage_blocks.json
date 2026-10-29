@@ -3,6 +3,8 @@
   "values": [
     "golemgarage:garage_controller",
     "golemgarage:laser_emitter",
-    "golemgarage:steel_emitter"
+    "golemgarage:steel_emitter",
+    "golemgarage:garage_door",
+    "golemgarage:garage_window"
   ]
 }

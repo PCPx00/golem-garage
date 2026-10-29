@@ -565,19 +565,36 @@ def garage_chapter(sizes):
                   "the wall; the emitters (cyan) are in the ceiling above the bay.", "Top View"),
             table([
                 ("Inside", "3 to 9 blocks wide and deep, 4 to 8 blocks tall, fully enclosed."),
-                ("Walls", "Planks, stone, stone bricks, bricks, copper blocks or deepslate bricks."),
-                ("Floor and ceiling", "Any solid block. Glowing blocks like sea lanterns are fine."),
+                ("Walls", "Planks, stone, smooth stone, stone bricks, bricks, concrete, iron or copper blocks, "
+                          "deepslate bricks, any glass, Garage Windows and Garage Doors."),
+                ("Floor and ceiling", "Any solid block. Glowing blocks like sea lanterns are fine. The ceiling "
+                                      "can also be glass, for a skylight."),
                 ("Controller", "In a side wall, facing into the room."),
                 ("Emitters", "2 to 4 Laser or Steel Emitters set into the ceiling, above the room's air."),
             ], "The Rules"),
             text(B("Hold a Garage Controller") + " and a see-through plan appears: white for walls, blue-gray for "
-                 "floor and ceiling, cyan for emitters, yellow for the controller, red for anything in the way. "
+                 "floor and ceiling, cyan for emitters, yellow for the controller, orange for the doorway, red for anything in the way. "
                  "Each block vanishes from the plan as you place it, and a checklist counts what's left.\n\n"
                  "Sneak + scroll changes the room size.", "The Build Plan"),
             text("Place the controller first: the room goes the way you're facing. Keep holding a controller "
                  "while you build and the plan follows it.\n\nRight-click the controller with an " + B("empty hand")
                  + " to check the room.\n\nBreaking a wall pauses a repair. Breaking the controller drops the "
                  "golem out.", "Checking It"),
+        ]),
+        entry("garage_look", "A Real Garage", MODID + ":garage_door", [
+            text("When the room is complete it comes to life: the emitters glow brighter, a neon "
+                 + B("GOLEM GARAGE") + " sign flickers on outside above the controller, the lift pad gets a "
+                 "hazard-striped ring and yellow bay lines appear on the floor.\n\nInside, a panel above the "
+                 "controller shows READY, or the repair's progress. During a repair amber warning lights spin "
+                 "inside and on the sign, and the sign counts up the percent.", "Coming to Life"),
+            craft(MODID + ":garage_door", "Iron, an iron trapdoor and redstone make 4. Place several side by side "
+                  "and stacked for one big roller door. It rolls up for golems and cubs, redstone or a "
+                  "right-click (right-click again to let it close).", "Garage Door"),
+            craft(MODID + ":garage_window", "Four glass and an iron nugget make 4. Use them, or any glass, in the "
+                  "walls and roof so you can watch the repairs.", "Garage Window"),
+            text("The build plan marks a 3-wide doorway in the back wall in orange: fill it with Garage Doors so "
+                 "golems can come and go, or with plain wall.\n\nA door counts as wall even while it's open, "
+                 "so repairs keep going when a golem walks out.", "Doorways"),
         ]),
         entry("garage_blocks", "Garage Blocks", MODID + ":laser_emitter", [
             craft(MODID + ":garage_controller", "Iron, a lever and redstone. Goes in a wall."),
@@ -1090,6 +1107,7 @@ def build_index():
         MODID + ":golem": "first_golem", MODID + ":manual": "manual_recipe", MODID + ":cub": "cub_basics",
         MODID + ":repair_kit": "repairing", MODID + ":garage_controller": "garage_intro",
         MODID + ":laser_emitter": "garage_blocks", MODID + ":steel_emitter": "garage_blocks",
+        MODID + ":garage_door": "garage_look", MODID + ":garage_window": "garage_look",
         MODID + ":golem_linker": "linker", MODID + ":signal_plate": "signal_plate", MODID + ":blueprint": "blueprints",
         MODID + ":steel_ingot": "mat_steel", MODID + ":module_casing": "modules_intro",
         MODID + ":golem_dock": "dock", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",

@@ -5,6 +5,8 @@
     "golemgarage:laser_emitter",
     "golemgarage:steel_emitter",
     "golemgarage:signal_plate",
-    "golemgarage:golem_dock"
+    "golemgarage:golem_dock",
+    "golemgarage:garage_door",
+    "golemgarage:garage_window"
   ]
 }

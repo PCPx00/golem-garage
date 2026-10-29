@@ -182,6 +182,81 @@ def emitter_model(lens_tex):
     }
 
 
+def door_texture():
+    """64x32 sheet for the roller door renderer: slat, bottom bar, drum housing, rail."""
+    img = Image.new("RGBA", (64, 32), (0, 0, 0, 0))
+    pal = paint.ramp("#7d848c")
+    dark = paint.ramp("#4a4f57")
+    px = img.load()
+    rng = random.Random(77)
+    # Slat (v 0-4): a ridged steel strip with a groove at its bottom.
+    for x in range(16):
+        n = rng.choice([0, 0, 1, -1])
+        for y, idx in ((0, 5), (1, 4), (2, 3), (3, 1)):
+            px[x, y] = tuple(pal[max(0, min(6, idx + n))]) + (255,)
+    # Bottom bar (v 4-8): thicker bar, a handle and a rubber seal.
+    for x in range(16):
+        for y, idx in ((4, 5), (5, 3), (6, 2)):
+            px[x, y] = tuple(pal[idx]) + (255,)
+        px[x, 7] = (28, 28, 30, 255)
+    for x in range(6, 10):
+        px[x, 5] = tuple(dark[1]) + (255,)
+    px[6, 6] = px[9, 6] = tuple(dark[0]) + (255,)
+    # Housing (u 16-32, v 0-16): painted box with hazard stripes along its lower half.
+    for x in range(16, 32):
+        for y in range(0, 16):
+            px[x, y] = tuple(dark[3 if y % 7 else 2]) + (255,)
+        for y in range(9, 14):
+            yellow = ((x + y) // 2) % 2 == 0
+            px[x, y] = (232, 186, 48, 255) if yellow else (34, 32, 36, 255)
+        px[x, 0] = tuple(dark[5]) + (255,)
+        px[x, 15] = tuple(dark[0]) + (255,)
+    # Rail (u 32-36): dark channel steel.
+    for x in range(32, 36):
+        for y in range(16):
+            px[x, y] = tuple(dark[4 if x in (32, 35) else 1]) + (255,)
+    return img
+
+
+def door_icon():
+    pal = paint.ramp("#7d848c")
+    dark = paint.ramp("#4a4f57")
+    c = paint.Canvas(16, 16)
+    for x in range(1, 15):
+        c.set(x, 1, dark[2]); c.set(x, 2, dark[3])
+        for y in range(3, 14):
+            c.set(x, y, pal[(5, 4, 3)[(y - 3) % 3]] if (y - 3) % 3 != 2 else pal[1])
+        c.set(x, 14, (28, 28, 30))
+    for y in range(1, 15):
+        c.set(0, y, dark[1]); c.set(15, y, dark[1])
+    for x in range(1, 15):
+        if ((x + 1) // 2) % 2 == 0:
+            c.set(x, 2, (232, 186, 48))
+    c.set(7, 12, dark[0]); c.set(8, 12, dark[0])
+    return c.img
+
+
+def window():
+    pal = paint.ramp("#6a7079")
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = img.load()
+    for y in range(16):
+        for x in range(16):
+            edge = x in (0, 15) or y in (0, 15)
+            if edge:
+                px[x, y] = tuple(pal[4 if x == 0 or y == 0 else 2]) + (255,)
+            else:
+                px[x, y] = (150, 200, 220, 70)
+    # Glare streaks.
+    for i in range(3, 9):
+        px[i, 12 - i + 2] = (230, 245, 255, 150)
+    for i in range(8, 12):
+        px[i, 21 - i - 4] = (230, 245, 255, 110)
+    for (x, y) in ((1, 1), (14, 1), (1, 14), (14, 14)):
+        px[x, y] = tuple(pal[6]) + (255,)
+    return img
+
+
 def generate(assets):
     tex = os.path.join(assets, "textures/block")
     _save(controller(), os.path.join(tex, "garage_controller.png"))
@@ -195,6 +270,9 @@ def generate(assets):
     _save(dock_top(False), os.path.join(tex, "golem_dock_top.png"))
     _save(dock_top(True), os.path.join(tex, "golem_dock_top_on.png"))
     _save(dock_side(), os.path.join(tex, "golem_dock_side.png"))
+    _save(door_texture(), os.path.join(assets, "textures/entity/garage_door.png"))
+    _save(door_icon(), os.path.join(assets, "textures/item/garage_door.png"))
+    _save(window(), os.path.join(tex, "garage_window.png"))
     for old in ("laser_emitter.png", "steel_emitter.png"):
         p = os.path.join(tex, old)
         if os.path.exists(p):
@@ -214,7 +292,14 @@ def generate(assets):
           {"parent": "minecraft:block/pressure_plate_down", "textures": {"texture": "golemgarage:block/signal_plate_on"}})
     _json(os.path.join(models, "block/golem_dock.json"), dock_model("golem_dock_top"))
     _json(os.path.join(models, "block/golem_dock_on.json"), dock_model("golem_dock_top_on"))
-    for b in ("garage_controller", "laser_emitter", "steel_emitter", "signal_plate", "golem_dock"):
+    # The roller door is drawn by its renderer; the block model only gives break particles.
+    _json(os.path.join(models, "block/garage_door.json"), {"textures": {"particle": "golemgarage:block/emitter_side"}})
+    _json(os.path.join(models, "item/garage_door.json"),
+          {"parent": "minecraft:item/generated", "textures": {"layer0": "golemgarage:item/garage_door"}})
+    _json(os.path.join(models, "block/garage_window.json"),
+          {"parent": "minecraft:block/cube_all", "render_type": "minecraft:translucent",
+           "textures": {"all": "golemgarage:block/garage_window"}})
+    for b in ("garage_controller", "laser_emitter", "steel_emitter", "signal_plate", "golem_dock", "garage_window"):
         _json(os.path.join(models, "item/%s.json" % b), {"parent": "golemgarage:block/%s" % b})
 
     bs = os.path.join(assets, "blockstates")
@@ -224,6 +309,8 @@ def generate(assets):
     _json(os.path.join(bs, "garage_controller.json"), {"variants": {
         "facing=%s" % f: dict({"model": "golemgarage:block/garage_controller"}, **({"y": r} if r else {}))
         for f, r in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
+    _json(os.path.join(bs, "garage_door.json"), {"variants": {"": {"model": "golemgarage:block/garage_door"}}})
+    _json(os.path.join(bs, "garage_window.json"), {"variants": {"": {"model": "golemgarage:block/garage_window"}}})
     _json(os.path.join(bs, "golem_dock.json"), {"variants": {
         "occupied=false": {"model": "golemgarage:block/golem_dock"},
         "occupied=true": {"model": "golemgarage:block/golem_dock_on"}}})

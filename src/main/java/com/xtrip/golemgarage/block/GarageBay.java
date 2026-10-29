@@ -20,7 +20,8 @@ import java.util.Set;
 /**
  * A valid Garage bay: an enclosed air room that the Garage Controller can repair in.
  * Rules: 3-9 wide, 3-9 deep, 4-8 tall. Side walls must be garage_walls blocks.
- * The floor and ceiling can be any solid block. 2-4 Laser Emitters sit on the ceiling.
+ * The floor and ceiling can be any solid block (the ceiling can also be glass). 2-4 Laser Emitters sit on the ceiling.
+ * Garage Doors and Garage Windows count as wall.
  */
 public record GarageBay(BlockPos min, BlockPos max, List<BlockPos> emitters) {
     public static final TagKey<Block> WALLS =
@@ -85,7 +86,8 @@ public record GarageBay(BlockPos min, BlockPos max, List<BlockPos> emitters) {
                 if (d == Direction.UP) {
                     if (s.is(ModBlocks.LASER_EMITTER.get()) || s.is(ModBlocks.STEEL_EMITTER.get())) {
                         emitters.add(n);
-                    } else if (!s.isSolidRender(level, n)) {
+                    } else if (!s.isSolidRender(level, n) && !s.is(WALLS)) {
+                        // Glass and Garage Windows make a skylight.
                         return null;
                     }
                 } else if (d == Direction.DOWN) {

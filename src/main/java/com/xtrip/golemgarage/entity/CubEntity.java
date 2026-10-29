@@ -40,6 +40,7 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -172,6 +173,7 @@ public class CubEntity extends PathfinderMob {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new FollowOwnerGoal(this, 1.15, 3.0));
+        this.goalSelector.addGoal(2, new WanderNearOwnerGoal(this));
         this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 6.0f));
         this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
     }
@@ -241,9 +243,18 @@ public class CubEntity extends PathfinderMob {
         return false;
     }
 
+    /** Cubs nudge each other (and golems nudge cubs) so they never stand inside one another. */
     @Override
     public boolean isPushable() {
-        return false;
+        return true;
+    }
+
+    /** Cubs push other cubs and mobs aside, but never shove players around. */
+    @Override
+    protected void doPush(net.minecraft.world.entity.Entity other) {
+        if (!(other instanceof Player)) {
+            super.doPush(other);
+        }
     }
 
     // =================================================================== ticking
@@ -556,7 +567,36 @@ public class CubEntity extends PathfinderMob {
         syncOutfit();
     }
 
-    /** Follows the owner, hopping after them; catches up by teleport if left far behind. */
+    /**
+     * Each cub has its own spot around its owner (an angle and distance taken from its id), so a group of
+     * cubs fans out around you instead of piling onto the same block.
+     */
+    Vec3 spotAround(Player owner) {
+        long bits = getUUID().getLeastSignificantBits();
+        double angle = ((bits & 0xFFFF) / 65536.0) * Math.PI * 2;
+        double radius = 1.8 + ((bits >>> 16) & 0xFF) / 255.0 * 1.8;
+        return owner.position().add(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
+    }
+
+    /** A free spot near the owner to catch up to (never the owner's own block). */
+    private Vec3 catchUpSpot(Player owner) {
+        Vec3 want = spotAround(owner);
+        for (int i = 0; i < 8; i++) {
+            double jx = i == 0 ? 0 : (random.nextDouble() - 0.5) * 3;
+            double jz = i == 0 ? 0 : (random.nextDouble() - 0.5) * 3;
+            BlockPos p = BlockPos.containing(want.x + jx, owner.getY(), want.z + jz);
+            for (int dy = 1; dy >= -2; dy--) {
+                BlockPos q = p.above(dy);
+                if (level().getBlockState(q.below()).isFaceSturdy(level(), q.below(), net.minecraft.core.Direction.UP)
+                        && level().noCollision(this, getType().getDimensions().makeBoundingBox(Vec3.atBottomCenterOf(q)))) {
+                    return Vec3.atBottomCenterOf(q);
+                }
+            }
+        }
+        return owner.position();
+    }
+
+    /** Follows the owner to its own spot nearby; catches up by teleport if left far behind. */
     static class FollowOwnerGoal extends Goal {
         private final CubEntity cub;
         private final double speed;
@@ -570,30 +610,39 @@ public class CubEntity extends PathfinderMob {
             this.setFlags(EnumSet.of(Flag.MOVE));
         }
 
+        private boolean farFromSpot() {
+            return cub.distanceToSqr(owner) > stopDistance * stopDistance * 2.2
+                    || cub.distanceToSqr(cub.spotAround(owner)) > 2.25 && cub.distanceToSqr(owner) > stopDistance * stopDistance;
+        }
+
         @Override
         public boolean canUse() {
             owner = cub.getOwner();
-            return owner != null && !cub.isSitting() && cub.distanceToSqr(owner) > stopDistance * stopDistance;
+            return owner != null && !cub.isSitting() && farFromSpot();
         }
 
         @Override
         public boolean canContinueToUse() {
-            return owner != null && owner.isAlive() && !cub.isSitting()
-                    && cub.distanceToSqr(owner) > stopDistance * stopDistance;
+            return owner != null && owner.isAlive() && !cub.isSitting() && cub.distanceToSqr(cub.spotAround(owner)) > 1.0;
         }
 
         @Override
         public void start() {
-            cub.getNavigation().moveTo(owner, speed);
+            Vec3 s = cub.spotAround(owner);
+            cub.getNavigation().moveTo(s.x, s.y, s.z, speed);
         }
 
         @Override
         public void tick() {
             if (cub.distanceToSqr(owner) > 144.0) {
-                cub.teleportTo(owner.getX(), owner.getY(), owner.getZ());
+                Vec3 s = cub.catchUpSpot(owner);
+                cub.teleportTo(s.x, s.y, s.z);
                 cub.getNavigation().stop();
             } else if (cub.tickCount % 10 == 0) {
-                cub.getNavigation().moveTo(owner, speed);
+                Vec3 s = cub.spotAround(owner);
+                // Hurry when far behind, amble when nearly there.
+                double sp = cub.distanceToSqr(owner) > 64 ? speed * 1.2 : speed;
+                cub.getNavigation().moveTo(s.x, s.y, s.z, sp);
             }
         }
 
@@ -601,6 +650,41 @@ public class CubEntity extends PathfinderMob {
         public void stop() {
             owner = null;
             cub.getNavigation().stop();
+        }
+    }
+
+    /** When it's near its owner with nothing to do, the cub pootles around a little on its own. */
+    static class WanderNearOwnerGoal extends Goal {
+        private final CubEntity cub;
+        private int cooldown;
+
+        WanderNearOwnerGoal(CubEntity cub) {
+            this.cub = cub;
+            this.setFlags(EnumSet.of(Flag.MOVE));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (cub.isSitting() || cub.isSleepy() || --cooldown > 0) {
+                return false;
+            }
+            cooldown = 60 + cub.getRandom().nextInt(120);
+            Player owner = cub.getOwner();
+            return owner == null || cub.distanceToSqr(owner) < 36;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return !cub.getNavigation().isDone() && !cub.isSitting();
+        }
+
+        @Override
+        public void start() {
+            Player owner = cub.getOwner();
+            Vec3 c = owner != null ? cub.spotAround(owner) : cub.position();
+            double a = cub.getRandom().nextDouble() * Math.PI * 2;
+            double r = 0.8 + cub.getRandom().nextDouble() * 2.2;
+            cub.getNavigation().moveTo(c.x + Math.cos(a) * r, c.y, c.z + Math.sin(a) * r, 0.7);
         }
     }
 

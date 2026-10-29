@@ -112,6 +112,7 @@ public class GarageControllerBlock extends BaseEntityBlock {
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof GarageControllerBlockEntity garage) {
             garage.dropGolem();
+            garage.unlightEmitters();
         }
         super.onRemove(state, level, pos, newState, moved);
     }

@@ -60,8 +60,16 @@ public class GarageControllerBlockEntity extends BlockEntity {
     private BlockPos bayCenter;
     private final List<BlockPos> emitters = new ArrayList<>();
 
+    /** Whether the room around the controller is a complete Garage (checked every 2 seconds, synced). */
+    private boolean formed;
+    private BlockPos bayMin;
+    private BlockPos bayMax;
+    private final List<BlockPos> litEmitters = new ArrayList<>();
+
     /** Client only: the golem model shown during repair. */
     private GolemEntity displayGolem;
+    /** Client only: when the Garage was last seen to become complete, for the sign's switch-on flicker. */
+    private long formedAt = Long.MIN_VALUE / 2;
 
     public GarageControllerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.GARAGE_CONTROLLER.get(), pos, state);
@@ -86,6 +94,42 @@ public class GarageControllerBlockEntity extends BlockEntity {
 
     public List<BlockPos> getEmitters() {
         return emitters;
+    }
+
+    public boolean isFormed() {
+        return formed;
+    }
+
+    @Nullable
+    public BlockPos getBayMin() {
+        return bayMin;
+    }
+
+    @Nullable
+    public BlockPos getBayMax() {
+        return bayMax;
+    }
+
+    /** Client: game ticks since the Garage became complete. */
+    public long formedFor(long gameTime) {
+        return gameTime - formedAt;
+    }
+
+    /** The way out of the room through the controller's wall. */
+    public Direction outside() {
+        return getBlockState().getValue(com.xtrip.golemgarage.block.GarageControllerBlock.FACING).getOpposite();
+    }
+
+    /** Where the idle lift pad sits: the busy center, or the middle of the formed room. */
+    @Nullable
+    public BlockPos padCenter() {
+        if (bayCenter != null && isBusy()) {
+            return bayCenter;
+        }
+        if (bayMin == null || bayMax == null) {
+            return null;
+        }
+        return new BlockPos((bayMin.getX() + bayMax.getX()) / 2, bayMin.getY(), (bayMin.getZ() + bayMax.getZ()) / 2);
     }
 
     // =================================================================== starting a repair
@@ -226,8 +270,64 @@ public class GarageControllerBlockEntity extends BlockEntity {
     // =================================================================== ticking
     public static void serverTick(Level level, BlockPos pos, BlockState state, GarageControllerBlockEntity garage) {
         if (level instanceof ServerLevel sl) {
+            if ((level.getGameTime() + pos.asLong()) % 40 == 0) {
+                garage.checkFormed(sl);
+            }
             garage.tickRepair(sl);
         }
+    }
+
+    /** Re-checks the room, lights or dims its emitters, and tells players when it changes. */
+    private void checkFormed(ServerLevel level) {
+        GarageBay bay = GarageBay.find(level, worldPosition);
+        boolean nowFormed = bay != null;
+        BlockPos min = bay == null ? null : bay.min();
+        BlockPos max = bay == null ? null : bay.max();
+        List<BlockPos> lit = bay == null ? List.of() : bay.emitters();
+        boolean changed = nowFormed != formed || !java.util.Objects.equals(min, bayMin) || !java.util.Objects.equals(max, bayMax)
+                || !litEmitters.equals(lit);
+        if (!changed) {
+            return;
+        }
+        for (BlockPos e : litEmitters) {
+            if (!lit.contains(e)) {
+                setLit(level, e, false);
+            }
+        }
+        for (BlockPos e : lit) {
+            setLit(level, e, true);
+        }
+        if (nowFormed && !formed) {
+            level.playSound(null, worldPosition, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 0.6f, 1.3f);
+        } else if (!nowFormed && formed) {
+            level.playSound(null, worldPosition, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 0.6f, 1.3f);
+        }
+        formed = nowFormed;
+        bayMin = min;
+        bayMax = max;
+        litEmitters.clear();
+        litEmitters.addAll(lit);
+        setChanged();
+        sync();
+    }
+
+    private static void setLit(Level level, BlockPos pos, boolean lit) {
+        BlockState s = level.getBlockState(pos);
+        if (s.hasProperty(com.xtrip.golemgarage.block.LaserEmitterBlock.LIT)
+                && s.getValue(com.xtrip.golemgarage.block.LaserEmitterBlock.LIT) != lit) {
+            level.setBlock(pos, s.setValue(com.xtrip.golemgarage.block.LaserEmitterBlock.LIT, lit), 3);
+        }
+    }
+
+    /** The controller is being removed: its emitters go dim. */
+    public void unlightEmitters() {
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        for (BlockPos e : litEmitters) {
+            setLit(level, e, false);
+        }
+        litEmitters.clear();
     }
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, GarageControllerBlockEntity garage) {
@@ -439,6 +539,16 @@ public class GarageControllerBlockEntity extends BlockEntity {
             list.add(LongTag.valueOf(e.asLong()));
         }
         tag.put("Emitters", list);
+        tag.putBoolean("Formed", formed);
+        if (bayMin != null && bayMax != null) {
+            tag.putLong("BayMin", bayMin.asLong());
+            tag.putLong("BayMax", bayMax.asLong());
+        }
+        ListTag lit = new ListTag();
+        for (BlockPos e : litEmitters) {
+            lit.add(LongTag.valueOf(e.asLong()));
+        }
+        tag.put("Lit", lit);
     }
 
     @Override
@@ -455,6 +565,17 @@ public class GarageControllerBlockEntity extends BlockEntity {
         emitters.clear();
         for (Tag t : tag.getList("Emitters", Tag.TAG_LONG)) {
             emitters.add(BlockPos.of(((LongTag) t).getAsLong()));
+        }
+        boolean nowFormed = tag.getBoolean("Formed");
+        if (nowFormed && !formed && level != null && level.isClientSide) {
+            formedAt = level.getGameTime();
+        }
+        formed = nowFormed;
+        bayMin = tag.contains("BayMin") ? BlockPos.of(tag.getLong("BayMin")) : null;
+        bayMax = tag.contains("BayMax") ? BlockPos.of(tag.getLong("BayMax")) : null;
+        litEmitters.clear();
+        for (Tag t : tag.getList("Lit", Tag.TAG_LONG)) {
+            litEmitters.add(BlockPos.of(((LongTag) t).getAsLong()));
         }
     }
 }

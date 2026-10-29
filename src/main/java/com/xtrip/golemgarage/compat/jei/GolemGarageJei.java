@@ -82,6 +82,8 @@ public class GolemGarageJei implements IModPlugin {
         info(reg, ModItems.GARAGE_CONTROLLER.get(), "garage");
         info(reg, ModItems.LASER_EMITTER.get(), "garage");
         info(reg, ModItems.STEEL_EMITTER.get(), "garage");
+        info(reg, ModItems.GARAGE_DOOR.get(), "garage_door");
+        info(reg, ModItems.GARAGE_WINDOW.get(), "garage_window");
         info(reg, ModItems.SIGNAL_PLATE.get(), "signal_plate");
         info(reg, ModItems.GOLEM_DOCK.get(), "dock");
         info(reg, ModItems.GOLEM_LINKER.get(), "linker");

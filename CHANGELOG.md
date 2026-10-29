@@ -2,6 +2,30 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.10.0
+
+### Added
+- **The Garage looks like a real garage once it's complete:**
+  - A neon **GOLEM GARAGE** sign flickers on outside, above the controller. It shows OPEN, or the repair's
+    progress while it works.
+  - A status panel inside, above the controller, shows READY or a progress bar.
+  - Yellow bay lines on the floor and a hazard-striped ring around the lift pad.
+  - The emitters glow brighter.
+  - Amber warning lights spin inside and on the sign during a repair.
+- **Garage Door:** a roller door. Place several side by side and stacked to make one big door that opens and
+  closes together. It rolls up by itself for golems and cubs, with redstone, or when you right-click it
+  (right-click again to let it close). It counts as Garage wall, open or shut. Iron, an iron trapdoor and
+  redstone make 4.
+- **Garage Window:** steel-framed glass so you can watch the repairs. Four glass and an iron nugget make 4.
+- Any glass block or pane now works in Garage walls, and glass works in the roof for a skylight. Concrete,
+  smooth stone, polished andesite and iron blocks also work as walls now.
+- The build plan marks a doorway in the back wall (orange) for a Garage Door.
+
+### Fixed
+- Cubs no longer bunch up in one spot. Each cub keeps its own spot around you, wanders a little when you
+  stand still, and bumps into other cubs instead of passing through them. When they teleport to catch up,
+  they land on a free spot near you instead of all on top of you. They still never push players.
+
 ## 0.9.0
 
 ### Added

@@ -25,6 +25,10 @@ if [ "$1" = "trailer" ]; then
   rm -rf "$ROOT/run/saves/golemtest/datapacks/golemtest"
   python3 "$ROOT/tools/testworld/trailer_world.py" "$ROOT/run/saves/golemtest"
 fi
+if [ "$1" = "garage" ]; then
+  rm -rf "$ROOT/run/saves/golemtest/datapacks/gtest"
+  python3 "$ROOT/tools/testworld/garage_world.py" "$ROOT/run/saves/golemtest"
+fi
 EXTRA=""
 [ -n "$COMPAT" ] && EXTRA="-Pcompat"
 export DISPLAY=:99

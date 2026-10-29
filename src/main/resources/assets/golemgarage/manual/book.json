@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.9.0, by xTrip",
+ "subtitle": "Version 0.10.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -8612,11 +8612,11 @@
         ],
         [
          "Walls",
-         "Planks, stone, stone bricks, bricks, copper blocks or deepslate bricks."
+         "Planks, stone, smooth stone, stone bricks, bricks, concrete, iron or copper blocks, deepslate bricks, any glass, Garage Windows and Garage Doors."
         ],
         [
          "Floor and ceiling",
-         "Any solid block. Glowing blocks like sea lanterns are fine."
+         "Any solid block. Glowing blocks like sea lanterns are fine. The ceiling can also be glass, for a skylight."
         ],
         [
          "Controller",
@@ -8631,13 +8631,54 @@
       },
       {
        "type": "text",
-       "text": "§lHold a Garage Controller§r and a see-through plan appears: white for walls, blue-gray for floor and ceiling, cyan for emitters, yellow for the controller, red for anything in the way. Each block vanishes from the plan as you place it, and a checklist counts what's left.\n\nSneak + scroll changes the room size.",
+       "text": "§lHold a Garage Controller§r and a see-through plan appears: white for walls, blue-gray for floor and ceiling, cyan for emitters, yellow for the controller, orange for the doorway, red for anything in the way. Each block vanishes from the plan as you place it, and a checklist counts what's left.",
        "title": "The Build Plan"
+      },
+      {
+       "type": "text",
+       "text": "Sneak + scroll changes the room size."
       },
       {
        "type": "text",
        "text": "Place the controller first: the room goes the way you're facing. Keep holding a controller while you build and the plan follows it.\n\nRight-click the controller with an §lempty hand§r to check the room.\n\nBreaking a wall pauses a repair. Breaking the controller drops the golem out.",
        "title": "Checking It"
+      }
+     ]
+    },
+    {
+     "id": "garage_look",
+     "title": "A Real Garage",
+     "icon": "golemgarage:garage_door",
+     "pages": [
+      {
+       "type": "text",
+       "text": "When the room is complete it comes to life: the emitters glow brighter, a neon §lGOLEM GARAGE§r sign flickers on outside above the controller, the lift pad gets a hazard-striped ring and yellow bay lines appear on the floor.\n\nInside, a panel above the controller shows READY, or the repair's progress.",
+       "title": "Coming to Life"
+      },
+      {
+       "type": "text",
+       "text": "During a repair amber warning lights spin inside and on the sign, and the sign counts up the percent."
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:garage_door",
+       "text": "Iron, an iron trapdoor and redstone make 4. Place several side by side and stacked for one big roller door.",
+       "title": "Garage Door"
+      },
+      {
+       "type": "text",
+       "text": "It rolls up for golems and cubs, redstone or a right-click (right-click again to let it close)."
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:garage_window",
+       "text": "Four glass and an iron nugget make 4. Use them, or any glass, in the walls and roof so you can watch the repairs.",
+       "title": "Garage Window"
+      },
+      {
+       "type": "text",
+       "text": "The build plan marks a 3-wide doorway in the back wall in orange: fill it with Garage Doors so golems can come and go, or with plain wall.\n\nA door counts as wall even while it's open, so repairs keep going when a golem walks out.",
+       "title": "Doorways"
       }
      ]
     },
@@ -10549,6 +10590,8 @@
   "golemgarage:garage_controller": "garage_intro",
   "golemgarage:laser_emitter": "garage_blocks",
   "golemgarage:steel_emitter": "garage_blocks",
+  "golemgarage:garage_door": "garage_look",
+  "golemgarage:garage_window": "garage_look",
   "golemgarage:golem_linker": "linker",
   "golemgarage:signal_plate": "signal_plate",
   "golemgarage:blueprint": "blueprints",

@@ -23,6 +23,10 @@ public final class ModItems {
             ITEMS.registerSimpleBlockItem("steel_emitter", ModBlocks.STEEL_EMITTER);
     public static final DeferredItem<BlockItem> SIGNAL_PLATE =
             ITEMS.registerSimpleBlockItem("signal_plate", ModBlocks.SIGNAL_PLATE);
+    public static final DeferredItem<BlockItem> GARAGE_DOOR =
+            ITEMS.registerSimpleBlockItem("garage_door", ModBlocks.GARAGE_DOOR);
+    public static final DeferredItem<BlockItem> GARAGE_WINDOW =
+            ITEMS.registerSimpleBlockItem("garage_window", ModBlocks.GARAGE_WINDOW);
     public static final DeferredItem<BlockItem> GOLEM_DOCK =
             ITEMS.registerSimpleBlockItem("golem_dock", ModBlocks.GOLEM_DOCK);
 
