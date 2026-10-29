@@ -33,6 +33,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -65,6 +66,8 @@ public class GarageControllerBlockEntity extends BlockEntity {
     private BlockPos bayMin;
     private BlockPos bayMax;
     private final List<BlockPos> litEmitters = new ArrayList<>();
+    /** Hidden light blocks this Garage placed under its roof, by the lanterns. */
+    private final List<BlockPos> lights = new ArrayList<>();
 
     /** Client only: the golem model shown during repair. */
     private GolemEntity displayGolem;
@@ -284,6 +287,11 @@ public class GarageControllerBlockEntity extends BlockEntity {
         BlockPos min = bay == null ? null : bay.min();
         BlockPos max = bay == null ? null : bay.max();
         List<BlockPos> lit = bay == null ? List.of() : bay.emitters();
+        if (bay != null) {
+            placeLights(level, bay);
+        } else {
+            removeLights(level);
+        }
         boolean changed = nowFormed != formed || !java.util.Objects.equals(min, bayMin) || !java.util.Objects.equals(max, bayMax)
                 || !litEmitters.equals(lit);
         if (!changed) {
@@ -316,6 +324,55 @@ public class GarageControllerBlockEntity extends BlockEntity {
         sync();
     }
 
+    /**
+     * Lights the finished room: an invisible light block in each top corner (where the lanterns hang) and one
+     * over the lift, so golems, players and the workshop are all lit, day or night.
+     */
+    private void placeLights(Level level, GarageBay bay) {
+        BlockPos min = bay.min();
+        BlockPos max = bay.max();
+        int y = max.getY();
+        List<BlockPos> want = new ArrayList<>(List.of(new BlockPos(min.getX(), y, min.getZ()), new BlockPos(max.getX(), y, min.getZ()),
+                new BlockPos(min.getX(), y, max.getZ()), new BlockPos(max.getX(), y, max.getZ())));
+        if (max.getY() - min.getY() >= 3) {
+            BlockPos c = bay.center();
+            want.add(new BlockPos(c.getX(), y, c.getZ()));
+        }
+        for (BlockPos p : lights) {
+            if (!want.contains(p) && level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.LIGHT)) {
+                level.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
+            }
+        }
+        lights.retainAll(want);
+        for (int i = 0; i < want.size(); i++) {
+            BlockPos p = want.get(i);
+            BlockState s = level.getBlockState(p);
+            int lvl = i < 4 ? 15 : 13;
+            if (s.isAir()) {
+                level.setBlock(p, net.minecraft.world.level.block.Blocks.LIGHT.defaultBlockState()
+                        .setValue(net.minecraft.world.level.block.LightBlock.LEVEL, lvl), 3);
+            }
+            if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.LIGHT) && !lights.contains(p)) {
+                lights.add(p);
+                setChanged();
+            }
+        }
+    }
+
+    /** Takes the hidden lights down again (the room was broken, or the controller removed). */
+    public void removeLights(Level level) {
+        if (lights.isEmpty()) {
+            return;
+        }
+        for (BlockPos p : lights) {
+            if (level.getBlockState(p).is(net.minecraft.world.level.block.Blocks.LIGHT)) {
+                level.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
+            }
+        }
+        lights.clear();
+        setChanged();
+    }
+
     private static void setLit(Level level, BlockPos pos, boolean lit) {
         BlockState s = level.getBlockState(pos);
         if (s.hasProperty(com.xtrip.golemgarage.block.LaserEmitterBlock.LIT)
@@ -333,6 +390,7 @@ public class GarageControllerBlockEntity extends BlockEntity {
             setLit(level, e, false);
         }
         litEmitters.clear();
+        removeLights(level);
     }
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, GarageControllerBlockEntity garage) {
@@ -667,6 +725,11 @@ public class GarageControllerBlockEntity extends BlockEntity {
             lit.add(LongTag.valueOf(e.asLong()));
         }
         tag.put("Lit", lit);
+        ListTag lightList = new ListTag();
+        for (BlockPos p : lights) {
+            lightList.add(LongTag.valueOf(p.asLong()));
+        }
+        tag.put("Lights", lightList);
     }
 
     @Override
@@ -694,6 +757,10 @@ public class GarageControllerBlockEntity extends BlockEntity {
         litEmitters.clear();
         for (Tag t : tag.getList("Lit", Tag.TAG_LONG)) {
             litEmitters.add(BlockPos.of(((LongTag) t).getAsLong()));
+        }
+        lights.clear();
+        for (Tag t : tag.getList("Lights", Tag.TAG_LONG)) {
+            lights.add(BlockPos.of(((LongTag) t).getAsLong()));
         }
     }
 }

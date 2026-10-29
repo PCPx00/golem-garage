@@ -588,7 +588,8 @@ def garage_chapter(sizes):
                  "workshop. Corrugated metal, grimy brick and bolted plates inside, a plank roof with a hoist "
                  "beam, an oily concrete floor, and a weathered shell outside with spikes on the roof and a "
                  "smoking exhaust stack. A workbench, tyres, oil drums and jerry cans fill the corners.\n\n"
-                 "Nothing really changes: break any part of the room and it goes back to how you built it.",
+                 "It also lights itself: hidden light blocks under the roof by the lanterns keep it bright day and "
+                 "night. Break any part of the room and it goes back to how you built it, lights and all.",
                  "The Transformation"),
             text("Once complete, the emitters glow brighter, a neon "
                  + B("GOLEM GARAGE") + " sign flickers on outside above the controller, the lift pad gets a "

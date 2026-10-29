@@ -39,7 +39,7 @@ public record GarageBay(BlockPos min, BlockPos max, List<BlockPos> emitters) {
     public static GarageBay find(Level level, BlockPos controller) {
         for (Direction d : Direction.Plane.HORIZONTAL) {
             BlockPos start = controller.relative(d);
-            if (level.getBlockState(start).isAir()) {
+            if (open(level.getBlockState(start))) {
                 GarageBay bay = flood(level, controller, start);
                 if (bay != null) {
                     return bay;
@@ -78,7 +78,7 @@ public record GarageBay(BlockPos min, BlockPos max, List<BlockPos> emitters) {
                     continue;
                 }
                 BlockState s = level.getBlockState(n);
-                if (s.isAir()) {
+                if (open(s)) {
                     air.add(n);
                     queue.add(n);
                     continue;
@@ -113,6 +113,11 @@ public record GarageBay(BlockPos min, BlockPos max, List<BlockPos> emitters) {
             return null;
         }
         return new GarageBay(new BlockPos(minX, minY, minZ), new BlockPos(maxX, maxY, maxZ), List.copyOf(emitters));
+    }
+
+    /** Room space: air, or the hidden light blocks a finished Garage hangs under its roof. */
+    public static boolean open(BlockState s) {
+        return s.isAir() || s.is(net.minecraft.world.level.block.Blocks.LIGHT);
     }
 
     /** True if any emitter in this bay is a steel emitter. */

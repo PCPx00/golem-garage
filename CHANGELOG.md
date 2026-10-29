@@ -2,6 +2,21 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.13.0
+
+### Changed
+- **The transformed Garage is bright inside, day or night.** It hangs invisible light blocks under the roof
+  by the lanterns and over the lift, so the room, the golems and you are all properly lit. They're taken down
+  again if the room is broken or the controller removed.
+- **Cleaner, planned look inside and out:**
+  - Steel pillars at the ends of every wall and every third block.
+  - Inside walls: a hazard kick plate along the floor, ribbed steel sheet, a brick band and bolted plates
+    with vents under the roof.
+  - Sealed concrete floor with a drain grate in each corner, and rafters across the plank roof.
+  - Outside: rusty corner pillars, warm weathered sheet metal and a hazard band at the base.
+  - Window and door openings get clean steel frames.
+- Lanterns glow with a soft, flickering warm halo.
+
 ## 0.12.0
 
 ### Added

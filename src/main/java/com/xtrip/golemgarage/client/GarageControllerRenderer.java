@@ -195,6 +195,37 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
         quad(vc, m, c.add(-r, 0, 0), c.add(r, 0, 0), new Vector3f(0, 0, r), col[0], col[1], col[2], a);
     }
 
+    /** A round glow that fades to nothing at its edge: three crossed discs, bright in the middle. */
+    private static void softGlow(VertexConsumer vc, Matrix4f m, Vec3 c, float r, float[] col, float a) {
+        int seg = 10;
+        float cx = (float) c.x, cy = (float) c.y, cz = (float) c.z;
+        for (int plane = 0; plane < 3; plane++) {
+            for (int i = 0; i < seg; i++) {
+                double a0 = Math.PI * 2 * i / seg;
+                double a1 = Math.PI * 2 * (i + 1) / seg;
+                float[] p0 = disc(plane, (float) Math.cos(a0) * r, (float) Math.sin(a0) * r);
+                float[] p1 = disc(plane, (float) Math.cos(a1) * r, (float) Math.sin(a1) * r);
+                // Each slice is a quad with a doubled centre point, drawn from both sides.
+                for (int side = 0; side < 2; side++) {
+                    float[] q0 = side == 0 ? p0 : p1;
+                    float[] q1 = side == 0 ? p1 : p0;
+                    vc.addVertex(m, cx, cy, cz).setColor(col[0], col[1], col[2], a);
+                    vc.addVertex(m, cx + q0[0], cy + q0[1], cz + q0[2]).setColor(col[0], col[1], col[2], 0f);
+                    vc.addVertex(m, cx + q1[0], cy + q1[1], cz + q1[2]).setColor(col[0], col[1], col[2], 0f);
+                    vc.addVertex(m, cx, cy, cz).setColor(col[0], col[1], col[2], a);
+                }
+            }
+        }
+    }
+
+    private static float[] disc(int plane, float u, float v) {
+        return switch (plane) {
+            case 0 -> new float[]{u, v, 0};
+            case 1 -> new float[]{0, v, u};
+            default -> new float[]{u, 0, v};
+        };
+    }
+
     /** A vertical run of chain from y0 up to y1, centred on (x, z). */
     private void chain(PoseStack pose, MultiBufferSource buffers, double x, double y0, double z, double y1, int light) {
         BlockState chain = Blocks.CHAIN.defaultBlockState();
@@ -245,6 +276,13 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
                 chain(pose, buffers, 0, -0.6, 0, 0, FULL_BRIGHT - 0x500000);
                 pose.translate(-0.5, -1.6, -0.5);
                 blocks.renderSingleBlock(lantern, pose, buffers, FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                // A warm, gently flickering glow round the flame.
+                float flick = 0.85f + 0.1f * Mth.sin(time * 0.37f + k * 2f) + 0.05f * Mth.sin(time * 1.3f + k);
+                VertexConsumer glow = buffers.getBuffer(RenderType.lightning());
+                Matrix4f lm = pose.last().pose();
+                Vec3 flame = new Vec3(0.5, 0.3, 0.5);
+                softGlow(glow, lm, flame, 0.75f, new float[]{1f, 0.6f, 0.22f}, 0.35f * flick);
+                softGlow(glow, lm, flame, 0.3f, new float[]{1f, 0.82f, 0.5f}, 0.5f * flick);
                 pose.popPose();
             }
         }

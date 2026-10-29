@@ -194,7 +194,7 @@ public final class GaragePlanOverlay {
                                         !s.isAir() && !s.isSolidRender(level, p) && !isEmitter);
                             }
                         } else {
-                            boolean air = s.isAir();
+                            boolean air = GarageBay.open(s);
                             if (!air) {
                                 add(p, Kind.CLEAR, false, true);
                             }

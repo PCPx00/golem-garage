@@ -42,7 +42,8 @@ final class GarageSkin {
     // Tile numbers in garage_skin.png (see tools/golemgen/skin.py).
     static final int CORRUGATED = 0, BRICK = 1, PLATES = 2, KICK = 3, PLANKS = 4, BEAM_PLANKS = 5, CONCRETE = 6,
             GRATE = 7, OUTER = 8, OUTER_HAZARD = 9, ROOF = 10, TYRE = 11, TYRE_TOP = 12, RUST = 13, JERRY = 14,
-            BENCH = 15, SIGN = 16, DRUM = 17, DRUM_TOP = 18, SOOT = 19;
+            BENCH = 15, SIGN = 16, DRUM = 17, DRUM_TOP = 18, SOOT = 19,
+            PILLAR = 20, OUTER_PILLAR = 21, VENT = 22;
 
     private static final float EPS = 0.004f;
     private static final int REBUILD_TICKS = 20;
@@ -108,8 +109,6 @@ final class GarageSkin {
         BlockPos sMin = min.offset(-1, -1, -1);
         BlockPos sMax = max.offset(1, 1, 1);
         BlockPos origin = garage.getBlockPos();
-        int midX = (min.getX() + max.getX()) / 2;
-        int midZ = (min.getZ() + max.getZ()) / 2;
         BlockPos.MutableBlockPos n = new BlockPos.MutableBlockPos();
         for (BlockPos p : BlockPos.betweenClosed(sMin, sMax)) {
             if (inside(p, min, max)) {
@@ -126,21 +125,24 @@ final class GarageSkin {
                 int tile;
                 if (inside(n, min, max)) {
                     tile = switch (d) {
-                        case UP -> h % 5 == 0 ? GRATE : CONCRETE;
-                        case DOWN -> p.getX() == midX || p.getZ() == midZ ? BEAM_PLANKS : PLANKS;
-                        default -> p.getY() == min.getY() ? KICK : new int[]{CORRUGATED, BRICK, PLATES, CORRUGATED}[h % 4];
+                        // Sealed concrete with a drain grate in each corner.
+                        case UP -> (p.getX() == min.getX() || p.getX() == max.getX())
+                                && (p.getZ() == min.getZ() || p.getZ() == max.getZ()) ? GRATE : CONCRETE;
+                        // Planks with a rusty rafter every other row.
+                        case DOWN -> (p.getX() - min.getX()) % 2 == 1 ? BEAM_PLANKS : PLANKS;
+                        default -> innerWall(p, d, min, max, h);
                     };
                 } else if (!inside(n, sMin, sMax) || !level.getBlockState(n).isSolidRender(level, n)) {
                     if (inside(n, sMin, sMax) && !level.getBlockState(n).isAir()) {
                         // The sides of a window or doorway: a rusty frame.
                         c.faces.add(new Face(p.getX() - origin.getX(), p.getY() - origin.getY(), p.getZ() - origin.getZ(),
-                                d, RUST, LevelRenderer.getLightColor(level, n), delay));
+                                d, PILLAR, LevelRenderer.getLightColor(level, n), delay));
                         continue;
                     }
                     if (d == Direction.DOWN) {
                         continue;
                     }
-                    tile = d == Direction.UP ? ROOF : h % 4 == 0 ? OUTER_HAZARD : OUTER;
+                    tile = d == Direction.UP ? ROOF : outerWall(p, d, sMin, sMax, min, max);
                 } else {
                     continue;
                 }
@@ -148,6 +150,48 @@ final class GarageSkin {
                         d, tile, LevelRenderer.getLightColor(level, n), delay));
             }
         }
+    }
+
+    /**
+     * Inside walls follow a plan: steel pillars at the ends and every third block, a hazard kick plate along
+     * the floor, bolted plates and the odd vent under the roof, ribbed sheet or brick in between.
+     */
+    private static int innerWall(BlockPos p, Direction d, BlockPos min, BlockPos max, int h) {
+        boolean alongX = d.getAxis() == Direction.Axis.Z;
+        int a = alongX ? p.getX() : p.getZ();
+        int a0 = alongX ? min.getX() : min.getZ();
+        int a1 = alongX ? max.getX() : max.getZ();
+        if (a == a0 || a == a1 || (a - a0) % 3 == 0 && a1 - a >= 2) {
+            return PILLAR;
+        }
+        if (p.getY() == min.getY()) {
+            return KICK;
+        }
+        if (p.getY() == max.getY()) {
+            return h % 3 == 0 ? VENT : PLATES;
+        }
+        return p.getY() == max.getY() - 1 && max.getY() - min.getY() >= 3 ? BRICK : CORRUGATED;
+    }
+
+    /** Outside: rusty pillars at the corners and every third block, a hazard band at the base, ribbed sheet above. */
+    private static int outerWall(BlockPos p, Direction d, BlockPos sMin, BlockPos sMax, BlockPos min, BlockPos max) {
+        boolean alongX = d.getAxis() == Direction.Axis.Z;
+        int a = alongX ? p.getX() : p.getZ();
+        int a0 = alongX ? sMin.getX() : sMin.getZ();
+        int a1 = alongX ? sMax.getX() : sMax.getZ();
+        if (a == a0 || a == a1 || (a - a0) % 3 == 0 && a1 - a >= 2) {
+            return OUTER_PILLAR;
+        }
+        if (p.getY() < min.getY()) {
+            return RUST;
+        }
+        if (p.getY() == min.getY()) {
+            return OUTER_HAZARD;
+        }
+        if (p.getY() > max.getY()) {
+            return RUST;
+        }
+        return OUTER;
     }
 
     // =================================================================== drawing

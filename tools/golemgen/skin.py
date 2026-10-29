@@ -272,6 +272,117 @@ def generate(assets):
     t.rust_spots(2)
     t.streaks(3, (16, 16, 18), 8)
 
+    # ---- cleaner, brighter tiles for the planned layout (these replace the first drafts above) ----
+    PANEL = [(62, 60, 58), (84, 80, 76), (108, 102, 94), (132, 124, 112), (156, 146, 130), (180, 170, 152)]
+    WARM = [(70, 46, 32), (96, 62, 40), (124, 82, 50), (150, 102, 62), (176, 126, 80), (198, 150, 100)]
+
+    def clear(t, col):
+        for y in range(16):
+            for x in range(16):
+                t.set(x, y, col)
+
+    def ribbed(t, pal, drip=2):
+        for y in range(16):
+            for x in range(16):
+                t.set(x, y, pal[(4, 3, 3, 1)[x % 4]])
+        for x in range(16):
+            t.set(x, 0, pal[0]); t.set(x, 15, pal[1])
+        for _ in range(drip):
+            x = t.rng.randint(0, 15)
+            for y in range(1, t.rng.randint(3, 8)):
+                t.set(x, y, RUST[3] if y < 3 else RUST[2])
+        for (x, y) in ((1, 1), (9, 1), (1, 14), (9, 14)):
+            t.set(x, y, pal[5])
+
+    # 0: clean ribbed steel sheet with a little rust running from the bolts
+    t = Tile(img, 0, 101)
+    ribbed(t, PANEL)
+
+    # 2: bolted plate, a neat grid of four plates
+    t = Tile(img, 2, 102)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, PANEL[3] if (x // 8 + y // 8) % 2 == 0 else PANEL[2])
+            if t.rng.random() < 0.08:
+                t.set(x, y, PANEL[t.rng.randint(2, 4)])
+    for i in range(16):
+        t.set(i, 7, PANEL[0]); t.set(7, i, PANEL[0]); t.set(i, 8, PANEL[4]); t.set(8, i, PANEL[4])
+    rivets(t, [(2, 2), (12, 2), (2, 12), (12, 12)], PANEL[5], PANEL[0])
+    t.rust_spots(1)
+
+    # 3: kick plate: diamond-tread steel with a clean hazard band
+    t = Tile(img, 3, 103)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, PANEL[4] if (x + y) % 4 == 0 and (x - y) % 4 == 0 else PANEL[2])
+    for y in range(10, 15):
+        for x in range(16):
+            t.set(x, y, (222, 172, 46) if ((x + y) // 3) % 2 == 0 else (34, 32, 34))
+    for x in range(16):
+        t.set(x, 9, PANEL[0]); t.set(x, 15, PANEL[0]); t.set(x, 0, PANEL[5])
+
+    # 6: smooth sealed concrete with faint slab seams
+    t = Tile(img, 6, 104)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, CONCRETE[t.rng.choice([3, 3, 3, 4, 2])])
+    for i in range(16):
+        t.set(i, 15, CONCRETE[1]); t.set(15, i, CONCRETE[1])
+    if t.rng.random() < 1:
+        t.set(5, 6, CONCRETE[1]); t.set(6, 6, CONCRETE[1]); t.set(6, 7, CONCRETE[1])
+
+    # 7: drain grate (gutter round the floor)
+    t = Tile(img, 7, 105)
+    for y in range(16):
+        for x in range(16):
+            hole = x % 3 != 0 and y % 8 not in (0, 7)
+            t.set(x, y, (20, 18, 18) if hole else PANEL[2 + (y % 8 == 0)])
+
+    # 8: outer wall: ribbed sheet, warm weathered paint
+    t = Tile(img, 8, 106)
+    ribbed(t, WARM, drip=3)
+
+    # 9: outer base: hazard band on dark steel
+    t = Tile(img, 9, 107)
+    clear(t, PANEL[1])
+    for y in range(3, 13):
+        for x in range(16):
+            t.set(x, y, (222, 172, 46) if ((x + y) // 3) % 2 == 0 else (30, 28, 30))
+    for x in range(16):
+        t.set(x, 2, PANEL[0]); t.set(x, 13, PANEL[0])
+
+    # 20: steel support pillar (I-beam), inside
+    t = Tile(img, 20, 108)
+    for y in range(16):
+        for x in range(16):
+            if x < 2 or x > 13:
+                c = PANEL[1]
+            elif x < 4 or x > 11:
+                c = PANEL[4]
+            else:
+                c = PANEL[2]
+            t.set(x, y, c)
+    for y in (3, 11):
+        t.set(2, y, PANEL[5]); t.set(13, y, PANEL[5])
+    t.rust_spots(1)
+
+    # 21: rusty corner pillar, outside
+    t = Tile(img, 21, 109)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, RUST[2] if 3 < x < 12 else RUST[1])
+        t.set(3, y, RUST[4]); t.set(12, y, RUST[0])
+    rivets(t, [(5, 2), (9, 2), (5, 10), (9, 10)], RUST[5], RUST[0])
+
+    # 22: louvred vent
+    t = Tile(img, 22, 110)
+    clear(t, PANEL[2])
+    for y in range(2, 14):
+        for x in range(2, 14):
+            t.set(x, y, PANEL[4] if y % 3 == 0 else (24, 22, 22) if y % 3 == 1 else PANEL[1])
+    for i in range(16):
+        t.set(i, 0, PANEL[0]); t.set(i, 15, PANEL[0]); t.set(0, i, PANEL[0]); t.set(15, i, PANEL[0])
+
     path = os.path.join(assets, "textures/entity/garage_skin.png")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     img.save(path)
