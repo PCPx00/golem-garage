@@ -25,6 +25,12 @@ if [ "$1" = "trailer" ]; then
   rm -rf "$ROOT/run/saves/golemtest/datapacks/golemtest"
   python3 "$ROOT/tools/testworld/trailer_world.py" "$ROOT/run/saves/golemtest"
 fi
+if [ "$1" = "banners" ]; then
+  rm -rf "$ROOT/run/saves/golemtest/datapacks/bannershots"
+  python3 "$ROOT/tools/testworld/banner_world.py" "$ROOT/run/saves/golemtest"
+  sed -i 's/^fov:.*/fov:0.5/' "$ROOT/run/options.txt"
+  echo "chatVisibility:2" >> "$ROOT/run/options.txt"
+fi
 if [ "$1" = "garage" ]; then
   rm -rf "$ROOT/run/saves/golemtest/datapacks/gtest"
   python3 "$ROOT/tools/testworld/garage_world.py" "$ROOT/run/saves/golemtest"
