@@ -49,6 +49,26 @@ def clip(src, start, length, top, w, h, tmp, crop_w=1280, left=0):
     return raw, raw + raw[-2:0:-1]  # forward then back, so the loop has no jump
 
 
+def logo(src="logo", start=1.5, length=4.0, top=10, crop_w=560, left=340):
+    """The square logo (400x400): a golem on the lift being zapped, the title on a plate below."""
+    lw = lh = 400
+    tmp = os.path.join(OUT, "logo_raw")
+    raw, order = clip(src, start, length, top, lw, lh, tmp, crop_w, left)
+    ttl = title("GOLEM GARAGE", 4)
+    fd = os.path.join(OUT, "logo_frames")
+    shutil.rmtree(fd, ignore_errors=True)
+    os.makedirs(fd)
+    for k, fname in enumerate(order):
+        img = Image.open(os.path.join(tmp, fname)).convert("RGBA")
+        img.alpha_composite(Image.new("RGBA", (lw, 74), (10, 12, 16, 215)), (0, 296))
+        img.alpha_composite(shine(ttl, (k / len(order)) * 1.4 - 0.2), ((lw - ttl.size[0]) // 2, 302))
+        img.alpha_composite(hazard(lw, 30, (k * 3) % 24 - 24), (0, 370))
+        img.convert("RGB").save(os.path.join(fd, "f%03d.png" % k))
+    save_gif(fd, os.path.join(OUT, "logo.gif"), FPS)
+    Image.open(os.path.join(fd, "f%03d.png" % (len(raw) // 2))).save(os.path.join(OUT, "logo.png"))
+    shutil.rmtree(tmp)
+
+
 def header(src="header", start=4.0, length=4.4, top=200, crop_w=1060, left=0):
     """The main header: the finished Garage at night, with the title glinting over it."""
     hw, hh = 800, 220
@@ -99,6 +119,9 @@ def build(name, src, start, length, top, head, sub):
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     only = sys.argv[3:]  # optional banner names (or "header"), to remake just those
+    if not only or "logo" in only:
+        logo()
+        print("logo", os.path.getsize(os.path.join(OUT, "logo.gif")) // 1024, "KB")
     if not only or "header" in only:
         header()
         print("header", os.path.getsize(os.path.join(OUT, "header.gif")) // 1024, "KB")
