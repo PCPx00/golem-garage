@@ -21,7 +21,7 @@ FPS = 10
 BANNERS = [
     ("build", "lineup", 3.0, 4.2, 196, "BUILD YOUR GOLEMS", "Every part is a shape and a material."),
     ("jobs", "farm", 2.0, 4.4, 250, "GIVE THEM JOBS", "Simple rules: farm, haul, guard and more."),
-    ("garage", "garage", 3.0, 4.2, 210, "THE GARAGE", "Build the room. The lasers fix the golem."),
+    ("garage", "garage", 3.0, 4.2, 110, "THE GARAGE", "Build the room. It becomes a wasteland workshop."),
     ("cubs", "cubs", 3.0, 4.6, 236, "CUBS & OUTFITS", "Tiny helpers, dressed cool, goth or cute."),
 ]
 
@@ -67,6 +67,9 @@ def build(name, src, start, length, top, head, sub):
 
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
+    only = sys.argv[3:]  # optional banner names, to remake just those
     for b in BANNERS:
+        if only and b[0] not in only:
+            continue
         build(*b)
         print("banner", b[0], os.path.getsize(os.path.join(OUT, "banner_%s.gif" % b[0])) // 1024, "KB")
