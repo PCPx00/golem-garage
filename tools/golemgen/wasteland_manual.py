@@ -30,5 +30,37 @@ def chapter():
                     "Rigs, scrap and everything out past the fence.", entries)
 
 
+def finds():
+    return entry("finds", "Scrapyards and Ruins", "minecraft:barrel", [
+        text(B("Scrapyards") + " turn up in plains, savannas, deserts, badlands and taigas: churned ground, junk "
+             "heaps of rusted copper and iron, a battered anvil and a salvage barrel. Sometimes there's a "
+             "wrecked rig too: no fuel and badly damaged, but fix it up and it's yours.", "Scrapyards"),
+        text(B("Abandoned garages") + " are ruined Garages with a stuck roller door, the controller still in its "
+             "wall and one emitter hanging on. Their crates always hold a broken golem. Patch the walls and "
+             "roof, add a second emitter and it works again: repair the golem right there.", "Abandoned Garages"),
+        table([
+            ("Scrap and tyres", "Always / often."),
+            ("Loose parts", "Any material, now and then a rare one."),
+            ("Broken golems", "Worn right down. Repair them in a Garage and they're yours."),
+            ("Rig upgrades", "Rarely: a ram, turret or plating."),
+            ("Rule cards, coal, nuggets", "Sometimes."),
+        ], "What You Find"),
+        text("Server owners can turn these off with " + B("generateWastelandFinds") + " in the server settings, "
+             "or change where they appear with the " + B("golemgarage:has_wasteland_finds") + " biome tag.",
+             "Turning Them Off"),
+    ])
+
+
+def cards():
+    return entry("rule_cards", "Rule Cards", MODID + ":rule_card", [
+        craft(MODID + ":rule_card", "Two paper and redstone make 2 blank cards.", "Rule Card"),
+        text(B("Copy") + ": use a blank card on your golem and its rules are punched onto the card.\n\n"
+             + B("Load") + ": use a punched card on any of your golems to give it those rules.\n\n"
+             + B("Share") + ": put a punched card in a crafting grid with blank cards for copies. You keep the "
+             "original, so you can hand out a farm crew's rules to friends.\n\nSneak + use in the air wipes a card.",
+             "Using Cards"),
+    ])
+
+
 # Later updates add their entries here.
-EXTRA = []
+EXTRA = [finds, cards]

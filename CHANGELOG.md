@@ -2,6 +2,19 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.16.0
+
+### Added
+- **Scrapyards** in plains, savannas, deserts, badlands and taigas: churned ground, junk heaps, a battered anvil,
+  tyre stacks and a salvage barrel. Sometimes there's a wrecked rig you can refuel and repair.
+- **Abandoned garages:** ruined Garages with a stuck roller door, their controller and one emitter. Their crates
+  always hold a broken golem. Patch the walls and roof, add an emitter, and the Garage works again.
+- Salvage crates hold scrap, tyres, loose parts (sometimes rare materials), broken golems, rig upgrades, rule
+  cards, coal and repair kits.
+- **Rule Cards:** punch a golem's rules onto a card and load them into other golems. Copy a card by crafting it
+  with blank cards. Sneak + use in the air to wipe it.
+- **generateWastelandFinds** server setting, and the `golemgarage:has_wasteland_finds` biome tag for packs.
+
 ## 0.15.0
 
 ### Added

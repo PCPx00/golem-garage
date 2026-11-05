@@ -52,6 +52,8 @@ public final class ModItems {
     public static final DeferredItem<Item> RIG_RAM = extra(ITEMS.registerSimpleItem("rig_ram"));
     public static final DeferredItem<Item> RIG_TURRET = extra(ITEMS.registerSimpleItem("rig_turret"));
     public static final DeferredItem<Item> RIG_PLATING = extra(ITEMS.registerSimpleItem("rig_plating"));
+    /** A punch card holding a golem's rules. */
+    public static final DeferredItem<RuleCardItem> RULE_CARD = extra(ITEMS.registerItem("rule_card", RuleCardItem::new));
     /** The in-game guide book. */
     public static final DeferredItem<ManualItem> MANUAL = ITEMS.registerItem("manual", ManualItem::new);
 

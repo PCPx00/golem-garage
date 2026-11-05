@@ -1124,7 +1124,8 @@ def build_index():
         MODID + ":golem_linker": "linker", MODID + ":signal_plate": "signal_plate", MODID + ":blueprint": "blueprints",
         MODID + ":steel_ingot": "mat_steel", MODID + ":module_casing": "modules_intro",
         MODID + ":golem_dock": "dock", MODID + ":rig": "rig", MODID + ":rig_ram": "rig", MODID + ":rig_turret": "rig",
-        MODID + ":rig_plating": "rig", MODID + ":tyre": "rig", MODID + ":scrap": "rig", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
+        MODID + ":rig_plating": "rig", MODID + ":tyre": "rig", MODID + ":scrap": "rig",
+        MODID + ":rule_card": "rule_cards", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
         "minecraft:redstone_block": "power_basics",
     }
     for sh in S.SHAPES:

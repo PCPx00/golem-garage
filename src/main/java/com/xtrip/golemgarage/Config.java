@@ -43,6 +43,7 @@ public final class Config {
     public static final ModConfigSpec.IntValue MAX_CUBS_PER_PLAYER;
     public static final ModConfigSpec.BooleanValue PLAYER_COMMANDS;
     public static final ModConfigSpec.IntValue RECALL_COOLDOWN_SECONDS;
+    public static final ModConfigSpec.BooleanValue WORLDGEN;
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -115,6 +116,11 @@ public final class Config {
                 .defineInRange("magnetRange", 3, 0, 16);
         MAX_CUBS_PER_PLAYER = b.comment("Most cubs one player can have out at once. 0 = no limit.")
                 .defineInRange("maxCubsPerPlayer", 0, 0, 1000);
+        b.pop();
+
+        b.comment("The wasteland").push("wasteland");
+        WORLDGEN = b.comment("Generate scrapyards and abandoned garages in new chunks.")
+                .define("generateWastelandFinds", true);
         b.pop();
 
         b.comment("Commands and getting started").push("general");

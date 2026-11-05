@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.15.0, by xTrip",
+ "subtitle": "Version 0.16.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -10028,6 +10028,76 @@
        "title": "Scrap"
       }
      ]
+    },
+    {
+     "id": "finds",
+     "title": "Scrapyards and Ruins",
+     "icon": "minecraft:barrel",
+     "pages": [
+      {
+       "type": "text",
+       "text": "§lScrapyards§r turn up in plains, savannas, deserts, badlands and taigas: churned ground, junk heaps of rusted copper and iron, a battered anvil and a salvage barrel. Sometimes there's a wrecked rig too: no fuel and badly damaged, but fix it up and it's yours.",
+       "title": "Scrapyards"
+      },
+      {
+       "type": "text",
+       "text": "§lAbandoned garages§r are ruined Garages with a stuck roller door, the controller still in its wall and one emitter hanging on. Their crates always hold a broken golem. Patch the walls and roof, add a second emitter and it works again: repair the golem right there.",
+       "title": "Abandoned Garages"
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "Scrap and tyres",
+         "Always / often."
+        ],
+        [
+         "Loose parts",
+         "Any material, now and then a rare one."
+        ],
+        [
+         "Broken golems",
+         "Worn right down. Repair them in a Garage and they're yours."
+        ],
+        [
+         "Rig upgrades",
+         "Rarely: a ram, turret or plating."
+        ],
+        [
+         "Rule cards, coal, nuggets",
+         "Sometimes."
+        ]
+       ],
+       "title": "What You Find"
+      },
+      {
+       "type": "text",
+       "text": "Server owners can turn these off with §lgenerateWastelandFinds§r in the server settings, or change where they appear with the §lgolemgarage:has_wasteland_finds§r biome tag.",
+       "title": "Turning Them Off"
+      }
+     ]
+    },
+    {
+     "id": "rule_cards",
+     "title": "Rule Cards",
+     "icon": "golemgarage:rule_card",
+     "pages": [
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rule_card",
+       "text": "Two paper and redstone make 2 blank cards.",
+       "title": "Rule Card"
+      },
+      {
+       "type": "text",
+       "text": "§lCopy§r: use a blank card on your golem and its rules are punched onto the card.\n\n§lLoad§r: use a punched card on any of your golems to give it those rules.\n\n§lShare§r: put a punched card in a crafting grid with blank cards for copies.",
+       "title": "Using Cards"
+      },
+      {
+       "type": "text",
+       "text": "You keep the original, so you can hand out a farm crew's rules to friends.\n\nSneak + use in the air wipes a card."
+      }
+     ]
     }
    ]
   },
@@ -10682,6 +10752,7 @@
   "golemgarage:rig_plating": "rig",
   "golemgarage:tyre": "rig",
   "golemgarage:scrap": "rig",
+  "golemgarage:rule_card": "rule_cards",
   "minecraft:honeycomb": "copper_care",
   "minecraft:vine": "vines",
   "minecraft:redstone_block": "power_basics",

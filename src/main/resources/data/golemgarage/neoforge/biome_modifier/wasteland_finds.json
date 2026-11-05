@@ -1,0 +1,9 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#golemgarage:has_wasteland_finds",
+  "features": [
+    "golemgarage:scrapyard",
+    "golemgarage:abandoned_garage"
+  ],
+  "step": "surface_structures"
+}

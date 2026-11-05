@@ -1,0 +1,19 @@
+{
+  "feature": "golemgarage:abandoned_garage",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 130
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "WORLD_SURFACE_WG"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

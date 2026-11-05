@@ -13,6 +13,9 @@ public final class ModRecipes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<DatapackPartRecipe>> DATAPACK_PART =
             SERIALIZERS.register("datapack_part", () -> DatapackPartRecipe.SERIALIZER);
 
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CardCopyRecipe>> CARD_COPY =
+            SERIALIZERS.register("card_copy", () -> CardCopyRecipe.SERIALIZER);
+
     private ModRecipes() {
     }
 }

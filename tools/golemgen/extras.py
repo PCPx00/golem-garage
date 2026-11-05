@@ -122,6 +122,23 @@ ICONS = {
         "..kkkkkkkkkkkk..",
         "................",
         "................"],
+    "rule_card": [
+        "................",
+        "................",
+        "..pppppppppppp..",
+        "..pPPPPPPPPPPp..",
+        "..pPkPkPPkPkPp..",
+        "..pPPPPPPPPPPp..",
+        "..pPkPPkPkPPPp..",
+        "..pPPPPPPPPPPp..",
+        "..pPPkPkPPkPkp..",
+        "..pPPPPPPPPPPp..",
+        "..pPkPPPkPkPPp..",
+        "..pPPPPPPPPPPp..",
+        "..pPPPPPPPPeep..",
+        "..pppppppppppp..",
+        "................",
+        "................"],
 }
 
 # id -> English name
@@ -132,9 +149,14 @@ NAMES = {
     "rig_ram": "Spiked Ram",
     "rig_turret": "Rig Turret",
     "rig_plating": "Rig Plating",
+    "rule_card": "Rule Card",
 }
 
 RECIPES = {
+    "rule_card": {"type": "minecraft:crafting_shapeless", "category": "misc",
+                  "ingredients": [{"item": "minecraft:paper"}, {"item": "minecraft:paper"}, {"item": "minecraft:redstone"}],
+                  "result": {"id": "golemgarage:rule_card", "count": 2}},
+    "rule_card_copy": {"type": "golemgarage:card_copy", "category": "misc"},
     "scrap": {"type": "minecraft:crafting_shapeless", "category": "misc",
               "ingredients": [{"tag": "c:ingots/iron"}, {"item": "minecraft:gravel"}],
               "result": {"id": "golemgarage:scrap", "count": 3}},

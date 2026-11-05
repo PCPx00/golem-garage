@@ -24,6 +24,7 @@ public class GolemGarage {
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.TABS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
+        com.xtrip.golemgarage.world.WastelandFeatures.FEATURES.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
         com.xtrip.golemgarage.menu.ModMenus.MENUS.register(modEventBus);

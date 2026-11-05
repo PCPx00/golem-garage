@@ -1418,6 +1418,10 @@ public class GolemEntity extends PathfinderMob {
             useBlueprint(player, held);
             return InteractionResult.SUCCESS;
         }
+        if (held.getItem() instanceof com.xtrip.golemgarage.item.RuleCardItem) {
+            com.xtrip.golemgarage.item.RuleCardItem.useOn(this, player, hand);
+            return InteractionResult.SUCCESS;
+        }
         if (held.is(ModItems.REPAIR_KIT.get())) {
             useRepairKit();
             consumeHeld(player, held);
