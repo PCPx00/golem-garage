@@ -77,6 +77,7 @@ public class CubItem extends Item {
         Vec3 pos = Vec3.atBottomCenterOf(context.getClickedPos().relative(context.getClickedFace()));
         cub.moveTo(pos.x, pos.y, pos.z, player != null ? player.getYRot() + 180f : 0f, 0f);
         level.addFreshEntity(cub);
+        com.xtrip.golemgarage.Hints.show(player, "first_cub");
         if (player == null || !player.getAbilities().instabuild) {
             stack.shrink(1);
         }

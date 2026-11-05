@@ -112,6 +112,7 @@ public class GolemItem extends Item {
         golem.moveTo(pos.x, pos.y, pos.z, player != null ? player.getYRot() + 180f : 0f, 0f);
         golem.setYHeadRot(golem.getYRot());
         level.addFreshEntity(golem);
+        com.xtrip.golemgarage.Hints.show(player, "first_golem");
         com.xtrip.golemgarage.advancement.ModTriggers.award(player, "place_golem");
         if (player == null || !player.getAbilities().instabuild) {
             stack.shrink(1);

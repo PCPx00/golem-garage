@@ -1,0 +1,35 @@
+{
+	chapter.A1CBD573D1BBA6F8.title: "Golem Garage"
+	quest.A23DD1946DE3611F.title: "The Engineer's Manual"
+	quest.A23DD1946DE3611F.quest_desc: ["Every golem engineer starts here. Keep it handy."]
+	quest.CCB9173EDF8AFDC8.title: "A Bare Frame"
+	quest.CCB9173EDF8AFDC8.quest_desc: ["Craft a Golem Frame and place it."]
+	quest.761E21E55AAF5FFA.title: "Legs First"
+	quest.761E21E55AAF5FFA.quest_desc: ["Craft any legs and fit them to your frame."]
+	quest.ACD7CE2C0C9E8629.title: "Power Up"
+	quest.ACD7CE2C0C9E8629.quest_desc: ["A core gives your golem power."]
+	quest.1EBB1F349B58A0D0.title: "Home Sweet Dock"
+	quest.1EBB1F349B58A0D0.quest_desc: ["Golems recharge and heal on their dock. Feed it Forge Energy to charge five times as fast."]
+	quest.CC4B348AE1C25BC8.title: "Linked Up"
+	quest.CC4B348AE1C25BC8.quest_desc: ["Link golems to chests, docks and each other."]
+	quest.D170FD854990786D.title: "Rule Cards"
+	quest.D170FD854990786D.quest_desc: ["Write a golem's rules onto a card and copy them to the rest of your crew."]
+	quest.66AD2C2B4E3CD158.title: "Open for Business"
+	quest.66AD2C2B4E3CD158.quest_desc: ["Build a Garage so broken golems can be repaired."]
+	quest.1F8F7013979B3331.title: "Parts Fabricator"
+	quest.1F8F7013979B3331.quest_desc: ["Let the robot arm weld parts for you."]
+	quest.A92F7ACF501FE94A.title: "Fresh Paint"
+	quest.A92F7ACF501FE94A.quest_desc: ["Give a golem a custom finish."]
+	quest.6107018E8098D045.title: "Eye in the Sky"
+	quest.6107018E8098D045.quest_desc: ["Track and recall your golems from anywhere."]
+	quest.86F1FD3E61BD3E0F.title: "Sound the Horn"
+	quest.86F1FD3E61BD3E0F.quest_desc: ["Rally, hold or charge with your golems."]
+	quest.F44F5D9042025A80.title: "Road Warrior"
+	quest.F44F5D9042025A80.quest_desc: ["Build a rig and take your crew on the road."]
+	quest.25DE665D2866AEE4.title: "Garage Radio"
+	quest.25DE665D2866AEE4.quest_desc: ["Some music for the workshop. Cubs love it."]
+	quest.8015BB2C887EB602.title: "A Little Helper"
+	quest.8015BB2C887EB602.quest_desc: ["Make a Cub: it collects items around you."]
+	quest.9BA246CC0A358E36.title: "Bedtime"
+	quest.9BA246CC0A358E36.quest_desc: ["Craft a Cub Bed for your Cubs to sleep in."]
+}

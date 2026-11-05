@@ -8,6 +8,7 @@
     "golemgarage:golem_dock",
     "golemgarage:garage_door",
     "golemgarage:garage_window",
-    "golemgarage:fabricator"
+    "golemgarage:fabricator",
+    "golemgarage:garage_radio"
   ]
 }

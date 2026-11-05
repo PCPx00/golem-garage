@@ -2,6 +2,27 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.21.0
+
+### Added
+- **Fast-charging docks:** the Golem Dock now takes Forge Energy from other mods' cables and generators and stores
+  up to 100,000 FE. A golem resting on a charged dock charges five times as fast and heals four times as fast.
+  Right-click the dock to see how much it holds.
+- **Garage Radio:** a battered boombox that plays the music disc songs on shuffle. Right-click to switch it on or
+  off, sneak + right-click to skip. Cubs dance to it.
+- **Golem personalities:** every golem is born Cheerful, Grumpy, Lazy, Brave or Curious. Each shows in little idle
+  moments and nudges one stat. Shown on the Status tab and in Jade.
+- **Trusted players:** `/gg trust <player>` lets a friend open, edit, link and pick up your golems and cubs.
+  `/gg untrust <player>` takes it back, and `/gg trust` lists who you trust.
+- **In-game settings:** Mods, Golem Garage, Config opens a settings screen for every option.
+- **Tips for new players:** a one-time tip at key moments: the first part, first golem, first breakdown, first Cub
+  and first raid. Server owners can turn them off with `hints`.
+- **FTB Quests chapter** for modpacks, with 16 quests, in `docs/compat/ftbquests`.
+
+### Changed
+- Performance: golems and Cubs spread their periodic work across ticks, and following golems keep their path
+  instead of re-pathing every half second. With 200 golems following one player, the slowest ticks were cut in half.
+
 ## 0.20.0
 
 ### Added

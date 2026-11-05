@@ -80,6 +80,7 @@ public final class Raids {
     public static int start(ServerPlayer player, boolean forceTitan) {
         ServerLevel level = player.serverLevel();
         RandomSource rnd = level.random;
+        com.xtrip.golemgarage.Hints.show(player, "raid");
         int golems = golemCount(level, player.getUUID());
         int count = Math.min(12, 3 + golems / 4);
         boolean titan = forceTitan || golems >= Config.get(Config.TITAN_MIN_GOLEMS::get, 12) && rnd.nextInt(3) == 0;

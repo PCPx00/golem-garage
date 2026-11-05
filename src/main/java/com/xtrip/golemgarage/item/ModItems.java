@@ -70,6 +70,7 @@ public final class ModItems {
     public static final DeferredItem<GolemTabletItem> GOLEM_TABLET = extra(ITEMS.registerItem("golem_tablet", GolemTabletItem::new,
             new Item.Properties().stacksTo(1)));
     public static final DeferredItem<BlockItem> CUB_BED = extra(ITEMS.registerSimpleBlockItem("cub_bed", ModBlocks.CUB_BED));
+    public static final DeferredItem<BlockItem> GARAGE_RADIO = extra(ITEMS.registerSimpleBlockItem("garage_radio", ModBlocks.GARAGE_RADIO));
     /** The in-game guide book. */
     public static final DeferredItem<ManualItem> MANUAL = ITEMS.registerItem("manual", ManualItem::new);
 

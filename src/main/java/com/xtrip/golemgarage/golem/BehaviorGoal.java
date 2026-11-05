@@ -94,7 +94,7 @@ public class BehaviorGoal extends Goal {
             golem.getNavigation().stop();
             return;
         }
-        if (golem.tickCount % CHECK == 0) {
+        if ((golem.tickCount + golem.getId()) % CHECK == 0) {
             ownerTooFar = ownerTooFar();
         }
         if (ownerTooFar) {
@@ -104,17 +104,17 @@ public class BehaviorGoal extends Goal {
             return;
         }
         if (golem.getMode() != GolemMode.RULES) {
-            runMode(golem.getMode(), golem.tickCount % CHECK == 0);
+            runMode(golem.getMode(), (golem.tickCount + golem.getId()) % CHECK == 0);
             return;
         }
         if (stoppedReason != null) {
             golem.setStatus(GolemText.of("stopped", stoppedReason));
             golem.setActiveRule(-1);
-            follow(golem.tickCount % CHECK == 0, true);
+            follow((golem.tickCount + golem.getId()) % CHECK == 0, true);
             return;
         }
 
-        boolean check = golem.tickCount % CHECK == 0;
+        boolean check = (golem.tickCount + golem.getId()) % CHECK == 0;
         if (golem.tickCount < waitUntil) {
             if (check) {
                 int[] idx = new int[1];
@@ -379,7 +379,12 @@ public class BehaviorGoal extends Goal {
             golem.setStatus(GolemText.of("following"));
         }
         if (golem.distanceToSqr(owner) > 12 && check) {
-            golem.getNavigation().moveTo(owner, 1.0);
+            // Keep the current path while it still ends near the owner; re-pathing hundreds of golems is costly.
+            var path = golem.getNavigation().getPath();
+            if (path == null || path.isDone() || golem.getNavigation().isDone()
+                    || path.getTarget().distToCenterSqr(owner.position()) > 6.25) {
+                golem.getNavigation().moveTo(owner, 1.0);
+            }
         } else if (golem.distanceToSqr(owner) <= 9) {
             golem.getNavigation().stop();
             golem.getLookControl().setLookAt(owner);

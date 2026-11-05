@@ -100,6 +100,15 @@ def veterans():
              + B("Tireless") + ": workers use a third less power.\n\n" + B("Unbreakable") + ": Legends' parts "
              "wear half as fast.\n\nRanked golems show gold chevrons over their heads (red for Legends) when "
              "you're close, and their rank, progress and traits on the Status tab and in Jade.", "Traits"),
+        table([
+            ("Cheerful", "Hums little notes. Walks 5% faster."),
+            ("Grumpy", "Huffs now and then. Takes 10% less damage."),
+            ("Lazy", "Yawns clouds. Uses less power but walks 5% slower."),
+            ("Brave", "Itching for a fight. Hits 10% harder."),
+            ("Curious", "Looks around at everything. Walks a little faster."),
+        ], "Personality"),
+        text("Every golem is born with a " + B("personality") + ". It shows on the Status tab and in Jade, "
+             "stays with the golem for life, and comes through in little idle moments.", "Born That Way"),
     ])
 
 

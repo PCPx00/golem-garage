@@ -1,0 +1,203 @@
+{
+	default_hide_dependency_lines: false
+	default_quest_shape: ""
+	filename: "golem_garage"
+	group: ""
+	icon: { count: 1, id: "golemgarage:golem" }
+	id: "A1CBD573D1BBA6F8"
+	order_index: 0
+	quest_links: [ ]
+	quests: [
+		{
+			id: "A23DD1946DE3611F"
+			x: 0.0d
+			y: 0.0d
+			icon: { count: 1, id: "golemgarage:manual" }
+			tasks: [{
+				id: "E50BEBE998DC4F8A"
+				type: "item"
+				item: { count: 1, id: "golemgarage:manual" }
+			}]
+		}
+		{
+			id: "CCB9173EDF8AFDC8"
+			x: 2.0d
+			y: 0.0d
+			icon: { count: 1, id: "golemgarage:golem" }
+			dependencies: ["A23DD1946DE3611F"]
+			tasks: [{
+				id: "017786059A567C3D"
+				type: "item"
+				item: { count: 1, id: "golemgarage:golem" }
+			}]
+		}
+		{
+			id: "761E21E55AAF5FFA"
+			x: 4.0d
+			y: -1.0d
+			icon: { count: 1, id: "golemgarage:stub_legs" }
+			dependencies: ["CCB9173EDF8AFDC8"]
+			tasks: [{
+				id: "715A97DF95020A33"
+				type: "item"
+				item: { count: 1, id: "golemgarage:stub_legs" }
+			}]
+		}
+		{
+			id: "ACD7CE2C0C9E8629"
+			x: 4.0d
+			y: 1.0d
+			icon: { count: 1, id: "golemgarage:redstone_core" }
+			dependencies: ["CCB9173EDF8AFDC8"]
+			tasks: [{
+				id: "7478AA1DAA86F0E6"
+				type: "item"
+				item: { count: 1, id: "golemgarage:redstone_core" }
+			}]
+		}
+		{
+			id: "1EBB1F349B58A0D0"
+			x: 6.0d
+			y: 1.0d
+			icon: { count: 1, id: "golemgarage:golem_dock" }
+			dependencies: ["ACD7CE2C0C9E8629"]
+			tasks: [{
+				id: "5476EF11A15CD410"
+				type: "item"
+				item: { count: 1, id: "golemgarage:golem_dock" }
+			}]
+		}
+		{
+			id: "CC4B348AE1C25BC8"
+			x: 6.0d
+			y: -1.0d
+			icon: { count: 1, id: "golemgarage:golem_linker" }
+			dependencies: ["761E21E55AAF5FFA"]
+			tasks: [{
+				id: "482137F73F10B475"
+				type: "item"
+				item: { count: 1, id: "golemgarage:golem_linker" }
+			}]
+		}
+		{
+			id: "D170FD854990786D"
+			x: 8.0d
+			y: -1.0d
+			icon: { count: 1, id: "golemgarage:rule_card" }
+			dependencies: ["CC4B348AE1C25BC8"]
+			tasks: [{
+				id: "61CFFF5160AC584F"
+				type: "item"
+				item: { count: 1, id: "golemgarage:rule_card" }
+			}]
+		}
+		{
+			id: "66AD2C2B4E3CD158"
+			x: 8.0d
+			y: 1.0d
+			icon: { count: 1, id: "golemgarage:garage_controller" }
+			dependencies: ["1EBB1F349B58A0D0"]
+			tasks: [{
+				id: "9F99F53F5082BC3A"
+				type: "item"
+				item: { count: 1, id: "golemgarage:garage_controller" }
+			}]
+		}
+		{
+			id: "1F8F7013979B3331"
+			x: 10.0d
+			y: 1.0d
+			icon: { count: 1, id: "golemgarage:fabricator" }
+			dependencies: ["66AD2C2B4E3CD158"]
+			tasks: [{
+				id: "9D5543169F05B5CF"
+				type: "item"
+				item: { count: 1, id: "golemgarage:fabricator" }
+			}]
+		}
+		{
+			id: "A92F7ACF501FE94A"
+			x: 10.0d
+			y: 3.0d
+			icon: { count: 1, id: "golemgarage:spray_can_flames" }
+			dependencies: ["66AD2C2B4E3CD158"]
+			tasks: [{
+				id: "DDEFE283FEBD14ED"
+				type: "item"
+				item: { count: 1, id: "golemgarage:spray_can_flames" }
+			}]
+		}
+		{
+			id: "6107018E8098D045"
+			x: 10.0d
+			y: -1.0d
+			icon: { count: 1, id: "golemgarage:golem_tablet" }
+			dependencies: ["D170FD854990786D"]
+			tasks: [{
+				id: "24E5A9233C541F5E"
+				type: "item"
+				item: { count: 1, id: "golemgarage:golem_tablet" }
+			}]
+		}
+		{
+			id: "86F1FD3E61BD3E0F"
+			x: 12.0d
+			y: -1.0d
+			icon: { count: 1, id: "golemgarage:war_horn" }
+			dependencies: ["6107018E8098D045"]
+			tasks: [{
+				id: "9507244037D0B510"
+				type: "item"
+				item: { count: 1, id: "golemgarage:war_horn" }
+			}]
+		}
+		{
+			id: "F44F5D9042025A80"
+			x: 12.0d
+			y: 1.0d
+			icon: { count: 1, id: "golemgarage:rig" }
+			dependencies: ["1F8F7013979B3331"]
+			tasks: [{
+				id: "825A33A7FE9B57E4"
+				type: "item"
+				item: { count: 1, id: "golemgarage:rig" }
+			}]
+		}
+		{
+			id: "25DE665D2866AEE4"
+			x: 12.0d
+			y: 3.0d
+			icon: { count: 1, id: "golemgarage:garage_radio" }
+			dependencies: ["A92F7ACF501FE94A"]
+			tasks: [{
+				id: "E709F4CDC63B0804"
+				type: "item"
+				item: { count: 1, id: "golemgarage:garage_radio" }
+			}]
+		}
+		{
+			id: "8015BB2C887EB602"
+			x: 2.0d
+			y: 3.0d
+			icon: { count: 1, id: "golemgarage:cub" }
+			dependencies: ["CCB9173EDF8AFDC8"]
+			tasks: [{
+				id: "AD5302FADBC9A4F7"
+				type: "item"
+				item: { count: 1, id: "golemgarage:cub" }
+			}]
+		}
+		{
+			id: "9BA246CC0A358E36"
+			x: 4.0d
+			y: 3.0d
+			icon: { count: 1, id: "golemgarage:cub_bed" }
+			dependencies: ["8015BB2C887EB602"]
+			tasks: [{
+				id: "7D94739644DBD545"
+				type: "item"
+				item: { count: 1, id: "golemgarage:cub_bed" }
+			}]
+		}
+	]
+}

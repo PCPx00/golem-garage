@@ -148,7 +148,7 @@ public class GolemScreen extends Screen {
         } else {
             g.fill(x0 + 18, ry, x0 + 128, ry + 3, 0xFFFFC14A);
         }
-        StringBuilder traits = new StringBuilder();
+        StringBuilder traits = new StringBuilder(I18n.get(golem.getPersonality().key()));
         for (var t : com.xtrip.golemgarage.entity.Veterancy.traits(golem)) {
             traits.append(traits.length() > 0 ? ", " : "").append(I18n.get(com.xtrip.golemgarage.entity.Veterancy.traitKey(t)));
         }

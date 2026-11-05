@@ -145,4 +145,11 @@ public final class ModEvents {
 
     private ModEvents() {
     }
+
+    @SubscribeEvent
+    public static void onCrafted(PlayerEvent.ItemCraftedEvent event) {
+        if (event.getCrafting().getItem() instanceof com.xtrip.golemgarage.item.PartItem) {
+            Hints.show(event.getEntity(), "first_part");
+        }
+    }
 }

@@ -110,6 +110,9 @@ public class GolemEntity extends PathfinderMob {
     /** Spray-can finish ("" for none): flames, hazard, rust, camo, chrome or tiger. */
     private static final EntityDataAccessor<String> DATA_FINISH =
             SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.STRING);
+    /** Personality (see {@link Personality}), -1 until first asked for. */
+    private static final EntityDataAccessor<Integer> DATA_PERSONALITY =
+            SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.INT);
     private boolean paused;
     @Nullable
     private BlockPos dockedAt;
@@ -182,6 +185,7 @@ public class GolemEntity extends PathfinderMob {
         builder.define(DATA_MODE, 0);
         builder.define(DATA_XP, 0);
         builder.define(DATA_FINISH, "");
+        builder.define(DATA_PERSONALITY, -1);
         builder.define(DATA_STATUS, "");
         builder.define(DATA_FLAGS, (byte) 0);
     }
@@ -593,6 +597,7 @@ public class GolemEntity extends PathfinderMob {
             stats.knockbackResist = 1f;
         } else if (!isRogue()) {
             Veterancy.apply(this, stats);
+            Personality.apply(getPersonality(), stats);
         }
         set(Attributes.MAX_HEALTH, stats.maxHealth);
         float powerFactor = stats.capacity > 0 && power <= 0 ? 0.4f : 1f;
@@ -630,6 +635,15 @@ public class GolemEntity extends PathfinderMob {
     @Override
     public void tick() {
         super.tick();
+        // A little personality now and then while idle.
+        if (!level().isClientSide && !isRogue() && !broken && tickCount % 160 == (getId() & 127)
+                && random.nextInt(3) == 0 && level() instanceof net.minecraft.server.level.ServerLevel sl) {
+            Personality p = getPersonality();
+            sl.sendParticles(p.particle, getX(), getEyeY() + 0.6, getZ(), p == Personality.CURIOUS ? 12 : 3, 0.3, 0.2, 0.3, 0.02);
+            if (p == Personality.CURIOUS) {
+                getLookControl().setLookAt(getX() + random.nextGaussian() * 6, getEyeY(), getZ() + random.nextGaussian() * 6);
+            }
+        }
         if (attackAnimationTick > 0) {
             attackAnimationTick--;
         }
@@ -645,16 +659,18 @@ public class GolemEntity extends PathfinderMob {
             tickBreakdown();
             return;
         }
-        if (tickCount % 100 == 7 && getServer() != null) {
+        // Spread periodic work over ticks so golems placed together don't all do it on the same tick.
+        int phase = tickCount + getId();
+        if (phase % 100 == 7 && getServer() != null) {
             com.xtrip.golemgarage.golem.GolemRegistry.get(getServer()).update(this);
         }
-        if (stats.turret && tickCount % 22 == 0) {
+        if (stats.turret && phase % 22 == 0) {
             fireTurret();
         }
-        if (stats.medic && !isRogue() && tickCount % 50 == 0) {
+        if (stats.medic && !isRogue() && phase % 50 == 0) {
             medic();
         }
-        if (dockedAt != null && tickCount % 20 == 0 && (distanceToSqr(Vec3.atBottomCenterOf(dockedAt)) > 2.5
+        if (dockedAt != null && phase % 20 == 0 && (distanceToSqr(Vec3.atBottomCenterOf(dockedAt)) > 2.5
                 || activeAction() != GolemRule.Action.GO_HOME)) {
             undock();
         }
@@ -662,17 +678,17 @@ public class GolemEntity extends PathfinderMob {
             setFlag(FLAG_CLIMBING, horizontalCollision);
         }
         trackWalking();
-        if (tickCount % 5 == 0) {
+        if (phase % 5 == 0) {
             updateLight();
         }
-        if (tickCount % 20 == 0) {
+        if (phase % 20 == 0) {
             secondTick();
         }
-        if (tickCount % 600 == 0) {
+        if (phase % 600 == 0) {
             weatherWear();
         }
         moduleTick();
-        if (tickCount % 1200 == 0) {
+        if (phase % 1200 == 0) {
             oxidize();
         }
         if (emitTicks > 0 && --emitTicks == 0) {
@@ -681,6 +697,7 @@ public class GolemEntity extends PathfinderMob {
     }
 
     private void secondTick() {
+        int phase = tickCount + getId();
         int used = 0;
         for (int i = 0; i < INVENTORY_SIZE; i++) {
             if (!inventory.getItem(i).isEmpty()) {
@@ -692,9 +709,9 @@ public class GolemEntity extends PathfinderMob {
         // Power drain: a little while idle, more while moving.
         if (stats.capacity > 0) {
             boolean moving = !getNavigation().isDone();
-            if (moving && tickCount % 40 == 0) {
+            if (moving && phase % 40 == 0) {
                 drainPower(1);
-            } else if (!moving && tickCount % 200 == 0) {
+            } else if (!moving && phase % 200 == 0) {
                 drainPower(1);
             }
             recharge();
@@ -704,10 +721,10 @@ public class GolemEntity extends PathfinderMob {
         } else {
             setFlag(FLAG_SMELTING, false);
         }
-        if (stats.ender && tickCount % 40 == 0) {
+        if (stats.ender && phase % 40 == 0) {
             enderCatchUp();
         }
-        if (stats.spotter && tickCount % 40 == 0) {
+        if (stats.spotter && phase % 40 == 0) {
             spotHostiles();
         }
         applyAttributes();
@@ -738,12 +755,26 @@ public class GolemEntity extends PathfinderMob {
         }
     }
 
+    public Personality getPersonality() {
+        int v = entityData.get(DATA_PERSONALITY);
+        if (v < 0) {
+            v = Math.floorMod(getUUID().hashCode(), Personality.values().length);
+            if (!level().isClientSide) {
+                entityData.set(DATA_PERSONALITY, v);
+            }
+        }
+        return Personality.of(v);
+    }
+
     /** Spends power. Every 100 points spent wears the core a little. */
     public void drainPower(int amount) {
         if (isRogue()) {
             return; // rogues run on whatever they scavenged
         }
         if (hasTrait(Veterancy.Trait.TIRELESS) && random.nextInt(3) == 0) {
+            return;
+        }
+        if (getPersonality() == Personality.LAZY && random.nextInt(6) == 0) {
             return;
         }
         if (stats.capacity <= 0) {
@@ -1124,11 +1155,18 @@ public class GolemEntity extends PathfinderMob {
             }
         }
         if (tickCount % 40 == 0) {
+            // A dock fed with Forge Energy charges five times as fast.
+            boolean fast = (stats.capacity > 0 && getPower() < stats.capacity || getHealth() < getMaxHealth())
+                    && level().getBlockEntity(dock) instanceof com.xtrip.golemgarage.block.entity.GolemDockBlockEntity be
+                    && be.drawCharge();
             if (stats.capacity > 0) {
-                addPower(Math.max(1, stats.capacity / 50));
+                addPower(Math.max(1, stats.capacity / (fast ? 10 : 50)));
             }
             if (getHealth() < getMaxHealth()) {
-                heal(1f);
+                heal(fast ? 4f : 1f);
+            }
+            if (fast && level() instanceof net.minecraft.server.level.ServerLevel sl) {
+                sl.sendParticles(net.minecraft.core.particles.ParticleTypes.ELECTRIC_SPARK, getX(), getY() + 0.2, getZ(), 6, 0.4, 0.1, 0.4, 0.05);
             }
         }
     }
@@ -1499,7 +1537,8 @@ public class GolemEntity extends PathfinderMob {
     public boolean canEdit(Player player) {
         UUID owner = getOwnerUuid();
         return owner == null || owner.equals(player.getUUID()) || player.hasPermissions(2)
-                || com.xtrip.golemgarage.Config.OTHERS_CAN_EDIT.get();
+                || com.xtrip.golemgarage.Config.OTHERS_CAN_EDIT.get()
+                || !level().isClientSide && com.xtrip.golemgarage.golem.Trust.trusts(player, owner);
     }
 
     public boolean isBroken() {
@@ -1516,6 +1555,9 @@ public class GolemEntity extends PathfinderMob {
     public boolean hurt(DamageSource source, float amount) {
         if (level().isClientSide || broken) {
             return super.hurt(source, amount);
+        }
+        if (getPersonality() == Personality.GRUMPY && !isRogue()) {
+            amount *= 0.9f;
         }
         if (isInvulnerableTo(source) || (fireImmune() && source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE))) {
             return false;
@@ -1638,6 +1680,9 @@ public class GolemEntity extends PathfinderMob {
         getNavigation().stop();
         setTarget(null);
         playSound(com.xtrip.golemgarage.ModSounds.GOLEM_BREAKDOWN.get(), 1f, 1f);
+        if (!isRogue()) {
+            com.xtrip.golemgarage.Hints.show(getOwner(), "breakdown");
+        }
     }
 
     private void tickBreakdown() {
@@ -2156,7 +2201,7 @@ public class GolemEntity extends PathfinderMob {
 
     /** Picks the golem up into the player's inventory, if it's theirs (or nobody's). */
     public void tryPickUp(Player player) {
-        if (getOwnerUuid() != null && !getOwnerUuid().equals(player.getUUID())
+        if (getOwnerUuid() != null && !com.xtrip.golemgarage.golem.Trust.trusts(player, getOwnerUuid())
                 && !com.xtrip.golemgarage.Config.OTHERS_CAN_PICK_UP.get()) {
             say(player, Component.translatable("golemgarage.msg.not_yours"), ChatFormatting.RED);
             return;
@@ -2210,6 +2255,7 @@ public class GolemEntity extends PathfinderMob {
         tag.putBoolean("Paused", paused);
         tag.putInt("Xp", getXp());
         tag.putString("Finish", getFinish());
+        tag.putInt("Personality", getPersonality().ordinal());
         tag.putInt("XpCombat", combatXp);
         CompoundTag l = new CompoundTag();
         links.forEach((m, p) -> l.putLong(m.name(), p.asLong()));
@@ -2253,6 +2299,9 @@ public class GolemEntity extends PathfinderMob {
         paused = tag.getBoolean("Paused");
         entityData.set(DATA_XP, tag.getInt("Xp"));
         entityData.set(DATA_FINISH, tag.getString("Finish"));
+        if (tag.contains("Personality")) {
+            entityData.set(DATA_PERSONALITY, tag.getInt("Personality"));
+        }
         combatXp = tag.getInt("XpCombat");
         if (tag.contains("Modules")) {
             readModules(tag);

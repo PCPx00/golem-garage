@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.19.0, by xTrip",
+ "subtitle": "Version 0.21.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -10321,6 +10321,29 @@
        "type": "text",
        "text": "A charging pad that gives a golem a home. Link it with the Linker in §lHome§r mode, then give the golem a §lrest at its dock§r rule, for example \"night: rest at its dock\".\n\nWhile it stands on the dock it slowly recharges and heals, and the pad lights up.",
        "title": "Home Sweet Home"
+      },
+      {
+       "type": "text",
+       "text": "The dock also takes §lForge Energy§r (FE) from other mods' cables and generators, and stores up to 100,000 FE. A golem resting on a charged dock tops up §lfive times as fast§r and heals four times as fast, using 2,000 FE each time it charges. Right-click the dock to see how much it holds.",
+       "title": "Fast Charging"
+      }
+     ]
+    },
+    {
+     "id": "radio",
+     "title": "Garage Radio",
+     "icon": "golemgarage:garage_radio",
+     "pages": [
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:garage_radio",
+       "text": "A jukebox with copper ingots on each side, iron below and on top.",
+       "title": "Garage Radio"
+      },
+      {
+       "type": "text",
+       "text": "A battered boombox for the workshop. §lRight-click§r to switch it on or off; it plays the music disc songs on shuffle and moves on to the next song by itself. §lSneak + right-click§r skips to another song.\n\nCubs nearby dance to it.",
+       "title": "Tunes"
       }
      ]
     },
@@ -10975,6 +10998,37 @@
       {
        "type": "text",
        "text": "Ranked golems show gold chevrons over their heads (red for Legends) when you're close, and their rank, progress and traits on the Status tab and in Jade."
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "Cheerful",
+         "Hums little notes. Walks 5% faster."
+        ],
+        [
+         "Grumpy",
+         "Huffs now and then. Takes 10% less damage."
+        ],
+        [
+         "Lazy",
+         "Yawns clouds. Uses less power but walks 5% slower."
+        ],
+        [
+         "Brave",
+         "Itching for a fight. Hits 10% harder."
+        ],
+        [
+         "Curious",
+         "Looks around at everything. Walks a little faster."
+        ]
+       ],
+       "title": "Personality"
+      },
+      {
+       "type": "text",
+       "text": "Every golem is born with a §lpersonality§r. It shows on the Status tab and in Jade, stays with the golem for life, and comes through in little idle moments.",
+       "title": "Born That Way"
       }
      ]
     },
@@ -11463,8 +11517,26 @@
        "title": "Cubs and Commands"
       },
       {
+       "type": "table",
+       "rows": [
+        [
+         "hints",
+         "New players get a one-time tip at key moments (on)."
+        ],
+        [
+         "generateWastelandFinds",
+         "Scrapyards and abandoned garages in new chunks (on)."
+        ],
+        [
+         "raids",
+         "Raider convoys at nightfall (on)."
+        ]
+       ],
+       "title": "More"
+      },
+      {
        "type": "text",
-       "text": "Operators can always edit any golem, and skip the recall wait.",
+       "text": "Operators can always edit any golem, and skip the recall wait.\n\nIn single player, all of these can also be changed in game: §lMods§r, Golem Garage, §lConfig§r.",
        "title": "Operators"
       }
      ]
@@ -11505,6 +11577,14 @@
         [
          "stop / resume <golem>",
          "Pauses its jobs, and starts them again."
+        ],
+        [
+         "trust <player>",
+         "Lets a friend open, edit, link and pick up your golems and cubs. /gg trust on its own lists who you trust."
+        ],
+        [
+         "untrust <player>",
+         "Takes that back."
         ]
        ],
        "title": "For Everyone"
@@ -11559,6 +11639,11 @@
        "type": "text",
        "text": "§lItem tags§r: golemgarage:golem_parts (and golem_parts/head, torso, arms, legs, core), modules, outfits (and outfits/cool, goth, cute, fancy), golems, cubs, garage_blocks and tools. Use them in recipes, quests and filters.\n\nThe §l/golemgarage give§r presets make good quest rewards.",
        "title": "Tags and Rewards"
+      },
+      {
+       "type": "text",
+       "text": "A ready-made §lFTB Quests§r chapter (16 quests from the first frame to the rig) is in the mod's GitHub repository under docs/compat/ftbquests.",
+       "title": "Quest Chapter"
       }
      ]
     },

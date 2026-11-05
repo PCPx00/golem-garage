@@ -306,6 +306,31 @@ def cub_bed_side():
     return c.img
 
 
+def radio_front(on):
+    """A rusty boombox: two speaker cones, a tuning dial and a little screen."""
+    c, pal = metal_panel("#7a4a2e", 63, rivets=False)
+    for x in range(16):
+        c.set(x, 0, pal[5]); c.set(x, 15, pal[5])
+    for cx in (4, 11):
+        for y in range(16):
+            for x in range(16):
+                d = ((x - cx + 0.5) ** 2 + (y - 9.5) ** 2) ** 0.5
+                if d < 3.6:
+                    c.set(x, y, (24, 22, 24) if d > 2.6 else (52, 50, 54) if d > 1.2 else (110, 108, 112))
+    for x in range(5, 11):
+        c.set(x, 3, (60, 240, 210) if on else (30, 70, 64))
+        c.set(x, 4, (40, 190, 170) if on else (24, 56, 52))
+    c.set(7, 2, (255, 90, 60) if on else (90, 40, 30))
+    return c.img
+
+
+def radio_side():
+    c, pal = metal_panel("#7a4a2e", 64, rivets=True)
+    for x in range(16):
+        c.set(x, 0, pal[5]); c.set(x, 15, pal[5])
+    return c.img
+
+
 def generate(assets):
     tex = os.path.join(assets, "textures/block")
     _save(controller(), os.path.join(tex, "garage_controller.png"))
@@ -326,6 +351,9 @@ def generate(assets):
     _save(cub_bed_top(), os.path.join(tex, "cub_bed_top.png"))
     _save(cub_bed_side(), os.path.join(tex, "cub_bed_side.png"))
     _save(fabricator_top(), os.path.join(tex, "fabricator_top.png"))
+    _save(radio_front(False), os.path.join(tex, "garage_radio_front.png"))
+    _save(radio_front(True), os.path.join(tex, "garage_radio_front_on.png"))
+    _save(radio_side(), os.path.join(tex, "garage_radio_side.png"))
     for old in ("laser_emitter.png", "steel_emitter.png"):
         p = os.path.join(tex, old)
         if os.path.exists(p):
@@ -374,13 +402,32 @@ def generate(assets):
             {"from": [1, 3, 3], "to": [3, 5, 13], "faces": {d: {"texture": "#side"} for d in ("north", "south", "east", "west", "up")}},
             {"from": [13, 3, 3], "to": [15, 5, 13], "faces": {d: {"texture": "#side"} for d in ("north", "south", "east", "west", "up")}},
         ]})
+    for on in (False, True):
+        side = {"texture": "#side"}
+        _json(os.path.join(models, "block/garage_radio%s.json" % ("_on" if on else "")), {
+            "parent": "minecraft:block/block",
+            "textures": {"particle": "golemgarage:block/garage_radio_side", "side": "golemgarage:block/garage_radio_side",
+                         "front": "golemgarage:block/garage_radio_front" + ("_on" if on else ""),
+                         "handle": "minecraft:block/iron_block"},
+            "elements": [
+                {"from": [1, 0, 4], "to": [15, 9, 12], "faces": {
+                    "north": {"texture": "#front", "uv": [1, 3, 15, 12]}, "south": side, "east": side, "west": side,
+                    "up": side, "down": side}},
+                {"from": [2, 9, 7], "to": [3, 12, 9], "faces": {d: {"texture": "#handle"} for d in ("north", "south", "east", "west", "up")}},
+                {"from": [13, 9, 7], "to": [14, 12, 9], "faces": {d: {"texture": "#handle"} for d in ("north", "south", "east", "west", "up")}},
+                {"from": [2, 12, 7], "to": [14, 13, 9], "faces": {d: {"texture": "#handle"} for d in ("north", "south", "east", "west", "up", "down")}},
+                {"from": [12, 9, 10], "to": [12.5, 15, 10.5], "faces": {d: {"texture": "#handle"} for d in ("north", "south", "east", "west", "up")}},
+            ]})
     for b in ("garage_controller", "laser_emitter", "steel_emitter", "signal_plate", "golem_dock", "garage_window",
-              "fabricator", "cub_bed"):
+              "fabricator", "cub_bed", "garage_radio"):
         _json(os.path.join(models, "item/%s.json" % b), {"parent": "golemgarage:block/%s" % b})
 
     bs = os.path.join(assets, "blockstates")
     _json(os.path.join(bs, "fabricator.json"), {"variants": {"": {"model": "golemgarage:block/fabricator"}}})
     _json(os.path.join(bs, "cub_bed.json"), {"variants": {"": {"model": "golemgarage:block/cub_bed"}}})
+    _json(os.path.join(bs, "garage_radio.json"), {"variants": {
+        "facing=%s,playing=%s" % (f, str(on).lower()): dict({"model": "golemgarage:block/garage_radio" + ("_on" if on else "")}, **({"y": r} if r else {}))
+        for f, r in (("north", 0), ("east", 90), ("south", 180), ("west", 270)) for on in (False, True)}})
     for b in ("laser_emitter", "steel_emitter"):
         _json(os.path.join(bs, b + ".json"), {"variants": {"": {"model": "golemgarage:block/" + b}}})
     # The controller's screen faces into the room it was placed toward.

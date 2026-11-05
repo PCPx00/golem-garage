@@ -92,6 +92,7 @@ public class GolemGarageJei implements IModPlugin {
         info(reg, ModItems.WAR_HORN.get(), "war_horn");
         info(reg, ModItems.FABRICATOR.get(), "fabricator");
         info(reg, ModItems.CUB_BED.get(), "cub_bed");
+        info(reg, ModItems.GARAGE_RADIO.get(), "garage_radio");
         info(reg, ModItems.GOLEM_TABLET.get(), "golem_tablet");
         ModItems.SPRAY_CANS.values().forEach(c -> info(reg, c.get(), "spray_can"));
         info(reg, ModItems.GARAGE_WINDOW.get(), "garage_window");

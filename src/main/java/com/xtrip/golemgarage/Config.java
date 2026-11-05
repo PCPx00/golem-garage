@@ -32,6 +32,7 @@ public final class Config {
     public static final ModConfigSpec.EnumValue<PlayerDamage> PLAYER_DAMAGE;
     public static final ModConfigSpec.BooleanValue KILLS_COUNT_AS_OWNER;
     public static final ModConfigSpec.BooleanValue GIVE_MANUAL;
+    public static final ModConfigSpec.BooleanValue HINTS;
     public static final ModConfigSpec.BooleanValue GOLEMS_HARVEST_NEED_GRIEFING;
     public static final ModConfigSpec.IntValue ITEM_DESPAWN_MINUTES;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> DISABLED_ACTIONS;
@@ -138,6 +139,8 @@ public final class Config {
         b.comment("Commands and getting started").push("general");
         GIVE_MANUAL = b.comment("Give every player a Golem Engineer's Manual the first time they join.")
                 .define("giveManualOnJoin", true);
+        HINTS = b.comment("Show new players a one-time tip at key moments (first part, first golem, first breakdown...).")
+                .define("hints", true);
         PLAYER_COMMANDS = b.comment("Players can use /golemgarage list, find, recall, rename, stop and resume on their own golems.",
                         "Admin commands always need operator permission.")
                 .define("playerCommands", true);

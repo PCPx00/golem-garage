@@ -372,7 +372,8 @@ public class CubEntity extends PathfinderMob {
         }
         ItemStack held = player.getItemInHand(hand);
         boolean mine = ownerUuid == null || ownerUuid.equals(player.getUUID()) || player.hasPermissions(2)
-                || com.xtrip.golemgarage.Config.OTHERS_CAN_EDIT.get();
+                || com.xtrip.golemgarage.Config.OTHERS_CAN_EDIT.get()
+                || com.xtrip.golemgarage.golem.Trust.trusts(player, ownerUuid);
         if (!mine && !(player.isShiftKeyDown() && held.isEmpty())) {
             player.displayClientMessage(Component.translatable("golemgarage.msg.cub_not_yours")
                     .withStyle(ChatFormatting.RED), true);
@@ -501,7 +502,7 @@ public class CubEntity extends PathfinderMob {
 
     /** Picks the cub up into the player's inventory, if it's theirs (or nobody's). */
     public void tryPickUp(Player player) {
-        if (getOwnerUuid() != null && !getOwnerUuid().equals(player.getUUID())
+        if (getOwnerUuid() != null && !com.xtrip.golemgarage.golem.Trust.trusts(player, getOwnerUuid())
                 && !com.xtrip.golemgarage.Config.OTHERS_CAN_PICK_UP.get()) {
             player.displayClientMessage(net.minecraft.network.chat.Component.translatable("golemgarage.msg.cub_not_yours")
                     .withStyle(net.minecraft.ChatFormatting.RED), true);
@@ -654,11 +655,13 @@ public class CubEntity extends PathfinderMob {
     private void tickFun(@Nullable Player owner) {
         long t = level().getGameTime();
         // Dance next to a jukebox that's playing.
-        if (tickCount % 20 == 0 && emote(0) == Emote.NONE) {
+        if ((tickCount + getId()) % 20 == 0 && emote(0) == Emote.NONE) {
             for (BlockPos p : BlockPos.betweenClosed(blockPosition().offset(-3, -1, -3), blockPosition().offset(3, 1, 3))) {
                 var st = level().getBlockState(p);
                 if (st.is(net.minecraft.world.level.block.Blocks.JUKEBOX)
-                        && st.getValue(net.minecraft.world.level.block.JukeboxBlock.HAS_RECORD)) {
+                        && st.getValue(net.minecraft.world.level.block.JukeboxBlock.HAS_RECORD)
+                        || st.getBlock() instanceof com.xtrip.golemgarage.block.GarageRadioBlock
+                        && st.getValue(com.xtrip.golemgarage.block.GarageRadioBlock.PLAYING)) {
                     emote(Emote.DANCE, 40);
                     break;
                 }
@@ -720,12 +723,12 @@ public class CubEntity extends PathfinderMob {
 
         @Override
         public boolean canUse() {
-            if (cub.bed != null || cub.isPassenger() || !night(cub.level()) || cub.tickCount % 40 != 0) {
+            if (cub.bed != null || cub.isPassenger() || !night(cub.level()) || (cub.tickCount + cub.getId()) % 60 != 0) {
                 return false;
             }
             BlockPos best = null;
             double bestD = Double.MAX_VALUE;
-            for (BlockPos p : BlockPos.betweenClosed(cub.blockPosition().offset(-16, -4, -16), cub.blockPosition().offset(16, 4, 16))) {
+            for (BlockPos p : BlockPos.betweenClosed(cub.blockPosition().offset(-16, -2, -16), cub.blockPosition().offset(16, 2, 16))) {
                 if (cub.level().getBlockState(p).getBlock() instanceof com.xtrip.golemgarage.block.CubBedBlock) {
                     final BlockPos q = p.immutable();
                     boolean taken = !cub.level().getEntitiesOfClass(CubEntity.class, new net.minecraft.world.phys.AABB(q).inflate(0.2),

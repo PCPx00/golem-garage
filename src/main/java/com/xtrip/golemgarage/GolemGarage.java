@@ -32,8 +32,14 @@ public class GolemGarage {
         com.xtrip.golemgarage.advancement.ModTriggers.TRIGGERS.register(modEventBus);
         com.xtrip.golemgarage.data.ModRecipes.SERIALIZERS.register(modEventBus);
         modEventBus.addListener(ModEntities::onAttributes);
+        modEventBus.addListener((net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent e) ->
+                e.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage.BLOCK,
+                        ModBlockEntities.GOLEM_DOCK.get(), (be, side) -> be.energy()));
         modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, Config.SERVER_SPEC);
         modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
+        if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) {
+            com.xtrip.golemgarage.client.ConfigScreenHook.register(modContainer);
+        }
         LOGGER.info("Golem Garage loaded");
     }
 }

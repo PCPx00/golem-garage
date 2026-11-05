@@ -880,6 +880,17 @@ def tools_chapter():
             text("A charging pad that gives a golem a home. Link it with the Linker in " + B("Home") + " mode, then "
                  "give the golem a " + B("rest at its dock") + " rule, for example \"night: rest at its dock\".\n\n"
                  "While it stands on the dock it slowly recharges and heals, and the pad lights up.", "Home Sweet Home"),
+            text("The dock also takes " + B("Forge Energy") + " (FE) from other mods' cables and generators, and "
+                 "stores up to 100,000 FE. A golem resting on a charged dock tops up " + B("five times as fast") +
+                 " and heals four times as fast, using 2,000 FE each time it charges. Right-click the dock to see "
+                 "how much it holds.", "Fast Charging"),
+        ]),
+        entry("radio", "Garage Radio", MODID + ":garage_radio", [
+            craft(MODID + ":garage_radio", "A jukebox with copper ingots on each side, iron below and on top.",
+                  "Garage Radio"),
+            text("A battered boombox for the workshop. " + B("Right-click") + " to switch it on or off; it plays "
+                 "the music disc songs on shuffle and moves on to the next song by itself. " + B("Sneak + "
+                 "right-click") + " skips to another song.\n\nCubs nearby dance to it.", "Tunes"),
         ]),
         entry("paint", "Paint", "minecraft:red_dye", [
             text("Right-click a golem with any " + B("dye") + " to paint its trim: the bands, plates and "
@@ -1021,7 +1032,13 @@ def settings_chapter():
                 ("playerCommands", "Players can use the /golemgarage player commands (on)."),
                 ("recallCooldownSeconds", "Wait between recalls (60)."),
             ], "Cubs and Commands"),
-            text("Operators can always edit any golem, and skip the recall wait.", "Operators"),
+            table([
+                ("hints", "New players get a one-time tip at key moments (on)."),
+                ("generateWastelandFinds", "Scrapyards and abandoned garages in new chunks (on)."),
+                ("raids", "Raider convoys at nightfall (on)."),
+            ], "More"),
+            text("Operators can always edit any golem, and skip the recall wait.\n\nIn single player, all of these "
+                 "can also be changed in game: " + B("Mods") + ", Golem Garage, " + B("Config") + ".", "Operators"),
         ]),
         entry("commands", "Commands", "minecraft:command_block", [
             text(B("/golemgarage") + " (or " + B("/gg") + ") looks after your golems from anywhere. Name a golem by its "
@@ -1034,6 +1051,9 @@ def settings_chapter():
                 ("rename <golem> <name>", "Gives it a new name."),
                 ("mode <golem> <mode>", "rules, aggressive, peaceful or guard."),
                 ("stop / resume <golem>", "Pauses its jobs, and starts them again."),
+                ("trust <player>", "Lets a friend open, edit, link and pick up your golems and cubs. "
+                                   "/gg trust on its own lists who you trust."),
+                ("untrust <player>", "Takes that back."),
             ], "For Everyone"),
             table([
                 ("give <players> golem <material> [preset]", "A ready-built golem. Presets: standard, guard, "
@@ -1055,6 +1075,8 @@ def settings_chapter():
                  "modules, outfits (and outfits/cool, goth, cute, fancy), golems, cubs, garage_blocks and tools. "
                  "Use them in recipes, quests and filters.\n\nThe " + B("/golemgarage give") + " presets make "
                  "good quest rewards.", "Tags and Rewards"),
+            text("A ready-made " + B("FTB Quests") + " chapter (16 quests from the first frame to the rig) is in "
+                 "the mod's GitHub repository under docs/compat/ftbquests.", "Quest Chapter"),
         ]),
         entry("client_settings", "Client Settings", "minecraft:spyglass", [
             table([

@@ -145,6 +145,13 @@ public final class GolemCommands {
                 .then(Commands.literal("resume").requires(GolemCommands::playerCommands)
                         .then(Commands.argument("golem", StringArgumentType.string()).suggests(golems)
                                 .executes(ctx -> pause(ctx.getSource(), StringArgumentType.getString(ctx, "golem"), false))))
+                .then(Commands.literal("trust").requires(GolemCommands::playerCommands)
+                        .executes(ctx -> trustList(ctx.getSource()))
+                        .then(Commands.argument("player", GameProfileArgument.gameProfile())
+                                .executes(ctx -> trust(ctx.getSource(), GameProfileArgument.getGameProfiles(ctx, "player"), true))))
+                .then(Commands.literal("untrust").requires(GolemCommands::playerCommands)
+                        .then(Commands.argument("player", GameProfileArgument.gameProfile())
+                                .executes(ctx -> trust(ctx.getSource(), GameProfileArgument.getGameProfiles(ctx, "player"), false))))
                 // ---- operators
                 .then(Commands.literal("give").requires(s -> s.hasPermission(2))
                         .then(Commands.argument("targets", EntityArgument.players())
@@ -587,5 +594,44 @@ public final class GolemCommands {
             s.sendSuccess(() -> c, false);
         }
         return 1;
+    }
+
+    private static int trust(CommandSourceStack src, java.util.Collection<com.mojang.authlib.GameProfile> profiles, boolean on)
+            throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        var me = src.getPlayerOrException();
+        var trust = com.xtrip.golemgarage.golem.Trust.get(src.getServer());
+        int n = 0;
+        for (var p : profiles) {
+            if (p.getId().equals(me.getUUID())) {
+                continue;
+            }
+            trust.set(me.getUUID(), p.getId(), on);
+            n++;
+            String name = p.getName();
+            src.sendSuccess(() -> Component.translatable(on ? "golemgarage.cmd.trusted" : "golemgarage.cmd.untrusted", name)
+                    .withStyle(on ? ChatFormatting.GREEN : ChatFormatting.YELLOW), false);
+            var friend = src.getServer().getPlayerList().getPlayer(p.getId());
+            if (friend != null && on) {
+                friend.sendSystemMessage(Component.translatable("golemgarage.cmd.trusted_you", me.getName()).withStyle(ChatFormatting.GREEN));
+            }
+        }
+        return n;
+    }
+
+    private static int trustList(CommandSourceStack src) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        var me = src.getPlayerOrException();
+        var set = com.xtrip.golemgarage.golem.Trust.get(src.getServer()).of(me.getUUID());
+        if (set.isEmpty()) {
+            src.sendSuccess(() -> Component.translatable("golemgarage.cmd.trust_none"), false);
+            return 0;
+        }
+        var cache = src.getServer().getProfileCache();
+        StringBuilder sb = new StringBuilder();
+        for (var u : set) {
+            String name = cache == null ? u.toString() : cache.get(u).map(com.mojang.authlib.GameProfile::getName).orElse(u.toString());
+            sb.append(sb.isEmpty() ? "" : ", ").append(name);
+        }
+        src.sendSuccess(() -> Component.translatable("golemgarage.cmd.trust_list", sb.toString()), false);
+        return set.size();
     }
 }

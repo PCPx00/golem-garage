@@ -26,6 +26,16 @@ public final class ModBlockEntities {
                     () -> BlockEntityType.Builder.of(FabricatorBlockEntity::new, ModBlocks.FABRICATOR.get())
                             .build(null));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GolemDockBlockEntity>> GOLEM_DOCK =
+            BLOCK_ENTITIES.register("golem_dock",
+                    () -> BlockEntityType.Builder.of(GolemDockBlockEntity::new, ModBlocks.GOLEM_DOCK.get())
+                            .build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GarageRadioBlockEntity>> GARAGE_RADIO =
+            BLOCK_ENTITIES.register("garage_radio",
+                    () -> BlockEntityType.Builder.of(GarageRadioBlockEntity::new, ModBlocks.GARAGE_RADIO.get())
+                            .build(null));
+
     private ModBlockEntities() {
     }
 }

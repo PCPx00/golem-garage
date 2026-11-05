@@ -65,6 +65,11 @@ public final class ModBlocks {
             () -> new CubBedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL)
                     .strength(0.4f).sound(SoundType.WOOL).noOcclusion()));
 
+    public static final DeferredBlock<GarageRadioBlock> GARAGE_RADIO = BLOCKS.register(
+            "garage_radio",
+            () -> new GarageRadioBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN)
+                    .strength(1.5f, 6.0f).sound(SoundType.METAL).noOcclusion()));
+
     private ModBlocks() {
     }
 }
