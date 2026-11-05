@@ -44,6 +44,10 @@ public final class Config {
     public static final ModConfigSpec.BooleanValue PLAYER_COMMANDS;
     public static final ModConfigSpec.IntValue RECALL_COOLDOWN_SECONDS;
     public static final ModConfigSpec.BooleanValue WORLDGEN;
+    public static final ModConfigSpec.BooleanValue RAIDS;
+    public static final ModConfigSpec.DoubleValue RAID_CHANCE;
+    public static final ModConfigSpec.IntValue RAID_MIN_GOLEMS;
+    public static final ModConfigSpec.IntValue TITAN_MIN_GOLEMS;
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -121,6 +125,14 @@ public final class Config {
         b.comment("The wasteland").push("wasteland");
         WORLDGEN = b.comment("Generate scrapyards and abandoned garages in new chunks.")
                 .define("generateWastelandFinds", true);
+        RAIDS = b.comment("Raider convoys of rogue golems can attack players' bases at nightfall.")
+                .define("raids", true);
+        RAID_CHANCE = b.comment("Chance each night that a player who qualifies is raided (0 to 1).")
+                .defineInRange("raidChance", 0.15, 0.0, 1.0);
+        RAID_MIN_GOLEMS = b.comment("A player needs at least this many golems before raiders come for them.")
+                .defineInRange("raidMinGolems", 3, 0, 1000);
+        TITAN_MIN_GOLEMS = b.comment("With at least this many golems, a raid can bring a Junk Titan (one raid in three).")
+                .defineInRange("titanMinGolems", 12, 0, 1000);
         b.pop();
 
         b.comment("Commands and getting started").push("general");

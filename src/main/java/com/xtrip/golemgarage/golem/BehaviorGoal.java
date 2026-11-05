@@ -59,7 +59,7 @@ public class BehaviorGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return !golem.isBroken() && !golem.isBreakingDown();
+        return !golem.isBroken() && !golem.isBreakingDown() && !golem.isRogue();
     }
 
     @Override
@@ -214,11 +214,12 @@ public class BehaviorGoal extends Goal {
     }
 
     /** The nearest hostile mob in sight within the range, ignoring work areas (modes don't use them). */
-    private Monster nearestThreat(float radius) {
-        Monster nearest = null;
+    private net.minecraft.world.entity.Mob nearestThreat(float radius) {
+        net.minecraft.world.entity.Mob nearest = null;
         double best = Double.MAX_VALUE;
-        for (Monster m : golem.level().getEntitiesOfClass(Monster.class, golem.getBoundingBox().inflate(radius),
-                m -> m.isAlive() && golem.canAttack(m) && golem.hasLineOfSight(m))) {
+        for (net.minecraft.world.entity.Mob m : golem.level().getEntitiesOfClass(net.minecraft.world.entity.Mob.class,
+                golem.getBoundingBox().inflate(radius),
+                m -> com.xtrip.golemgarage.entity.GolemEntity.isHostile(m) && golem.canAttack(m) && golem.hasLineOfSight(m))) {
             double d = golem.distanceToSqr(m);
             if (d < best && d <= radius * radius) {
                 best = d;
@@ -322,7 +323,7 @@ public class BehaviorGoal extends Goal {
                 yield null;
             }
             case ATTACK_HOSTILE -> {
-                Monster m = nearestHostile(Math.max(8f, golem.stats().vision));
+                net.minecraft.world.entity.Mob m = nearestHostile(Math.max(8f, golem.stats().vision));
                 if (m != null) {
                     golem.setTarget(m);
                     golem.setStatus(GolemText.of("attacking", GolemText.name(m)));
@@ -889,13 +890,14 @@ public class BehaviorGoal extends Goal {
         return null;
     }
 
-    private Monster nearestHostile(float radius) {
+    private net.minecraft.world.entity.Mob nearestHostile(float radius) {
         net.minecraft.world.phys.AABB area = golem.area();
-        List<Monster> found = golem.level().getEntitiesOfClass(Monster.class,
-                golem.getBoundingBox().inflate(radius), m -> m.isAlive() && (area == null || area.contains(m.position())));
-        Monster nearest = null;
+        List<net.minecraft.world.entity.Mob> found = golem.level().getEntitiesOfClass(net.minecraft.world.entity.Mob.class,
+                golem.getBoundingBox().inflate(radius), m -> com.xtrip.golemgarage.entity.GolemEntity.isHostile(m)
+                        && (area == null || area.contains(m.position())));
+        net.minecraft.world.entity.Mob nearest = null;
         double best = Double.MAX_VALUE;
-        for (Monster m : found) {
+        for (net.minecraft.world.entity.Mob m : found) {
             double d = golem.distanceToSqr(m);
             if (d < best) {
                 best = d;

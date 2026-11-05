@@ -2,6 +2,19 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.17.0
+
+### Added
+- **Raider convoys:** once you have 3 golems, rogue golems may raid you at nightfall. A horn and a title warn
+  you which way they're coming from. A rusted rig drives them in, drops them off, and they march on your base
+  to attack your golems, cubs, villagers and you. A bar counts them down; stragglers leave at dawn.
+- Raids grow with your base, up to 12 raiders. From 12 golems, a raid can bring a **Junk Titan**: a giant rogue
+  boss with a health bar and a big hoard of loot.
+- Rogues drop scrap and parts. An empty raiders' rig can be claimed by right-clicking it.
+- Your golems, turrets and rams treat rogue golems as hostile.
+- Advancements: Road Warrior, Scavenger, Hold the Line and Titan Fall.
+- Settings: `raids`, `raidChance`, `raidMinGolems`, `titanMinGolems`. Command: `/golemgarage raid <player> [titan]`.
+
 ## 0.16.0
 
 ### Added

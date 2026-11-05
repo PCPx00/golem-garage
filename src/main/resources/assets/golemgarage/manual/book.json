@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.16.0, by xTrip",
+ "subtitle": "Version 0.17.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -10096,6 +10096,46 @@
       {
        "type": "text",
        "text": "You keep the original, so you can hand out a farm crew's rules to friends.\n\nSneak + use in the air wipes a card."
+      }
+     ]
+    },
+    {
+     "id": "raids",
+     "title": "Raider Convoys",
+     "icon": "golemgarage:rig_turret",
+     "pages": [
+      {
+       "type": "text",
+       "text": "Once you have §l3 or more golems§r, raiders may come for you at nightfall (about one night in seven). A horn sounds and a title tells you which way they're coming from. A rusted rig full of §lRogue Golems§r drives at your base, drops them off, and they march in to wreck your golems, cubs, villagers and you.",
+       "title": "Raiders!"
+      },
+      {
+       "type": "text",
+       "text": "§lBigger bases draw bigger raids§r: 3 raiders, plus one for every 4 golems you have, up to 12.\n\n§lJunk Titan§r: with 12 or more golems, one raid in three brings a giant rogue golem with its own health bar. It hits like a truck.\n\nA yellow bar counts the raiders down. Anything left at dawn slinks off.",
+       "title": "How Big"
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "Rogue Golems",
+         "Scrap, and sometimes one of their parts."
+        ],
+        [
+         "The raiders' rig",
+         "Once it's empty, right-click it to claim it."
+        ],
+        [
+         "Junk Titan",
+         "A pile of scrap, three parts, a rare broken golem, a rig upgrade and diamonds."
+        ]
+       ],
+       "title": "Spoils"
+      },
+      {
+       "type": "text",
+       "text": "Your golems treat rogues as hostile mobs: Aggressive and Guard modes and \"attack hostile\" rules go after them, and so does a rig turret.\n\nServer owners can change or turn off raids with §lraids§r, §lraidChance§r, §lraidMinGolems§r and §ltitanMinGolems§r. Operators can start one with §l/golemgarage raid <player> [titan]§r.",
+       "title": "Fighting Back"
       }
      ]
     }

@@ -55,6 +55,9 @@ public class GolemRegistry extends SavedData {
     }
 
     public void update(GolemEntity g) {
+        if (g.isRogue()) {
+            return;
+        }
         String name = g.hasCustomName() && g.getCustomName() != null ? g.getCustomName().getString() : "";
         Entry old = entries.get(g.getUUID());
         Entry e = new Entry(g.getUUID(), g.getOwnerUuid(), name, g.level().dimension(), g.blockPosition(),

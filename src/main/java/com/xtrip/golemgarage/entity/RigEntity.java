@@ -3,6 +3,7 @@ package com.xtrip.golemgarage.entity;
 import com.xtrip.golemgarage.ModSounds;
 import com.xtrip.golemgarage.item.ModDataComponents;
 import com.xtrip.golemgarage.item.ModItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -51,6 +52,8 @@ public class RigEntity extends Mob {
     private static final EntityDataAccessor<Float> TURRET_YAW = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.FLOAT);
 
     public static final int RAM = 1, TURRET = 2, PLATING = 4;
+    /** Rigs that came with a raid: they drive themselves at the base and drop their crew. */
+    public static final String ROGUE_TAG = "golemgarage_rogue_rig";
     public static final int MAX_FUEL = 20 * 60 * 20;
     /** The car model is drawn at this scale. */
     public static final float SCALE = 1.3f;
@@ -120,7 +123,40 @@ public class RigEntity extends Mob {
     }
 
     public boolean engineOn() {
-        return getFuel() > 0 && getControllingPassenger() != null;
+        return getFuel() > 0 && (getControllingPassenger() != null || isRogue() && !getPassengers().isEmpty());
+    }
+
+    public boolean isRogue() {
+        return getTags().contains(ROGUE_TAG);
+    }
+
+    public void setRaidTarget(BlockPos pos) {
+        getPersistentData().putLong("GGRaidTarget", pos.asLong());
+    }
+
+    /** A raid rig that has dropped its crew. */
+    public boolean hasArrived() {
+        return getPersistentData().getBoolean("GGArrived");
+    }
+
+    private void tickRogue() {
+        if (!getPersistentData().contains("GGRaidTarget") || hasArrived()) {
+            return;
+        }
+        BlockPos t = BlockPos.of(getPersistentData().getLong("GGRaidTarget"));
+        if (blockPosition().distSqr(t) < 14 * 14 || tickCount > 20 * 60 || getPassengers().isEmpty()) {
+            getPersistentData().putBoolean("GGArrived", true);
+            getNavigation().stop();
+            for (Entity p : getPassengers()) {
+                p.stopRiding();
+            }
+            playSound(SoundEvents.IRON_DOOR_OPEN, 1f, 0.6f);
+            return;
+        }
+        if (getNavigation().isDone() || tickCount % 30 == 0) {
+            Vec3 step = com.xtrip.golemgarage.golem.RogueMarchGoal.hop(this, t, 12);
+            getNavigation().moveTo(step.x, step.y, step.z, 1.3);
+        }
     }
 
     // =================================================================== driving
@@ -228,7 +264,7 @@ public class RigEntity extends Mob {
 
     @Override
     public boolean removeWhenFarAway(double distance) {
-        return false;
+        return isRogue() && distance > 96 * 96;
     }
 
     @Override
@@ -252,6 +288,9 @@ public class RigEntity extends Mob {
         }
         if (engineOn() && speed > 0.02) {
             setFuel(getFuel() - 1);
+        }
+        if (isRogue()) {
+            tickRogue();
         }
         if (speed > 0.2) {
             ram(speed);
@@ -297,6 +336,10 @@ public class RigEntity extends Mob {
 
     /** Never hurt players (unless they're hostile mobs), your golems, cubs or other rigs. */
     private boolean friendly(LivingEntity e) {
+        if (isRogue()) {
+            return e instanceof GolemEntity g && g.isRogue() || e instanceof RigEntity
+                    || e instanceof Player p && (p.isCreative() || p.isSpectator());
+        }
         return e instanceof Player || e instanceof GolemEntity g && !g.isRogue() || e instanceof CubEntity || e instanceof RigEntity;
     }
 
@@ -310,8 +353,7 @@ public class RigEntity extends Mob {
         }
         Vec3 gun = position().add(0, 1.5 * SCALE, 0);
         LivingEntity target = level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(18),
-                        e -> e instanceof Enemy && e.isAlive() && !(e instanceof GolemEntity g && !g.isRogue())
-                                && hasLineOfSight(e))
+                        e -> GolemEntity.isHostile(e) && hasLineOfSight(e))
                 .stream().min(Comparator.comparingDouble(this::distanceToSqr)).orElse(null);
         if (target == null) {
             turretCooldown = 10;
@@ -336,6 +378,19 @@ public class RigEntity extends Mob {
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack held = player.getItemInHand(hand);
         boolean client = level().isClientSide;
+        // A raiders' rig left empty can be claimed.
+        if (isRogue()) {
+            if (!getPassengers().isEmpty()) {
+                return InteractionResult.PASS;
+            }
+            if (!client) {
+                removeTag(ROGUE_TAG);
+                setPersistenceRequired();
+                owner = player.getUUID();
+                player.displayClientMessage(Component.translatable("golemgarage.rig.claimed"), true);
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
         // Fuel.
         int burn = held.getBurnTime(null);
         if (burn > 0 && getFuel() < MAX_FUEL - 100) {

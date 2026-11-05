@@ -165,6 +165,11 @@ public final class GolemCommands {
                                 .then(Commands.argument("player", GameProfileArgument.gameProfile())
                                         .executes(ctx -> owner(ctx.getSource(), EntityArgument.getEntities(ctx, "golems"),
                                                 GameProfileArgument.getGameProfiles(ctx, "player").iterator().next())))))
+                .then(Commands.literal("raid").requires(s -> s.hasPermission(2))
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .executes(ctx -> raid(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), false))
+                                .then(Commands.literal("titan")
+                                        .executes(ctx -> raid(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), true)))))
                 .then(Commands.literal("count").requires(s -> s.hasPermission(2))
                         .executes(ctx -> count(ctx.getSource())))
                 .then(Commands.literal("purge").requires(s -> s.hasPermission(2))
@@ -173,6 +178,17 @@ public final class GolemCommands {
                 .then(Commands.literal("debug").requires(s -> s.hasPermission(2))
                         .then(Commands.argument("golem", EntityArgument.entity())
                                 .executes(ctx -> debug(ctx.getSource(), EntityArgument.getEntity(ctx, "golem")))));
+    }
+
+    private static int raid(CommandSourceStack src, net.minecraft.server.level.ServerPlayer player, boolean titan) {
+        int n = com.xtrip.golemgarage.world.Raids.start(player, titan);
+        if (n == 0) {
+            src.sendFailure(net.minecraft.network.chat.Component.translatable("golemgarage.raid.no_room"));
+            return 0;
+        }
+        src.sendSuccess(() -> net.minecraft.network.chat.Component.translatable("golemgarage.raid.started", n,
+                player.getDisplayName()), true);
+        return n;
     }
 
     private static boolean playerCommands(CommandSourceStack s) {

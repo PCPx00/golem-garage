@@ -197,6 +197,112 @@ public class GolemEntity extends PathfinderMob {
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0f));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        // Rogues hunt players, golems that have an owner, cubs and villagers.
+        this.targetSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(this,
+                LivingEntity.class, 10, true, false, e -> isRogue() && rogueWants(e)));
+        this.goalSelector.addGoal(3, new com.xtrip.golemgarage.golem.RogueMarchGoal(this));
+    }
+
+    /** What a rogue goes for. */
+    private boolean rogueWants(LivingEntity e) {
+        if (e instanceof Player p) {
+            return !p.isCreative() && !p.isSpectator();
+        }
+        return e instanceof GolemEntity g && !g.isRogue() || e instanceof CubEntity
+                || e instanceof net.minecraft.world.entity.npc.AbstractVillager
+                || e instanceof net.minecraft.world.entity.animal.IronGolem;
+    }
+
+    /** Hostile mobs and rogue golems: what your golems, turrets and rams go after. */
+    public static boolean isHostile(Entity e) {
+        return e.isAlive() && (e instanceof net.minecraft.world.entity.monster.Enemy && !(e instanceof GolemEntity g && !g.isRogue())
+                || e instanceof GolemEntity g2 && g2.isRogue());
+    }
+
+    /** Junk Titans are giant rogue bosses. */
+    public boolean isTitan() {
+        return getTags().contains("golemgarage_titan");
+    }
+
+    @Nullable
+    private net.minecraft.server.level.ServerBossEvent titanBar;
+
+    @Override
+    public void startSeenByPlayer(net.minecraft.server.level.ServerPlayer player) {
+        super.startSeenByPlayer(player);
+        if (isTitan()) {
+            bossBar().addPlayer(player);
+        }
+    }
+
+    @Override
+    public void stopSeenByPlayer(net.minecraft.server.level.ServerPlayer player) {
+        super.stopSeenByPlayer(player);
+        if (titanBar != null) {
+            titanBar.removePlayer(player);
+        }
+    }
+
+    private net.minecraft.server.level.ServerBossEvent bossBar() {
+        if (titanBar == null) {
+            titanBar = new net.minecraft.server.level.ServerBossEvent(getDisplayName(),
+                    net.minecraft.world.BossEvent.BossBarColor.RED, net.minecraft.world.BossEvent.BossBarOverlay.NOTCHED_10);
+        }
+        return titanBar;
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distance) {
+        return isRogue() && !isTitan() && distance > 96 * 96;
+    }
+
+    @Override
+    public void die(DamageSource source) {
+        if (titanBar != null) {
+            titanBar.removeAllPlayers();
+        }
+        if (isTitan() && source.getEntity() != null) {
+            Entity killer = source.getEntity();
+            Player p = killer instanceof Player pl ? pl : killer instanceof GolemEntity g ? g.getOwner() : null;
+            if (p == null && killer instanceof RigEntity rig && rig.getControllingPassenger() instanceof Player pl2) {
+                p = pl2;
+            }
+            com.xtrip.golemgarage.advancement.ModTriggers.award(p, "titan_kill");
+        }
+        super.die(source);
+    }
+
+    /** Rogues drop scrap and sometimes one of their parts; Junk Titans drop a hoard. */
+    @Override
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean recentlyHit) {
+        super.dropCustomDeathLoot(level, source, recentlyHit);
+        if (!isRogue()) {
+            return;
+        }
+        spawnAtLocation(new ItemStack(com.xtrip.golemgarage.item.ModItems.SCRAP.get(), (isTitan() ? 18 : 2) + random.nextInt(4)));
+        List<PartInstance> list = new java.util.ArrayList<>(parts.values());
+        int partDrops = isTitan() ? 3 : random.nextInt(4) == 0 ? 1 : 0;
+        for (int i = 0; i < partDrops && !list.isEmpty(); i++) {
+            PartInstance p = list.remove(random.nextInt(list.size()));
+            spawnAtLocation(com.xtrip.golemgarage.item.PartItem.create(p.shape(), p.material()));
+        }
+        if (isTitan()) {
+            spawnAtLocation(com.xtrip.golemgarage.world.Salvage.brokenGolem(random, true));
+            spawnAtLocation(new ItemStack(random.nextBoolean() ? com.xtrip.golemgarage.item.ModItems.RIG_TURRET.get()
+                    : com.xtrip.golemgarage.item.ModItems.RIG_RAM.get()));
+            spawnAtLocation(new ItemStack(Items.DIAMOND, 2 + random.nextInt(3)));
+            level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, getX(), getY() + 1, getZ(), 1, 0, 0, 0, 0);
+        }
+    }
+
+    /** Where a raid is heading, or null. */
+    @Nullable
+    public BlockPos raidTarget() {
+        return getPersistentData().contains("GGRaidTarget") ? BlockPos.of(getPersistentData().getLong("GGRaidTarget")) : null;
+    }
+
+    public void setRaidTarget(BlockPos pos) {
+        getPersistentData().putLong("GGRaidTarget", pos.asLong());
     }
 
     // =================================================================== parts
@@ -390,6 +496,9 @@ public class GolemEntity extends PathfinderMob {
 
     /** Spends power. Every 100 points spent wears the core a little. */
     public void drainPower(int amount) {
+        if (isRogue()) {
+            return; // rogues run on whatever they scavenged
+        }
         if (stats.capacity <= 0) {
             return;
         }
@@ -788,6 +897,12 @@ public class GolemEntity extends PathfinderMob {
     /** Players are fair game only as the server's playerDamage setting allows, and never the owner. */
     @Override
     public boolean canAttack(LivingEntity target) {
+        if (isRogue()) {
+            return !(target instanceof GolemEntity g && g.isRogue()) && super.canAttack(target);
+        }
+        if (target instanceof GolemEntity g && g.isRogue()) {
+            return getMode() != com.xtrip.golemgarage.golem.GolemMode.PEACEFUL;
+        }
         if (getMode() == com.xtrip.golemgarage.golem.GolemMode.PEACEFUL) {
             return false; // never fights, even when hit
         }
@@ -836,7 +951,7 @@ public class GolemEntity extends PathfinderMob {
     }
 
     private void spotHostiles() {
-        for (Monster m : level().getEntitiesOfClass(Monster.class, getBoundingBox().inflate(stats.vision))) {
+        for (Mob m : level().getEntitiesOfClass(Mob.class, getBoundingBox().inflate(stats.vision), GolemEntity::isHostile)) {
             m.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60, 0, false, false));
         }
     }
@@ -1158,6 +1273,13 @@ public class GolemEntity extends PathfinderMob {
         if (hasFlag(FLAG_BREAKING)) {
             return false;
         }
+        if (isRogue()) {
+            boolean hit = super.hurt(source, amount);
+            if (titanBar != null) {
+                titanBar.setProgress(getHealth() / getMaxHealth());
+            }
+            return hit;
+        }
         if (getHealth() <= amount && !source.is(net.minecraft.tags.DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             startBreakdown();
             return false;
@@ -1194,7 +1316,7 @@ public class GolemEntity extends PathfinderMob {
                 }
             }
             if (stats.sweep) {
-                for (Monster m : level().getEntitiesOfClass(Monster.class, target.getBoundingBox().inflate(2.5))) {
+                for (Mob m : level().getEntitiesOfClass(Mob.class, target.getBoundingBox().inflate(2.5), GolemEntity::isHostile)) {
                     if (m != target && m.isAlive()) {
                         m.hurt(src, dmg * 0.5f);
                         m.knockback(0.4, Mth.sin(getYRot() * Mth.DEG_TO_RAD), -Mth.cos(getYRot() * Mth.DEG_TO_RAD));

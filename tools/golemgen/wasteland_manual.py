@@ -62,5 +62,27 @@ def cards():
     ])
 
 
+def raids():
+    return entry("raids", "Raider Convoys", MODID + ":rig_turret", [
+        text("Once you have " + B("3 or more golems") + ", raiders may come for you at nightfall (about one night "
+             "in seven). A horn sounds and a title tells you which way they're coming from. A rusted rig full of "
+             + B("Rogue Golems") + " drives at your base, drops them off, and they march in to wreck your golems, "
+             "cubs, villagers and you.", "Raiders!"),
+        text(B("Bigger bases draw bigger raids") + ": 3 raiders, plus one for every 4 golems you have, up to 12.\n\n"
+             + B("Junk Titan") + ": with 12 or more golems, one raid in three brings a giant rogue golem with its "
+             "own health bar. It hits like a truck.\n\nA yellow bar counts the raiders down. Anything left at "
+             "dawn slinks off.", "How Big"),
+        table([
+            ("Rogue Golems", "Scrap, and sometimes one of their parts."),
+            ("The raiders' rig", "Once it's empty, right-click it to claim it."),
+            ("Junk Titan", "A pile of scrap, three parts, a rare broken golem, a rig upgrade and diamonds."),
+        ], "Spoils"),
+        text("Your golems treat rogues as hostile mobs: Aggressive and Guard modes and \"attack hostile\" rules "
+             "go after them, and so does a rig turret.\n\nServer owners can change or turn off raids with "
+             + B("raids") + ", " + B("raidChance") + ", " + B("raidMinGolems") + " and " + B("titanMinGolems")
+             + ". Operators can start one with " + B("/golemgarage raid <player> [titan]") + ".", "Fighting Back"),
+    ])
+
+
 # Later updates add their entries here.
-EXTRA = [finds, cards]
+EXTRA = [finds, cards, raids]

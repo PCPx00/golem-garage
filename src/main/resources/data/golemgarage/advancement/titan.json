@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "id": "golemgarage:rig_plating"
+    },
+    "title": {
+      "translate": "advancement.golemgarage.titan"
+    },
+    "description": {
+      "translate": "advancement.golemgarage.titan.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "golemgarage:golem_event",
+      "conditions": {
+        "event": "titan_kill"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "golemgarage:raid_won"
+}
