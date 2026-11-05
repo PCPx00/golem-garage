@@ -2,6 +2,31 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.23.0
+
+### Added
+- **Garage Planner**: right-click a Garage Controller to open it.
+  - Set the room's inside **width** (3 to 9), **depth** (3 to 9) and **height** (4 to 8). The plan in the world
+    redraws at the new size straight away.
+  - Shows what the Garage will be (Scrap Shack, Workshop or Industrial Bay) and how many wall blocks, floor and
+    roof blocks and emitters it still needs, against what you carry.
+  - **Auto Build**: when you carry everything and nothing is in the way, the controller builds the room itself.
+    Beams of light shoot out to each new block with sparks and rising building sounds: floor first, then the walls
+    course by course, the roof, and the emitters last, finishing with a burst of fireworks as the Garage
+    transforms. It uses the blocks you carry most of (garage wall blocks for walls, any solid block for floor and
+    roof, steel emitters first). Grass and flowers in the room are cleared; anything else in the way has to be
+    moved first. Free in creative. Breaking the controller mid-build gives back the unused blocks.
+  - **Plan: Shown / Hidden** toggle.
+- 5-wide plans now include a third emitter, so a 5 x 5 room is a Workshop.
+- Advancement: Instant Garage.
+
+### Changed
+- The build plan **stays in the world** after you place the controller, without holding anything, until you
+  hide it in the Planner or the Garage is finished.
+- A controller takes the size you previewed (sneak + scroll) when you place it.
+- Sneak + right-click the controller with an empty hand checks the room in chat (plain right-click opens the
+  Planner).
+
 ## 0.22.0
 
 ### Added

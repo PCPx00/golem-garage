@@ -51,6 +51,8 @@ TREE = [
      {"trigger": "minecraft:placed_block",
       "conditions": {"location": [{"condition": "minecraft:block_state_property",
                                    "block": f"{NS}:garage_controller"}]}}, False),
+    ("auto_build", "garage_build", "steel_emitter", "task", "Instant Garage",
+     "Auto build a Garage from the Garage Planner", ev("auto_build"), False),
     ("garage_repair", "garage_build", "laser_emitter", "goal", "Good as New",
      "Have the Garage repair one of your golems", ev("garage_repair"), False),
     ("cub", "root", "cub", "task", "Little Helper",

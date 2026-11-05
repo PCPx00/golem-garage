@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.22.0, by xTrip",
+ "subtitle": "Version 0.23.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -9315,16 +9315,27 @@
       },
       {
        "type": "text",
-       "text": "§lHold a Garage Controller§r and a see-through plan appears: white for walls, blue-gray for floor and ceiling, cyan for emitters, yellow for the controller, orange for the doorway, red for anything in the way. Each block vanishes from the plan as you place it, and a checklist counts what's left.",
+       "text": "§lHold a Garage Controller§r and a see-through plan appears: white for walls, blue-gray for floor and ceiling, cyan for emitters, yellow for the controller, orange for the doorway, red for anything in the way. Sneak + scroll changes its size.",
        "title": "The Build Plan"
       },
       {
        "type": "text",
-       "text": "Sneak + scroll changes the room size."
+       "text": "Place the controller: the room goes the way you're facing, at the size you previewed. The plan §lstays§r in the world after you put the controller away, and each block vanishes from it as you place it. It hides itself when the Garage is finished.",
+       "title": "It Stays Up"
       },
       {
        "type": "text",
-       "text": "Place the controller first: the room goes the way you're facing. Keep holding a controller while you build and the plan follows it.\n\nRight-click the controller with an §lempty hand§r to check the room.\n\nBreaking a wall pauses a repair. Breaking the controller drops the golem out.",
+       "text": "§lRight-click the controller§r to open the §lGarage Planner§r:\n\n- Set the width, depth and height inside.\n- Show or hide the plan.\n- See how many wall blocks, floor and roof blocks and emitters it still needs, against what you carry.",
+       "title": "Garage Planner"
+      },
+      {
+       "type": "text",
+       "text": "§lAuto Build§r lights up when you carry everything and nothing is in the way. Beams shoot out of the controller and the room builds itself: floor, walls course by course, roof, then the emitters. It uses the blocks you carry most of. In creative it's free.",
+       "title": "Auto Build"
+      },
+      {
+       "type": "text",
+       "text": "§lSneak + right-click§r the controller to check the room in chat.\n\nBreaking a wall pauses a repair. Breaking the controller drops the golem out, and gives back any blocks an auto build hadn't placed yet.",
        "title": "Checking It"
       }
      ]
@@ -11775,7 +11786,7 @@
        "rows": [
         [
          "showGaragePlan",
-         "The see-through build plan while holding a Garage Controller."
+         "The see-through Garage build plans."
         ],
         [
          "showStatusIcons",
@@ -11841,7 +11852,7 @@
         ],
         [
          "The Garage isn't built correctly.",
-         "Right-click the controller empty-handed to see why."
+         "Sneak + right-click the controller to see why."
         ],
         [
          "Stuck: ... / Stopped: ...",

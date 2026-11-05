@@ -23,4 +23,8 @@ public final class ClientHooks {
 
     private ClientHooks() {
     }
+
+    public static void openGaragePlanner(net.minecraft.core.BlockPos pos) {
+        net.minecraft.client.Minecraft.getInstance().setScreen(new GaragePlannerScreen(pos));
+    }
 }

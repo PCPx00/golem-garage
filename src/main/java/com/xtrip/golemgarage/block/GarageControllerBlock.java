@@ -100,10 +100,15 @@ public class GarageControllerBlock extends BaseEntityBlock {
         return ItemInteractionResult.SUCCESS;
     }
 
+    /** Right-click opens the Garage Planner; sneak + right-click reports on the room in chat. */
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof GarageControllerBlockEntity garage) {
-            player.displayClientMessage(garage.describe(), false);
+        if (player.isSecondaryUseActive()) {
+            if (!level.isClientSide && level.getBlockEntity(pos) instanceof GarageControllerBlockEntity garage) {
+                player.displayClientMessage(garage.describe(), false);
+            }
+        } else if (level.isClientSide) {
+            com.xtrip.golemgarage.client.ClientHooks.openGaragePlanner(pos);
         }
         return InteractionResult.SUCCESS;
     }
@@ -112,6 +117,7 @@ public class GarageControllerBlock extends BaseEntityBlock {
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof GarageControllerBlockEntity garage) {
             garage.dropGolem();
+            garage.refundBuild();
             garage.unlightEmitters();
         }
         super.onRemove(state, level, pos, newState, moved);

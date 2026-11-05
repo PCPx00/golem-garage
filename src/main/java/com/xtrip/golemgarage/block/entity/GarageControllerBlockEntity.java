@@ -63,6 +63,13 @@ public class GarageControllerBlockEntity extends BlockEntity {
 
     /** Whether the room around the controller is a complete Garage (checked every 2 seconds, synced). */
     private boolean formed;
+
+    // Planner: the room size the player chose, whether its outline shows in the world, and the auto-build queue.
+    private int planW = 5, planD = 5, planH = 4;
+    private boolean showPlan = true, configured;
+    private final List<BlockPos> buildPos = new ArrayList<>();
+    private final List<BlockState> buildState = new ArrayList<>();
+    private int buildTotal, buildDone;
     private int tier = 1;
     private BlockPos bayMin;
     private BlockPos bayMax;
@@ -98,6 +105,181 @@ public class GarageControllerBlockEntity extends BlockEntity {
 
     public List<BlockPos> getEmitters() {
         return emitters;
+    }
+
+    public int planW() {
+        return planW;
+    }
+
+    public int planD() {
+        return planD;
+    }
+
+    public int planH() {
+        return planH;
+    }
+
+    public boolean showPlan() {
+        return showPlan;
+    }
+
+    /** False until someone picks a size (the placing player's preview size is sent right after placing). */
+    public boolean configured() {
+        return configured;
+    }
+
+    /** Auto-build progress 0..1, or -1 when not building. */
+    public float buildProgress() {
+        return buildTotal <= 0 ? -1 : buildDone / (float) buildTotal;
+    }
+
+    public void setPlan(int w, int d, int h, boolean show) {
+        planW = com.xtrip.golemgarage.block.GaragePlan.clampWidth(w);
+        planD = com.xtrip.golemgarage.block.GaragePlan.clampDepth(d);
+        planH = com.xtrip.golemgarage.block.GaragePlan.clampHeight(h);
+        showPlan = show;
+        configured = true;
+        setChanged();
+        sync();
+    }
+
+    /** The plan for the chosen size, checked against the world. */
+    public List<com.xtrip.golemgarage.block.GaragePlan.Cell> plan() {
+        Direction f = getBlockState().getValue(com.xtrip.golemgarage.block.GarageControllerBlock.FACING);
+        return com.xtrip.golemgarage.block.GaragePlan.plan(level, worldPosition, f, planW, planD, planH);
+    }
+
+    /**
+     * Starts building the planned room from the player's inventory (or for free in creative). Returns a message key
+     * if it can't.
+     */
+    @Nullable
+    public String autoBuild(Player player) {
+        if (!(level instanceof ServerLevel)) {
+            return null;
+        }
+        if (buildTotal > 0) {
+            return "golemgarage.planner.err.busy";
+        }
+        if (formed) {
+            return "golemgarage.planner.err.formed";
+        }
+        var cells = plan();
+        var needs = com.xtrip.golemgarage.block.GaragePlan.needs(cells, player);
+        if (needs.blocked() > 0) {
+            return "golemgarage.planner.err.blocked";
+        }
+        var supply = player.getAbilities().instabuild
+                ? com.xtrip.golemgarage.block.GaragePlan.creative(needs.walls(), needs.solid(), needs.emitters())
+                : com.xtrip.golemgarage.block.GaragePlan.allocate(player, needs.walls(), needs.solid(), needs.emitters(), false);
+        if (supply == null) {
+            return "golemgarage.planner.err.materials";
+        }
+        // Order: clear the room, lay the floor, raise the walls course by course, close the roof, fit the emitters.
+        List<com.xtrip.golemgarage.block.GaragePlan.Cell> todo = new ArrayList<>(cells.stream().filter(c -> !c.done()
+                && c.kind() != com.xtrip.golemgarage.block.GaragePlan.Kind.CONTROLLER).toList());
+        todo.sort(java.util.Comparator.<com.xtrip.golemgarage.block.GaragePlan.Cell>comparingInt(c -> switch (c.kind()) {
+                    case CLEAR -> 0;
+                    case FLOOR -> 1;
+                    case WALL, DOOR -> 2;
+                    case CEILING -> 3;
+                    default -> 4;
+                }).thenComparingInt(c -> c.pos().getY())
+                .thenComparingDouble(c -> c.pos().distSqr(worldPosition)));
+        var walls = supply.walls().iterator();
+        var solid = supply.solid().iterator();
+        var emit = supply.emitters().iterator();
+        buildPos.clear();
+        buildState.clear();
+        for (var c : todo) {
+            BlockState st = switch (c.kind()) {
+                case CLEAR -> Blocks.AIR.defaultBlockState();
+                case FLOOR, CEILING -> solid.next();
+                case WALL, DOOR -> walls.next();
+                default -> emit.next();
+            };
+            buildPos.add(c.pos());
+            buildState.add(st);
+        }
+        buildTotal = buildPos.size();
+        buildDone = 0;
+        showPlan = true;
+        level.playSound(null, worldPosition, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1f, 1.4f);
+        setChanged();
+        sync();
+        return null;
+    }
+
+    /** Places the next few blocks of an auto-build, each one shot in on a beam from the controller. */
+    private void tickBuild(ServerLevel sl) {
+        if (buildTotal <= 0) {
+            return;
+        }
+        int per = Math.max(1, (int) Math.ceil(buildTotal / 110.0));
+        Vec3 from = Vec3.atCenterOf(worldPosition).add(0, 0.6, 0);
+        for (int k = 0; k < per && buildDone < buildPos.size(); k++, buildDone++) {
+            BlockPos p = buildPos.get(buildDone);
+            BlockState st = buildState.get(buildDone);
+            BlockState here = sl.getBlockState(p);
+            Vec3 to = Vec3.atCenterOf(p);
+            if (st.isAir()) {
+                if (here.canBeReplaced() && !here.isAir()) {
+                    sl.destroyBlock(p, false);
+                }
+                sl.sendParticles(ParticleTypes.POOF, to.x, to.y, to.z, 3, 0.2, 0.2, 0.2, 0.01);
+                continue;
+            }
+            if (here.isAir() || here.canBeReplaced()) {
+                sl.setBlock(p, st, 3);
+            } else {
+                Block.popResource(sl, worldPosition.above(), new ItemStack(st.getBlock()));
+                continue;
+            }
+            // The beam: a line of light from the controller to the new block, and sparks where it lands.
+            Vec3 step = to.subtract(from);
+            int n = Math.max(4, (int) (step.length() * 2));
+            for (int i = 1; i <= n; i += 2) {
+                Vec3 q = from.add(step.scale(i / (double) n));
+                sl.sendParticles(ParticleTypes.END_ROD, q.x, q.y, q.z, 1, 0, 0, 0, 0);
+            }
+            sl.sendParticles(ParticleTypes.ELECTRIC_SPARK, to.x, to.y, to.z, 6, 0.35, 0.35, 0.35, 0.08);
+            sl.sendParticles(ParticleTypes.WAX_ON, to.x, to.y, to.z, 2, 0.3, 0.3, 0.3, 0.5);
+            if (buildDone % 2 == 0) {
+                float pitch = 0.7f + 0.8f * buildDone / (float) buildTotal;
+                sl.playSound(null, p, st.getSoundType(sl, p, null).getPlaceSound(), SoundSource.BLOCKS, 0.5f, pitch);
+            }
+        }
+        if (buildDone >= buildPos.size()) {
+            buildPos.clear();
+            buildState.clear();
+            buildTotal = 0;
+            buildDone = 0;
+            Vec3 c = Vec3.atCenterOf(worldPosition);
+            sl.playSound(null, worldPosition, SoundEvents.BEACON_POWER_SELECT, SoundSource.BLOCKS, 1.2f, 1.2f);
+            sl.playSound(null, worldPosition, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 0.7f, 0.8f);
+            sl.sendParticles(ParticleTypes.FIREWORK, c.x, c.y + 1, c.z, 40, 0.6, 0.6, 0.6, 0.15);
+            checkFormed(sl);
+            setChanged();
+            sync();
+        } else if (sl.getGameTime() % 5 == 0) {
+            setChanged();
+            sync();
+        }
+    }
+
+    /** Gives back whatever an unfinished auto-build hadn't placed yet. */
+    public void refundBuild() {
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        for (int i = buildDone; i < buildState.size(); i++) {
+            if (!buildState.get(i).isAir()) {
+                Block.popResource(level, worldPosition, new ItemStack(buildState.get(i).getBlock()));
+            }
+        }
+        buildPos.clear();
+        buildState.clear();
+        buildTotal = 0;
     }
 
     public boolean isFormed() {
@@ -282,6 +464,7 @@ public class GarageControllerBlockEntity extends BlockEntity {
                 garage.checkFormed(sl);
             }
             garage.tickRepair(sl);
+            garage.tickBuild(sl);
         }
     }
 
@@ -410,6 +593,15 @@ public class GarageControllerBlockEntity extends BlockEntity {
     }
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, GarageControllerBlockEntity garage) {
+        if (garage.buildTotal > 0) {
+            // While it builds, the controller's core swirls with light.
+            double a = level.getGameTime() * 0.5;
+            for (int k = 0; k < 2; k++) {
+                double ang = a + k * Math.PI;
+                level.addParticle(ParticleTypes.END_ROD, pos.getX() + 0.5 + Math.cos(ang) * 0.7, pos.getY() + 1.1,
+                        pos.getZ() + 0.5 + Math.sin(ang) * 0.7, 0, 0.03, 0);
+            }
+        }
         if (garage.formed) {
             garage.formedParticles(level);
         }
@@ -821,7 +1013,9 @@ public class GarageControllerBlockEntity extends BlockEntity {
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return saveWithoutMetadata(registries);
+        CompoundTag tag = saveWithoutMetadata(registries);
+        tag.remove("BuildQueue");
+        return tag;
     }
 
     @Override
@@ -861,6 +1055,23 @@ public class GarageControllerBlockEntity extends BlockEntity {
             lightList.add(LongTag.valueOf(p.asLong()));
         }
         tag.put("Lights", lightList);
+        tag.putInt("PlanW", planW);
+        tag.putInt("PlanD", planD);
+        tag.putInt("PlanH", planH);
+        tag.putBoolean("ShowPlan", showPlan);
+        tag.putBoolean("Configured", configured);
+        tag.putInt("BuildTotal", buildTotal);
+        tag.putInt("BuildDone", buildDone);
+        if (!buildPos.isEmpty()) {
+            ListTag q = new ListTag();
+            for (int i = 0; i < buildPos.size(); i++) {
+                CompoundTag e = new CompoundTag();
+                e.putLong("P", buildPos.get(i).asLong());
+                e.put("S", net.minecraft.nbt.NbtUtils.writeBlockState(buildState.get(i)));
+                q.add(e);
+            }
+            tag.put("BuildQueue", q);
+        }
     }
 
     @Override
@@ -893,6 +1104,27 @@ public class GarageControllerBlockEntity extends BlockEntity {
         lights.clear();
         for (Tag t : tag.getList("Lights", Tag.TAG_LONG)) {
             lights.add(BlockPos.of(((LongTag) t).getAsLong()));
+        }
+        if (tag.contains("PlanW")) {
+            planW = tag.getInt("PlanW");
+            planD = tag.getInt("PlanD");
+            planH = tag.getInt("PlanH");
+            showPlan = tag.getBoolean("ShowPlan");
+            configured = tag.getBoolean("Configured");
+        }
+        buildTotal = tag.getInt("BuildTotal");
+        buildDone = tag.getInt("BuildDone");
+        if (tag.contains("BuildQueue")) {
+            buildPos.clear();
+            buildState.clear();
+            var blocks = registries.lookupOrThrow(net.minecraft.core.registries.Registries.BLOCK);
+            for (Tag t : tag.getList("BuildQueue", Tag.TAG_COMPOUND)) {
+                CompoundTag e = (CompoundTag) t;
+                buildPos.add(BlockPos.of(e.getLong("P")));
+                buildState.add(net.minecraft.nbt.NbtUtils.readBlockState(blocks, e.getCompound("S")));
+            }
+        } else if (level != null && !level.isClientSide) {
+            buildTotal = 0;
         }
     }
 }

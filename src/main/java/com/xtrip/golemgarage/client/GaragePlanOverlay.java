@@ -3,9 +3,7 @@ package com.xtrip.golemgarage.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.xtrip.golemgarage.GolemGarage;
-import com.xtrip.golemgarage.block.GarageBay;
-import com.xtrip.golemgarage.block.GarageControllerBlock;
-import com.xtrip.golemgarage.block.ModBlocks;
+import com.xtrip.golemgarage.block.GaragePlan;
 import com.xtrip.golemgarage.block.entity.GarageControllerBlockEntity;
 import com.xtrip.golemgarage.item.ModItems;
 import net.minecraft.client.Minecraft;
@@ -17,7 +15,6 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -42,41 +39,30 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * While the player holds a Garage Controller, shows a see-through plan of a Garage: every block still
- * to place (walls, floor, ceiling, emitters), anything in the way, and a checklist on screen.
- * Before placing it previews where the controller would go; after, it follows the placed controller.
- * Sneak + scroll changes the room size.
+ * The see-through Garage plan in the world: every block still to place (walls, floor, ceiling, emitters), anything in
+ * the way, and a checklist on screen. Placed controllers keep showing their plan (at the size picked in the Garage
+ * Planner) until it's turned off there or the Garage is finished. Holding a controller previews where one would go;
+ * sneak + scroll changes that preview's size, and the controller takes that size when placed.
  */
 @EventBusSubscriber(modid = GolemGarage.MOD_ID, value = Dist.CLIENT)
 public final class GaragePlanOverlay {
-    /** Interior sizes: width, depth, height. */
+    /** Preview sizes for a controller in hand: width, depth, height. */
     private static final int[][] SIZES = {{3, 3, 4}, {5, 5, 4}, {7, 7, 5}, {9, 9, 6}};
     private static int size = 1;
 
-    enum Kind {
-        WALL(0xE8E8F0), FLOOR(0x8FA4C8), CEILING(0x8FA4C8),
-        EMITTER(0x5FE8FF), CONTROLLER(0xFFD84A), DOOR(0xFF9A3C), CLEAR(0xFF4A4A);
-        final int color;
-
-        Kind(int color) {
-            this.color = color;
-        }
-
-        String key() {
-            return "golemgarage.plan.kind." + name().toLowerCase(java.util.Locale.ROOT);
-        }
-    }
-
-    record Cell(BlockPos pos, Kind kind, boolean done, boolean wrong) {
-    }
-
-    private static final List<Cell> cells = new ArrayList<>();
-    private static final Map<Kind, int[]> counts = new EnumMap<>(Kind.class);
+    private static final List<GaragePlan.Cell> cells = new ArrayList<>();
+    /** The plan the checklist describes: the preview, or the nearest placed plan. */
+    private static final List<GaragePlan.Cell> focus = new ArrayList<>();
+    private static final Map<GaragePlan.Kind, int[]> counts = new EnumMap<>(GaragePlan.Kind.class);
     private static boolean active;
+    private static boolean holdingNow;
     private static boolean placed;
     private static boolean complete;
     private static AABB readyBox;
     private static int[] dims = SIZES[1];
+    /** Where the preview last sat, so a controller placed there can take the preview's size. */
+    private static BlockPos previewAt;
+    private static int previewAge;
 
     private static boolean holding(LocalPlayer p) {
         return p.getMainHandItem().is(ModItems.GARAGE_CONTROLLER.get())
@@ -88,146 +74,104 @@ public final class GaragePlanOverlay {
     public static void onTick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        active = player != null && mc.level != null && holding(player)
-                && com.xtrip.golemgarage.Config.SHOW_GARAGE_PLAN.get();
-        if (!active) {
-            cells.clear();
-            return;
-        }
-        dims = SIZES[size];
-        Level level = mc.level;
-        BlockPos controller = null;
-        Direction facing = null;
-
-        // A placed controller nearby that isn't a working Garage yet takes priority.
-        BlockPos near = nearestController(level, player.blockPosition(), 10);
+        cells.clear();
+        focus.clear();
+        counts.clear();
         readyBox = null;
         complete = false;
-        if (near != null) {
-            GarageBay bay = GarageBay.find(level, near);
-            if (bay != null) {
-                complete = true;
-                readyBox = new AABB(Vec3.atLowerCornerOf(bay.min()), Vec3.atLowerCornerOf(bay.max().offset(1, 1, 1)));
-            } else {
-                controller = near;
-                facing = level.getBlockState(near).getValue(GarageControllerBlock.FACING);
+        placed = false;
+        active = false;
+        if (player == null || mc.level == null || !com.xtrip.golemgarage.Config.SHOW_GARAGE_PLAN.get()) {
+            return;
+        }
+        Level level = mc.level;
+        holdingNow = holding(player);
+
+        // A controller just placed where the preview was takes the preview's size.
+        if (previewAt != null && ++previewAge < 60 && level.getBlockEntity(previewAt) instanceof GarageControllerBlockEntity fresh
+                && !fresh.configured()) {
+            net.neoforged.neoforge.network.PacketDistributor.sendToServer(new com.xtrip.golemgarage.network.GaragePlanPayload(
+                    previewAt, com.xtrip.golemgarage.network.GaragePlanPayload.SET, dims[0], dims[1], dims[2], true));
+            previewAt = null;
+        }
+
+        // Every placed controller nearby with its plan switched on.
+        GarageControllerBlockEntity nearest = null;
+        double nearestD = Double.MAX_VALUE;
+        for (GarageControllerBlockEntity g : controllers(level, player.blockPosition(), 3)) {
+            double dist = g.getBlockPos().distSqr(player.blockPosition());
+            if (g.isFormed()) {
+                if (holdingNow && dist < 16 * 16 && g.getBayMin() != null && g.getBayMax() != null) {
+                    complete = true;
+                    readyBox = new AABB(Vec3.atLowerCornerOf(g.getBayMin()), Vec3.atLowerCornerOf(g.getBayMax().offset(1, 1, 1)));
+                }
+                continue;
+            }
+            if (!g.showPlan() && !(holdingNow && dist < 10 * 10)) {
+                continue;
+            }
+            if (dist > 48 * 48) {
+                continue;
+            }
+            List<GaragePlan.Cell> plan = g.plan();
+            cells.addAll(plan);
+            if (dist < nearestD && dist < 16 * 16) {
+                nearestD = dist;
+                nearest = g;
+                focus.clear();
+                focus.addAll(plan);
+                dims = new int[]{g.planW(), g.planD(), g.planH()};
             }
         }
-        placed = controller != null;
-        if (controller == null && !complete && mc.hitResult instanceof BlockHitResult hit
+        placed = nearest != null;
+
+        // Holding a controller and not near a placed one: preview where it would go.
+        if (holdingNow && nearest == null && mc.hitResult instanceof BlockHitResult hit
                 && mc.hitResult.getType() == HitResult.Type.BLOCK) {
+            dims = SIZES[size];
             BlockPos target = hit.getBlockPos();
             BlockState s = level.getBlockState(target);
-            controller = s.canBeReplaced() ? target : target.relative(hit.getDirection());
-            facing = player.getDirection();
+            BlockPos c = s.canBeReplaced() ? target : target.relative(hit.getDirection());
+            List<GaragePlan.Cell> plan = GaragePlan.plan(level, c, player.getDirection(), dims[0], dims[1], dims[2]);
+            cells.addAll(plan);
+            focus.addAll(plan);
+            previewAt = c.immutable();
+            previewAge = 0;
         }
-        cells.clear();
-        counts.clear();
-        if (controller != null) {
-            plan(level, controller, facing);
+        for (GaragePlan.Cell c : focus) {
+            int[] n = counts.computeIfAbsent(c.kind(), k -> new int[2]);
+            n[0]++;
+            if (c.done()) {
+                n[1]++;
+            }
         }
+        active = !cells.isEmpty() || holdingNow || readyBox != null;
     }
 
-    private static BlockPos nearestController(Level level, BlockPos center, int radius) {
-        BlockPos best = null;
-        double bestD = Double.MAX_VALUE;
+    private static List<GarageControllerBlockEntity> controllers(Level level, BlockPos center, int chunkRadius) {
+        List<GarageControllerBlockEntity> out = new ArrayList<>();
         ChunkPos cp = new ChunkPos(center);
-        for (int cx = cp.x - 1; cx <= cp.x + 1; cx++) {
-            for (int cz = cp.z - 1; cz <= cp.z + 1; cz++) {
+        for (int cx = cp.x - chunkRadius; cx <= cp.x + chunkRadius; cx++) {
+            for (int cz = cp.z - chunkRadius; cz <= cp.z + chunkRadius; cz++) {
                 LevelChunk chunk = level.getChunkSource().getChunk(cx, cz, false);
                 if (chunk == null) {
                     continue;
                 }
                 for (BlockEntity be : chunk.getBlockEntities().values()) {
-                    if (be instanceof GarageControllerBlockEntity) {
-                        double d = be.getBlockPos().distSqr(center);
-                        if (d <= radius * radius && d < bestD) {
-                            bestD = d;
-                            best = be.getBlockPos();
-                        }
+                    if (be instanceof GarageControllerBlockEntity g) {
+                        out.add(g);
                     }
                 }
             }
         }
-        return best;
-    }
-
-    /** Lays out the room behind the controller and checks every block against the world. */
-    private static void plan(Level level, BlockPos c, Direction f) {
-        int w = dims[0];
-        int depth = dims[1];
-        int h = dims[2];
-        int half = w / 2;
-        Direction right = f.getClockWise();
-        // Emitter spots in the ceiling.
-        List<int[]> emitters = new ArrayList<>();
-        int dA = 1 + (depth - 1) / 4;
-        int dB = depth - (depth - 1) / 4;
-        int lA = -(w / 4);
-        int lB = w / 4;
-        emitters.add(new int[]{dA, lA});
-        emitters.add(new int[]{dB, lB});
-        if (w >= 7) {
-            emitters.add(new int[]{dA, lB});
-            emitters.add(new int[]{dB, lA});
-        }
-        for (int d = 0; d <= depth + 1; d++) {
-            for (int l = -half - 1; l <= half + 1; l++) {
-                boolean inside = d >= 1 && d <= depth && l >= -half && l <= half;
-                boolean sideWall = (d == 0 || d == depth + 1) && l >= -half && l <= half
-                        || (l == -half - 1 || l == half + 1) && d >= 1 && d <= depth;
-                for (int y = -1; y <= h; y++) {
-                    BlockPos p = c.relative(f, d).relative(right, l).above(y);
-                    BlockState s = level.getBlockState(p);
-                    if (inside) {
-                        if (y == -1) {
-                            add(p, Kind.FLOOR, s.isSolidRender(level, p), !s.isAir() && !s.isSolidRender(level, p));
-                        } else if (y == h) {
-                            final int dd = d;
-                            final int ll = l;
-                            boolean isEmitterSpot = emitters.stream().anyMatch(e -> e[0] == dd && e[1] == ll);
-                            boolean isEmitter = s.is(ModBlocks.LASER_EMITTER.get()) || s.is(ModBlocks.STEEL_EMITTER.get());
-                            if (isEmitterSpot) {
-                                add(p, Kind.EMITTER, isEmitter, !s.isAir() && !isEmitter);
-                            } else {
-                                add(p, Kind.CEILING, s.isSolidRender(level, p) || isEmitter,
-                                        !s.isAir() && !s.isSolidRender(level, p) && !isEmitter);
-                            }
-                        } else {
-                            boolean air = GarageBay.open(s);
-                            if (!air) {
-                                add(p, Kind.CLEAR, false, true);
-                            }
-                        }
-                    } else if (sideWall && y >= 0 && y < h) {
-                        if (d == 0 && l == 0 && y == 0) {
-                            add(p, Kind.CONTROLLER, s.is(ModBlocks.GARAGE_CONTROLLER.get()), false);
-                        } else if (d == depth + 1 && Math.abs(l) <= (w >= 5 ? 1 : 0) && y <= Math.min(2, h - 2)) {
-                            // A doorway in the back wall: Garage Doors, or plain wall.
-                            add(p, Kind.DOOR, s.is(GarageBay.WALLS), !s.isAir() && !s.canBeReplaced() && !s.is(GarageBay.WALLS));
-                        } else {
-                            add(p, Kind.WALL, s.is(GarageBay.WALLS), !s.isAir() && !s.canBeReplaced() && !s.is(GarageBay.WALLS));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private static void add(BlockPos p, Kind kind, boolean done, boolean wrong) {
-        cells.add(new Cell(p.immutable(), kind, done, wrong));
-        int[] n = counts.computeIfAbsent(kind, k -> new int[2]);
-        n[0]++;
-        if (done) {
-            n[1]++;
-        }
+        return out;
     }
 
     // ================================================================ input
     @SubscribeEvent
     public static void onScroll(InputEvent.MouseScrollingEvent event) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.screen != null || !mc.player.isShiftKeyDown() || !holding(mc.player)) {
+        if (mc.player == null || mc.screen != null || !mc.player.isShiftKeyDown() || !holding(mc.player) || placed) {
             return;
         }
         size = Math.floorMod(size + (event.getScrollDeltaY() > 0 ? 1 : -1), SIZES.length);
@@ -249,25 +193,25 @@ public final class GaragePlanOverlay {
         float pulse = 0.75f + 0.25f * (float) Math.sin(System.currentTimeMillis() / 300.0);
 
         VertexConsumer fill = buffers.getBuffer(RenderType.debugFilledBox());
-        for (Cell c : cells) {
-            if (c.done) {
+        for (GaragePlan.Cell c : cells) {
+            if (c.done()) {
                 continue;
             }
-            int col = c.wrong ? 0xFF4A4A : c.kind.color;
-            float a = (c.wrong ? 0.30f : 0.16f) * pulse;
-            AABB box = new AABB(c.pos).deflate(0.06);
+            int col = c.wrong() ? 0xFF4A4A : c.kind().color;
+            float a = (c.wrong() ? 0.30f : 0.16f) * pulse;
+            AABB box = new AABB(c.pos()).deflate(0.06);
             LevelRenderer.addChainedFilledBoxVertices(pose, fill, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ,
                     r(col), g(col), b(col), a);
         }
         buffers.endBatch(RenderType.debugFilledBox());
 
         VertexConsumer lines = buffers.getBuffer(RenderType.lines());
-        for (Cell c : cells) {
-            if (c.done) {
+        for (GaragePlan.Cell c : cells) {
+            if (c.done()) {
                 continue;
             }
-            int col = c.wrong ? 0xFF4A4A : c.kind.color;
-            LevelRenderer.renderLineBox(pose, lines, new AABB(c.pos).deflate(0.04), r(col), g(col), b(col), 0.9f);
+            int col = c.wrong() ? 0xFF4A4A : c.kind().color;
+            LevelRenderer.renderLineBox(pose, lines, new AABB(c.pos()).deflate(0.04), r(col), g(col), b(col), 0.9f);
         }
         if (readyBox != null) {
             LevelRenderer.renderLineBox(pose, lines, readyBox.inflate(0.02), 0.35f, 1f, 0.5f, 0.9f);
@@ -292,7 +236,7 @@ public final class GaragePlanOverlay {
     @SubscribeEvent
     public static void onRenderGui(RenderGuiEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
-        if (!active || mc.options.hideGui || mc.screen != null) {
+        if (!active || mc.options.hideGui || mc.screen != null || focus.isEmpty() && !holdingNow) {
             return;
         }
         GuiGraphics g = event.getGuiGraphics();
@@ -300,13 +244,13 @@ public final class GaragePlanOverlay {
         List<String[]> rows = new ArrayList<>();
         String title;
         int titleColor = 0xFFFFD84A;
-        if (complete && cells.isEmpty()) {
+        if (complete && focus.isEmpty()) {
             title = I18n.get("golemgarage.plan.ready");
             titleColor = 0xFF5AFF8A;
             for (var l : font.split(Component.translatable("golemgarage.plan.ready_help"), 184)) {
                 rows.add(new String[]{text(l), ""});
             }
-        } else if (cells.isEmpty()) {
+        } else if (focus.isEmpty()) {
             title = I18n.get("golemgarage.plan.title");
             for (var l : font.split(Component.translatable("golemgarage.plan.look"), 184)) {
                 rows.add(new String[]{text(l), ""});
@@ -315,18 +259,18 @@ public final class GaragePlanOverlay {
             title = I18n.get(placed ? "golemgarage.plan.finish" : "golemgarage.plan.title_size",
                     dims[0], dims[1], dims[2]);
             boolean allDone = true;
-            for (Kind k : Kind.values()) {
+            for (GaragePlan.Kind k : GaragePlan.Kind.values()) {
                 int[] n = counts.get(k);
                 if (n == null) {
                     continue;
                 }
                 int left = n[0] - n[1];
-                if (k == Kind.CLEAR) {
+                if (k == GaragePlan.Kind.CLEAR) {
                     rows.add(new String[]{k.name(), I18n.get("golemgarage.plan.in_the_way", left), "bad"});
                     allDone = false;
                     continue;
                 }
-                if (k == Kind.CONTROLLER && !placed) {
+                if (k == GaragePlan.Kind.CONTROLLER && !placed) {
                     rows.add(new String[]{k.name(), I18n.get("golemgarage.plan.place_here"), ""});
                     allDone = false;
                     continue;
@@ -346,7 +290,7 @@ public final class GaragePlanOverlay {
         int x = 6;
         int y = 6;
         int wBox = 190;
-        int hBox = 18 + rows.size() * 10 + (cells.isEmpty() ? 0 : 12);
+        int hBox = 18 + rows.size() * 10 + (focus.isEmpty() ? 0 : 12);
         g.fill(x - 3, y - 3, x + wBox, y + hBox, 0xA0101420);
         g.renderOutline(x - 3, y - 3, wBox + 3, hBox + 3, 0xFF3A4458);
         g.drawString(font, font.plainSubstrByWidth(title, wBox - 4), x, y, titleColor);
@@ -355,7 +299,7 @@ public final class GaragePlanOverlay {
             if (r.length == 2) {
                 g.drawString(font, r[0], x, y, 0xFFC8D0DC);
             } else {
-                Kind k = Kind.valueOf(r[0]);
+                GaragePlan.Kind k = GaragePlan.Kind.valueOf(r[0]);
                 g.fill(x, y + 1, x + 6, y + 7, 0xFF000000 | k.color);
                 g.drawString(font, I18n.get(k.key()), x + 10, y, 0xFFE8ECF2);
                 int vc = "ok".equals(r[2]) ? 0xFF5AFF8A : "bad".equals(r[2]) ? 0xFFFF6A6A : 0xFFFFE27A;
@@ -363,8 +307,9 @@ public final class GaragePlanOverlay {
             }
             y += 10;
         }
-        if (!cells.isEmpty()) {
-            g.drawString(font, Component.translatable("golemgarage.plan.scroll"), x, y + 2, 0xFF7D8696);
+        if (!focus.isEmpty()) {
+            g.drawString(font, font.plainSubstrByWidth(I18n.get(placed ? "golemgarage.plan.open_planner"
+                    : "golemgarage.plan.scroll"), wBox - 4), x, y + 2, 0xFF7D8696);
         }
     }
 

@@ -577,13 +577,20 @@ def garage_chapter(sizes):
                 ("Emitters", "2 to 4 Laser or Steel Emitters set into the ceiling, above the room's air."),
             ], "The Rules"),
             text(B("Hold a Garage Controller") + " and a see-through plan appears: white for walls, blue-gray for "
-                 "floor and ceiling, cyan for emitters, yellow for the controller, orange for the doorway, red for anything in the way. "
-                 "Each block vanishes from the plan as you place it, and a checklist counts what's left.\n\n"
-                 "Sneak + scroll changes the room size.", "The Build Plan"),
-            text("Place the controller first: the room goes the way you're facing. Keep holding a controller "
-                 "while you build and the plan follows it.\n\nRight-click the controller with an " + B("empty hand")
-                 + " to check the room.\n\nBreaking a wall pauses a repair. Breaking the controller drops the "
-                 "golem out.", "Checking It"),
+                 "floor and ceiling, cyan for emitters, yellow for the controller, orange for the doorway, red for "
+                 "anything in the way. Sneak + scroll changes its size.", "The Build Plan"),
+            text("Place the controller: the room goes the way you're facing, at the size you previewed. The plan "
+                 + B("stays") + " in the world after you put the controller away, and each block vanishes from it as "
+                 "you place it. It hides itself when the Garage is finished.", "It Stays Up"),
+            text(B("Right-click the controller") + " to open the " + B("Garage Planner") + ":\n\n- Set the "
+                 "width, depth and height inside.\n- Show or hide the plan.\n- See how many wall blocks, floor "
+                 "and roof blocks and emitters it still needs, against what you carry.", "Garage Planner"),
+            text(B("Auto Build") + " lights up when you carry everything and nothing is in the way. Beams shoot "
+                 "out of the controller and the room builds itself: floor, walls course by course, roof, then the "
+                 "emitters. It uses the blocks you carry most of. In creative it's free.", "Auto Build"),
+            text(B("Sneak + right-click") + " the controller to check the room in chat.\n\nBreaking a wall pauses "
+                 "a repair. Breaking the controller drops the golem out, and gives back any blocks an auto build "
+                 "hadn't placed yet.", "Checking It"),
         ]),
         entry("garage_look", "A Real Garage", MODID + ":garage_door", [
             text("When the room is complete it " + B("transforms") + ": rusty panels sweep across every wall, "
@@ -1101,7 +1108,7 @@ def settings_chapter():
         ]),
         entry("client_settings", "Client Settings", "minecraft:spyglass", [
             table([
-                ("showGaragePlan", "The see-through build plan while holding a Garage Controller."),
+                ("showGaragePlan", "The see-through Garage build plans."),
                 ("showStatusIcons", "The little icons over golems that are stuck, stopped, out of power or "
                                     "have a broken part."),
             ], "golemgarage-client.toml"),
@@ -1153,7 +1160,7 @@ def help_chapter():
                                                        "to the controller, or the golem's inventory)."),
                 ("This golem belongs to someone else.", "Only its owner (or an operator) can change it."),
                 ("You already have N golems out", "The server limits golems per player. Pick one up first."),
-                ("The Garage isn't built correctly.", "Right-click the controller empty-handed to see why."),
+                ("The Garage isn't built correctly.", "Sneak + right-click the controller to see why."),
                 ("Stuck: ... / Stopped: ...", "A rule can't run; the reason follows."),
                 ("Cub is growing: 2 / 3", "Feed it one more part for a different slot."),
             ], "Messages"),
