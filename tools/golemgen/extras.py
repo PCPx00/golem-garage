@@ -139,6 +139,23 @@ ICONS = {
         "..pppppppppppp..",
         "................",
         "................"],
+    "war_horn": [
+        "................",
+        "................",
+        "............oO..",
+        "...........oOY..",
+        "..........oOo...",
+        ".........oOo....",
+        "........oOo.....",
+        ".......nOo......",
+        "......nNo.......",
+        ".....nNn........",
+        "....nNn.........",
+        "...nNn..........",
+        "..oOo...........",
+        ".oOYOo..........",
+        "..ooo...........",
+        "................"],
 }
 
 # id -> English name
@@ -150,9 +167,14 @@ NAMES = {
     "rig_turret": "Rig Turret",
     "rig_plating": "Rig Plating",
     "rule_card": "Rule Card",
+    "war_horn": "War Horn",
 }
 
 RECIPES = {
+    "war_horn": {"type": "minecraft:crafting_shapeless", "category": "tools",
+                 "ingredients": [{"tag": "c:ingots/copper"}, {"tag": "c:ingots/copper"}, {"tag": "c:ingots/copper"},
+                                 {"item": "minecraft:redstone"}, {"item": "minecraft:leather"}],
+                 "result": {"id": "golemgarage:war_horn", "count": 1}},
     "rule_card": {"type": "minecraft:crafting_shapeless", "category": "misc",
                   "ingredients": [{"item": "minecraft:paper"}, {"item": "minecraft:paper"}, {"item": "minecraft:redstone"}],
                   "result": {"id": "golemgarage:rule_card", "count": 2}},

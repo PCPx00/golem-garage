@@ -73,7 +73,7 @@ TREE = [
      "Have one of your golems reach Veteran rank", ev("veteran"), False),
     ("legend", "veteran", "minecraft:netherite_ingot", "challenge", "Living Legend",
      "Have one of your golems reach Legend rank", ev("legend"), False),
-    ("war_horn", "golem_kill", "minecraft:goat_horn", "task", "Sound the Horn",
+    ("war_horn", "golem_kill", "war_horn", "task", "Sound the Horn",
      "Rally your golems with a War Horn", ev("war_horn"), False),
     ("tablet", "first_golem", "minecraft:spyglass", "task", "Eye in the Sky",
      "Watch one of your golems through a Golem Tablet", ev("tablet_camera"), False),

@@ -95,6 +95,22 @@ SHAPES = [
              B((-2, -3.5, -6.5), (4, 1, 2), style="dark"),
          ])]),
 
+    dict(id="turret_head", slot="HEAD", name="Turret Head",
+         desc="A head with a twin-barrel turret on top. Fires bolts at hostile mobs within 16 blocks.",
+         stats=dict(health=4, vision=18), abilities=["TURRET"],
+         recipe=([" C ", "MMM", "MRM"], {"C": "minecraft:crossbow", "R": "minecraft:redstone"}),
+         parts=[P("turret_head", [
+             B((-4, -10, -5.5), (8, 8, 8), deco="face"),
+             B((-1, -5, -7.5), (2, 3, 2), deco="nose"),
+             B((-3, -7, -5.75), (2, 1, 1), glow=True),
+             B((1, -7, -5.75), (2, 1, 1), glow=True),
+             B((-3, -13, -4.5), (6, 3, 6), style="trim", deco="rivets"),
+             B((-2.5, -12.5, -11.5), (1, 1, 7), style="dark"),
+             B((1.5, -12.5, -11.5), (1, 1, 7), style="dark"),
+             B((-3, -13, -12), (6, 2, 1), style="trim"),
+             B((-1, -14, -2.5), (2, 1, 2), glow=True),
+         ])]),
+
     # ================================================================== TORSO
     dict(id="plated_chest", slot="TORSO", name="Plated Chest",
          desc="Heavy armor plating. The most health of any torso.",
@@ -202,6 +218,18 @@ SHAPES = [
              B((-2.5, 20, -3.5), (5, 2, 7), style="dark"),
              B((-0.5, 21, -13), (1, 3, 10), style="trim", deco="blade"),
              B((-0.5, 24, -14), (1, 3, 2), style="trim", deco="blade"),
+         ])]),
+
+    dict(id="shield_arms", slot="ARMS", name="Shield Arms",
+         desc="Arms with a riveted tower shield. Takes a third less damage and stops most arrows.",
+         stats=dict(health=14, attack=5, work=0.7), abilities=["SHIELD"],
+         recipe=(["MMM", "MSM", " M "], {"S": "minecraft:shield"}),
+         parts=[P("shield_arms", [
+             B((-2.5, -2, -3.5), (5, 3, 7), style="trim", deco="rivets"),
+             B((-2, -1, -3), (4, 20, 6), deco="panel"),
+             B((-3, 19, -4), (6, 5, 8), deco="knuckles"),
+             B((-4.5, 3, -7), (1, 18, 14), style="trim", deco="rivets"),
+             B((-5, 9, -2), (1, 6, 4), style="dark", deco="hub"),
          ])]),
 
     # =================================================================== LEGS
@@ -316,6 +344,16 @@ SHAPES = [
          ], children=[
              P("panel", [B((-8, -0.5, 0), (16, 1, 10), style="solar", deco="solar")],
                pivot=(0, -1, 6.5), rot=(0.6, 0, 0)),
+         ])]),
+    dict(id="medic_core", slot="CORE", name="Medic Core",
+         desc="A field medic's battery. Recharges at redstone blocks and slowly heals your golems and cubs nearby.",
+         stats=dict(capacity=160), abilities=["RECHARGE_REDSTONE", "MEDIC"], glow="#5aff7a",
+         recipe=([" M ", "MGM", " M "], {"G": "minecraft:golden_apple"}),
+         parts=[P("medic_core", [
+             B((-4, 0, 5), (8, 8, 3), deco="panel"),
+             B((-0.5, 1, 7.25), (1, 6, 1), glow=True),
+             B((-3, 3.5, 7.25), (6, 1, 1), glow=True),
+             B((-4.5, -1, 4.5), (9, 1, 4), style="trim"),
          ])]),
     dict(id="soul_core", slot="CORE", name="Soul Core",
          desc="A bound soul flame. Slowly recharges anywhere and mends the golem over time.",

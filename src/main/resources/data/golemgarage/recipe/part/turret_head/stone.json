@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " C ",
+    "MMM",
+    "MRM"
+  ],
+  "key": {
+    "M": {
+      "tag": "c:cobblestones"
+    },
+    "C": {
+      "item": "minecraft:crossbow"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:turret_head",
+    "count": 1,
+    "components": {
+      "golemgarage:material": "stone",
+      "minecraft:max_damage": 38
+    }
+  }
+}

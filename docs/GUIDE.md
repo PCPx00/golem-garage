@@ -1,6 +1,6 @@
 # Golem Garage: Player Guide
 
-Version 0.17.0 for Minecraft 1.21.1 (NeoForge). By xTrip.
+Version 0.18.0 for Minecraft 1.21.1 (NeoForge). By xTrip.
 
 Build golems from parts. Every golem has five slots (head, torso, arms, legs and core), and every
 part is a **shape** made from a **material**. Iron arms look like iron and gold legs look like gold, and each
@@ -57,6 +57,7 @@ Every shape can be made from any material. Numbers are for the shape itself; the
 | Scope Head | sight 32, health +3 | A telescopic eye. Doubles sight range and spots hostiles early. | `MMM` / `MSM` / `·M·` (M = material, S = spyglass) |
 | Lantern Head | sight 12, health +4 | Carries its own lantern. Lights up the ground around it as it walks. | `·L·` / `MMM` / `MRM` (M = material, L = lantern, R = redstone) |
 | Visor Head | sight 14, health +6 | A sealed helmet. Rain and desert sand can't wear it down. | `MMM` / `MGM` / `·M·` (M = material, G = glass pane) |
+| Turret Head | sight 18, health +4 | A head with a twin-barrel turret on top. Fires bolts at hostile mobs within 16 blocks. | `·C·` / `MMM` / `MRM` (M = material, C = crossbow, R = redstone) |
 
 ### Torso
 
@@ -75,6 +76,7 @@ Every shape can be made from any material. Numbers are for the shape itself; the
 | Grabber Claws | damage 5, work 120% | Three-fingered claws. Best at picking up items and hauling. | `M·M` / `MCM` / `M·M` (M = material, C = chain) |
 | Hammer Arms | damage 12, work 70% | Heavy hammers. The strongest hits, and they strike every enemy nearby. | `MMM` / `MMM` / `R·R` (M = material, R = redstone) |
 | Scythe Arms | damage 9, work 150% | Curved blades. Harvest crops three times faster and slice through groups. | `MMM` / `·RM` / `··M` (M = material, R = redstone) |
+| Shield Arms | damage 5, work 70% | Arms with a riveted tower shield. Takes a third less damage and stops most arrows. | `MMM` / `MSM` / `·M·` (M = material, S = shield) |
 
 ### Legs
 
@@ -94,6 +96,7 @@ Every shape can be made from any material. Numbers are for the shape itself; the
 | Furnace Core | power 200 | Burns coal, charcoal or any fuel it carries to recharge. | `·M·` / `MCM` / `·M·` (M = material, C = coals) |
 | Lightning Core | power 250 | Charges in rain and thunderstorms. A lightning strike fills it instantly. | `·M·` / `MLM` / `·M·` (M = material, L = lightning rod) |
 | Solar Core | power 120 | A solar panel. Recharges in daylight under open sky. | `·M·` / `MDM` / `·M·` (M = material, D = daylight detector) |
+| Medic Core | power 160 | A field medic's battery. Recharges at redstone blocks and slowly heals your golems and cubs nearby. | `·M·` / `MGM` / `·M·` (M = material, G = golden apple) |
 | Soul Core | power 220 | A bound soul flame. Slowly recharges anywhere and mends the golem over time. | `·M·` / `MSM` / `·M·` (M = material, S = soul lantern) |
 
 ## Materials

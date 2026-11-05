@@ -204,6 +204,9 @@ def matched_stats(m):
 
 
 ABILITY_TEXT = {
+    "TURRET": "Turret: fires a bolt at the nearest hostile mob or rogue within 16 blocks about once a second.",
+    "SHIELD": "Shield: takes a third less damage, and stops most arrows and other projectiles.",
+    "MEDIC": "Medic: every few seconds heals your golems and cubs within 6 blocks.",
     "SPOTTER": "Spotter: hostile mobs within its sight range start glowing, so you can see them through walls.",
     "LIGHT": "Lantern: lights up the ground around it (light level 14) as it walks, and the light follows it.",
     "SEALED": "Sealed: rain and desert sand can't wear this part down.",

@@ -54,6 +54,9 @@ public final class ModItems {
     public static final DeferredItem<Item> RIG_PLATING = extra(ITEMS.registerSimpleItem("rig_plating"));
     /** A punch card holding a golem's rules. */
     public static final DeferredItem<RuleCardItem> RULE_CARD = extra(ITEMS.registerItem("rule_card", RuleCardItem::new));
+    /** Commands every golem nearby: rally, hold or charge. */
+    public static final DeferredItem<WarHornItem> WAR_HORN = extra(ITEMS.registerItem("war_horn", WarHornItem::new,
+            new Item.Properties().stacksTo(1)));
     /** The in-game guide book. */
     public static final DeferredItem<ManualItem> MANUAL = ITEMS.registerItem("manual", ManualItem::new);
 

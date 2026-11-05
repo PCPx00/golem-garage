@@ -134,6 +134,27 @@ public class GolemScreen extends Screen {
         if (golem.getGroup() > 0) {
             g.drawCenteredString(font, I18n.get("screen.golemgarage.golem.group", golem.getGroup()), x0 + 73, y0 + 42, 0xFFFFE27A);
         }
+        // Rank, experience to the next rank, and traits.
+        int xp = golem.getXp();
+        int rank = com.xtrip.golemgarage.entity.Veterancy.rank(xp);
+        int next = com.xtrip.golemgarage.entity.Veterancy.next(xp);
+        int ry = y0 + H - 32;
+        String rankLine = I18n.get(com.xtrip.golemgarage.entity.Veterancy.rankKey(rank)) + "  " + "^".repeat(rank);
+        g.drawCenteredString(font, rankLine, x0 + 73, ry - 10, 0xFFFFC14A);
+        g.fill(x0 + 18, ry, x0 + 128, ry + 3, 0xFF0B0E14);
+        if (next > 0) {
+            int lo = com.xtrip.golemgarage.entity.Veterancy.THRESHOLDS[rank];
+            g.fill(x0 + 18, ry, x0 + 18 + Math.round(110f * (xp - lo) / (next - lo)), ry + 3, 0xFFFFC14A);
+        } else {
+            g.fill(x0 + 18, ry, x0 + 128, ry + 3, 0xFFFFC14A);
+        }
+        StringBuilder traits = new StringBuilder();
+        for (var t : com.xtrip.golemgarage.entity.Veterancy.traits(golem)) {
+            traits.append(traits.length() > 0 ? ", " : "").append(I18n.get(com.xtrip.golemgarage.entity.Veterancy.traitKey(t)));
+        }
+        if (traits.length() > 0) {
+            g.drawCenteredString(font, fit(traits.toString(), 126), x0 + 73, ry + 6, 0xFFB8E0A0);
+        }
 
         // Parts.
         int px = x0 + 146;

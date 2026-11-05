@@ -2,6 +2,22 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.18.0
+
+### Added
+- **Veterancy:** golems earn experience from work and fights and rise through five ranks (Rookie, Seasoned,
+  Veteran, Elite, Legend), gaining 5% health and damage per rank. At Veteran they gain a trait from how they've
+  spent their life: **Brawler** (+15% damage) for fighters, **Tireless** (a third less power) for workers. Legends
+  are **Unbreakable** (parts wear half as fast). Experience stays with the golem through pick-up and repairs.
+- Rank chevrons float over ranked golems' heads up close (red for Legends). Rank, progress and traits show on the
+  Status tab and in Jade, and the owner hears about every promotion.
+- **War Horn:** command every golem within 48 blocks: **Rally** to you, **Hold** a spot, or **Charge** what you're
+  looking at. Sneak + use changes the call.
+- **New parts:** **Turret Head** (fires bolts at hostiles within 16 blocks), **Shield Arms** (a third less damage
+  and stops most arrows) and **Medic Core** (heals your golems and cubs nearby, recharges at redstone).
+- No friendly fire: your golems, turrets and rigs never hurt you, each other or your cubs.
+- Advancements: Old Rusty, Living Legend and Sound the Horn.
+
 ## 0.17.0
 
 ### Added

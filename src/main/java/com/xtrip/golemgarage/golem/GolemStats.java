@@ -45,6 +45,9 @@ public final class GolemStats {
     public boolean magnet;
     public boolean regen;
     public boolean selfRepair;
+    public boolean turret;
+    public boolean shield;
+    public boolean medic;
 
     /** Adds the effects of installed upgrade modules. */
     public GolemStats withModules(java.util.List<GolemModule> modules) {
@@ -111,6 +114,7 @@ public final class GolemStats {
                     health += shape.health() * hm;
                     s.vision = broken ? 4f : shape.vision() + 2f * mat.tier();
                     s.spotter = !broken && shape.has(ShapeAbility.SPOTTER);
+                    s.turret = !broken && shape.has(ShapeAbility.TURRET);
                     if (!broken && shape.has(ShapeAbility.LIGHT)) {
                         s.lightLevel = 14;
                     }
@@ -134,6 +138,7 @@ public final class GolemStats {
                     s.harvest = !broken && shape.has(ShapeAbility.HARVEST);
                     s.scytheHarvest = s.harvest && shape.has(ShapeAbility.SWEEP);
                     s.smite = mat.has(GolemTrait.SMITE);
+                    s.shield = !broken && shape.has(ShapeAbility.SHIELD);
                 }
                 case LEGS -> {
                     health += shape.health() * hm;
@@ -149,6 +154,7 @@ public final class GolemStats {
                     s.unpowered = false;
                     s.capacity = Math.round(shape.capacity() * mat.capacityMult() * (broken ? 0.25f : 1f));
                     s.glowColor = broken ? 0x5a3a30 : shape.glowColor();
+                    s.medic = !broken && shape.has(ShapeAbility.MEDIC);
                     for (ShapeAbility a : shape.abilities()) {
                         if (a.name().startsWith("RECHARGE_")) {
                             s.rechargeType = a;

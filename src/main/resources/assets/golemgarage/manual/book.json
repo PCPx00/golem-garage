@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.17.0, by xTrip",
+ "subtitle": "Version 0.18.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -296,6 +296,18 @@
       {
        "type": "table",
        "rows": [
+        [
+         "Turret",
+         "fires a bolt at the nearest hostile mob or rogue within 16 blocks about once a second."
+        ],
+        [
+         "Shield",
+         "takes a third less damage, and stops most arrows and other projectiles."
+        ],
+        [
+         "Medic",
+         "every few seconds heals your golems and cubs within 6 blocks."
+        ],
         [
          "Spotter",
          "hostile mobs within its sight range start glowing, so you can see them through walls."
@@ -923,6 +935,156 @@
         "golemgarage:visor_head@azure_electrum",
         "golemgarage:visor_head@tyrian_steel",
         "golemgarage:visor_head@blaze_gold"
+       ],
+       "text": "These appear only when a mod that adds the metal is installed.",
+       "title": "Modded Materials",
+       "links": [
+        "mat_aluminum",
+        "mat_tin",
+        "mat_zinc",
+        "mat_lead",
+        "mat_nickel",
+        "mat_silver",
+        "mat_bronze",
+        "mat_brass",
+        "mat_constantan",
+        "mat_electrum",
+        "mat_invar",
+        "mat_platinum",
+        "mat_osmium",
+        "mat_uranium",
+        "mat_signalum",
+        "mat_lumium",
+        "mat_iridium",
+        "mat_enderium",
+        "mat_allthemodium",
+        "mat_vibranium",
+        "mat_unobtainium",
+        "mat_vibranium_allthemodium_alloy",
+        "mat_unobtainium_allthemodium_alloy",
+        "mat_unobtainium_vibranium_alloy",
+        "mat_crimson_iron",
+        "mat_crimson_steel",
+        "mat_azure_silver",
+        "mat_azure_electrum",
+        "mat_tyrian_steel",
+        "mat_blaze_gold"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "shape_turret_head",
+     "title": "Head: Turret Head",
+     "icon": "golemgarage:turret_head@iron",
+     "pages": [
+      {
+       "type": "golem",
+       "golem": "{Parts:{head:{Shape:\"turret_head\",Material:\"iron\"},torso:{Shape:\"plated_chest\",Material:\"iron\"},arms:{Shape:\"golem_fists\",Material:\"iron\"},legs:{Shape:\"stub_legs\",Material:\"iron\"},core:{Shape:\"redstone_core\",Material:\"iron\"}}}",
+       "text": "A head with a twin-barrel turret on top. Fires bolts at hostile mobs within 16 blocks.",
+       "height": 84,
+       "title": "Turret Head"
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "Stone",
+         "Sight 18, +4 health, 38 durability"
+        ],
+        [
+         "Copper",
+         "Sight 20, +5.2 health, 72 durability"
+        ],
+        [
+         "Iron",
+         "Sight 22, +6.4 health, 112 durability"
+        ],
+        [
+         "Gold",
+         "Sight 22, +6.4 health, 67 durability"
+        ],
+        [
+         "Steel",
+         "Sight 24, +7.6 health, 187 durability"
+        ],
+        [
+         "Diamond",
+         "Sight 26, +8.8 health, 264 durability"
+        ],
+        [
+         "Netherite",
+         "Sight 28, +10 health, 291 durability"
+        ]
+       ],
+       "title": "In Each Material"
+      },
+      {
+       "type": "text",
+       "text": "Turret: fires a bolt at the nearest hostile mob or rogue within 16 blocks about once a second.",
+       "title": "Abilities"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:part/turret_head/iron",
+       "text": "Shown in iron. M is the material: use any material's ingot (or cobblestone for stone). C = crossbow, R = redstone."
+      },
+      {
+       "type": "items",
+       "items": [
+        "golemgarage:turret_head@stone",
+        "golemgarage:turret_head@copper",
+        "golemgarage:turret_head@iron",
+        "golemgarage:turret_head@gold",
+        "golemgarage:turret_head@steel",
+        "golemgarage:turret_head@diamond",
+        "golemgarage:turret_head@netherite"
+       ],
+       "text": "Click one to read about that material.",
+       "title": "Materials",
+       "links": [
+        "mat_stone",
+        "mat_copper",
+        "mat_iron",
+        "mat_gold",
+        "mat_steel",
+        "mat_diamond",
+        "mat_netherite"
+       ]
+      },
+      {
+       "type": "items",
+       "items": [
+        "golemgarage:turret_head@aluminum",
+        "golemgarage:turret_head@tin",
+        "golemgarage:turret_head@zinc",
+        "golemgarage:turret_head@lead",
+        "golemgarage:turret_head@nickel",
+        "golemgarage:turret_head@silver",
+        "golemgarage:turret_head@bronze",
+        "golemgarage:turret_head@brass",
+        "golemgarage:turret_head@constantan",
+        "golemgarage:turret_head@electrum",
+        "golemgarage:turret_head@invar",
+        "golemgarage:turret_head@platinum",
+        "golemgarage:turret_head@osmium",
+        "golemgarage:turret_head@uranium",
+        "golemgarage:turret_head@signalum",
+        "golemgarage:turret_head@lumium",
+        "golemgarage:turret_head@iridium",
+        "golemgarage:turret_head@enderium",
+        "golemgarage:turret_head@allthemodium",
+        "golemgarage:turret_head@vibranium",
+        "golemgarage:turret_head@unobtainium",
+        "golemgarage:turret_head@vibranium_allthemodium_alloy",
+        "golemgarage:turret_head@unobtainium_allthemodium_alloy",
+        "golemgarage:turret_head@unobtainium_vibranium_alloy",
+        "golemgarage:turret_head@crimson_iron",
+        "golemgarage:turret_head@crimson_steel",
+        "golemgarage:turret_head@azure_silver",
+        "golemgarage:turret_head@azure_electrum",
+        "golemgarage:turret_head@tyrian_steel",
+        "golemgarage:turret_head@blaze_gold"
        ],
        "text": "These appear only when a mod that adds the metal is installed.",
        "title": "Modded Materials",
@@ -2123,6 +2285,156 @@
         "golemgarage:scythe_arms@azure_electrum",
         "golemgarage:scythe_arms@tyrian_steel",
         "golemgarage:scythe_arms@blaze_gold"
+       ],
+       "text": "These appear only when a mod that adds the metal is installed.",
+       "title": "Modded Materials",
+       "links": [
+        "mat_aluminum",
+        "mat_tin",
+        "mat_zinc",
+        "mat_lead",
+        "mat_nickel",
+        "mat_silver",
+        "mat_bronze",
+        "mat_brass",
+        "mat_constantan",
+        "mat_electrum",
+        "mat_invar",
+        "mat_platinum",
+        "mat_osmium",
+        "mat_uranium",
+        "mat_signalum",
+        "mat_lumium",
+        "mat_iridium",
+        "mat_enderium",
+        "mat_allthemodium",
+        "mat_vibranium",
+        "mat_unobtainium",
+        "mat_vibranium_allthemodium_alloy",
+        "mat_unobtainium_allthemodium_alloy",
+        "mat_unobtainium_vibranium_alloy",
+        "mat_crimson_iron",
+        "mat_crimson_steel",
+        "mat_azure_silver",
+        "mat_azure_electrum",
+        "mat_tyrian_steel",
+        "mat_blaze_gold"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "shape_shield_arms",
+     "title": "Arms: Shield Arms",
+     "icon": "golemgarage:shield_arms@iron",
+     "pages": [
+      {
+       "type": "golem",
+       "golem": "{Parts:{head:{Shape:\"sentry_head\",Material:\"iron\"},torso:{Shape:\"plated_chest\",Material:\"iron\"},arms:{Shape:\"shield_arms\",Material:\"iron\"},legs:{Shape:\"stub_legs\",Material:\"iron\"},core:{Shape:\"redstone_core\",Material:\"iron\"}}}",
+       "text": "Arms with a riveted tower shield. Takes a third less damage and stops most arrows.",
+       "height": 84,
+       "title": "Shield Arms"
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "Stone",
+         "Damage 5, work 63%, +14 health, 48 durability"
+        ],
+        [
+         "Copper",
+         "Damage 6.5, work 77%, +18.2 health, 90 durability"
+        ],
+        [
+         "Iron",
+         "Damage 8, work 84%, +22.4 health, 140 durability"
+        ],
+        [
+         "Gold",
+         "Damage 8, work 109%, +22.4 health, 84 durability"
+        ],
+        [
+         "Steel",
+         "Damage 9.5, work 91%, +26.6 health, 234 durability"
+        ],
+        [
+         "Diamond",
+         "Damage 11, work 98%, +30.8 health, 330 durability"
+        ],
+        [
+         "Netherite",
+         "Damage 12.5, work 105%, +35 health, 364 durability"
+        ]
+       ],
+       "title": "In Each Material"
+      },
+      {
+       "type": "text",
+       "text": "Shield: takes a third less damage, and stops most arrows and other projectiles.",
+       "title": "Abilities"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:part/shield_arms/iron",
+       "text": "Shown in iron. M is the material: use any material's ingot (or cobblestone for stone). S = shield."
+      },
+      {
+       "type": "items",
+       "items": [
+        "golemgarage:shield_arms@stone",
+        "golemgarage:shield_arms@copper",
+        "golemgarage:shield_arms@iron",
+        "golemgarage:shield_arms@gold",
+        "golemgarage:shield_arms@steel",
+        "golemgarage:shield_arms@diamond",
+        "golemgarage:shield_arms@netherite"
+       ],
+       "text": "Click one to read about that material.",
+       "title": "Materials",
+       "links": [
+        "mat_stone",
+        "mat_copper",
+        "mat_iron",
+        "mat_gold",
+        "mat_steel",
+        "mat_diamond",
+        "mat_netherite"
+       ]
+      },
+      {
+       "type": "items",
+       "items": [
+        "golemgarage:shield_arms@aluminum",
+        "golemgarage:shield_arms@tin",
+        "golemgarage:shield_arms@zinc",
+        "golemgarage:shield_arms@lead",
+        "golemgarage:shield_arms@nickel",
+        "golemgarage:shield_arms@silver",
+        "golemgarage:shield_arms@bronze",
+        "golemgarage:shield_arms@brass",
+        "golemgarage:shield_arms@constantan",
+        "golemgarage:shield_arms@electrum",
+        "golemgarage:shield_arms@invar",
+        "golemgarage:shield_arms@platinum",
+        "golemgarage:shield_arms@osmium",
+        "golemgarage:shield_arms@uranium",
+        "golemgarage:shield_arms@signalum",
+        "golemgarage:shield_arms@lumium",
+        "golemgarage:shield_arms@iridium",
+        "golemgarage:shield_arms@enderium",
+        "golemgarage:shield_arms@allthemodium",
+        "golemgarage:shield_arms@vibranium",
+        "golemgarage:shield_arms@unobtainium",
+        "golemgarage:shield_arms@vibranium_allthemodium_alloy",
+        "golemgarage:shield_arms@unobtainium_allthemodium_alloy",
+        "golemgarage:shield_arms@unobtainium_vibranium_alloy",
+        "golemgarage:shield_arms@crimson_iron",
+        "golemgarage:shield_arms@crimson_steel",
+        "golemgarage:shield_arms@azure_silver",
+        "golemgarage:shield_arms@azure_electrum",
+        "golemgarage:shield_arms@tyrian_steel",
+        "golemgarage:shield_arms@blaze_gold"
        ],
        "text": "These appear only when a mod that adds the metal is installed.",
        "title": "Modded Materials",
@@ -3512,6 +3824,156 @@
      ]
     },
     {
+     "id": "shape_medic_core",
+     "title": "Core: Medic Core",
+     "icon": "golemgarage:medic_core@iron",
+     "pages": [
+      {
+       "type": "golem",
+       "golem": "{Parts:{head:{Shape:\"sentry_head\",Material:\"iron\"},torso:{Shape:\"plated_chest\",Material:\"iron\"},arms:{Shape:\"golem_fists\",Material:\"iron\"},legs:{Shape:\"stub_legs\",Material:\"iron\"},core:{Shape:\"medic_core\",Material:\"iron\"}}}",
+       "text": "A field medic's battery. Recharges at redstone blocks and slowly heals your golems and cubs nearby.",
+       "height": 84,
+       "title": "Medic Core"
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "Stone",
+         "Power 128, 43 durability"
+        ],
+        [
+         "Copper",
+         "Power 230, 81 durability"
+        ],
+        [
+         "Iron",
+         "Power 240, 126 durability"
+        ],
+        [
+         "Gold",
+         "Power 360, 76 durability"
+        ],
+        [
+         "Steel",
+         "Power 280, 211 durability"
+        ],
+        [
+         "Diamond",
+         "Power 320, 297 durability"
+        ],
+        [
+         "Netherite",
+         "Power 360, 328 durability"
+        ]
+       ],
+       "title": "In Each Material"
+      },
+      {
+       "type": "text",
+       "text": "Recharges by burning redstone it carries: a redstone block gives 100, dust gives 12 (only while below 75%). Any golem can also charge next to a placed redstone block with the Recharge action.\n\nMedic: every few seconds heals your golems and cubs within 6 blocks.",
+       "title": "Abilities"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:part/medic_core/iron",
+       "text": "Shown in iron. M is the material: use any material's ingot (or cobblestone for stone). G = golden apple."
+      },
+      {
+       "type": "items",
+       "items": [
+        "golemgarage:medic_core@stone",
+        "golemgarage:medic_core@copper",
+        "golemgarage:medic_core@iron",
+        "golemgarage:medic_core@gold",
+        "golemgarage:medic_core@steel",
+        "golemgarage:medic_core@diamond",
+        "golemgarage:medic_core@netherite"
+       ],
+       "text": "Click one to read about that material.",
+       "title": "Materials",
+       "links": [
+        "mat_stone",
+        "mat_copper",
+        "mat_iron",
+        "mat_gold",
+        "mat_steel",
+        "mat_diamond",
+        "mat_netherite"
+       ]
+      },
+      {
+       "type": "items",
+       "items": [
+        "golemgarage:medic_core@aluminum",
+        "golemgarage:medic_core@tin",
+        "golemgarage:medic_core@zinc",
+        "golemgarage:medic_core@lead",
+        "golemgarage:medic_core@nickel",
+        "golemgarage:medic_core@silver",
+        "golemgarage:medic_core@bronze",
+        "golemgarage:medic_core@brass",
+        "golemgarage:medic_core@constantan",
+        "golemgarage:medic_core@electrum",
+        "golemgarage:medic_core@invar",
+        "golemgarage:medic_core@platinum",
+        "golemgarage:medic_core@osmium",
+        "golemgarage:medic_core@uranium",
+        "golemgarage:medic_core@signalum",
+        "golemgarage:medic_core@lumium",
+        "golemgarage:medic_core@iridium",
+        "golemgarage:medic_core@enderium",
+        "golemgarage:medic_core@allthemodium",
+        "golemgarage:medic_core@vibranium",
+        "golemgarage:medic_core@unobtainium",
+        "golemgarage:medic_core@vibranium_allthemodium_alloy",
+        "golemgarage:medic_core@unobtainium_allthemodium_alloy",
+        "golemgarage:medic_core@unobtainium_vibranium_alloy",
+        "golemgarage:medic_core@crimson_iron",
+        "golemgarage:medic_core@crimson_steel",
+        "golemgarage:medic_core@azure_silver",
+        "golemgarage:medic_core@azure_electrum",
+        "golemgarage:medic_core@tyrian_steel",
+        "golemgarage:medic_core@blaze_gold"
+       ],
+       "text": "These appear only when a mod that adds the metal is installed.",
+       "title": "Modded Materials",
+       "links": [
+        "mat_aluminum",
+        "mat_tin",
+        "mat_zinc",
+        "mat_lead",
+        "mat_nickel",
+        "mat_silver",
+        "mat_bronze",
+        "mat_brass",
+        "mat_constantan",
+        "mat_electrum",
+        "mat_invar",
+        "mat_platinum",
+        "mat_osmium",
+        "mat_uranium",
+        "mat_signalum",
+        "mat_lumium",
+        "mat_iridium",
+        "mat_enderium",
+        "mat_allthemodium",
+        "mat_vibranium",
+        "mat_unobtainium",
+        "mat_vibranium_allthemodium_alloy",
+        "mat_unobtainium_allthemodium_alloy",
+        "mat_unobtainium_vibranium_alloy",
+        "mat_crimson_iron",
+        "mat_crimson_steel",
+        "mat_azure_silver",
+        "mat_azure_electrum",
+        "mat_tyrian_steel",
+        "mat_blaze_gold"
+       ]
+      }
+     ]
+    },
+    {
      "id": "shape_soul_core",
      "title": "Core: Soul Core",
      "icon": "golemgarage:soul_core@iron",
@@ -4068,6 +4530,7 @@
         "golemgarage:scope_head@stone",
         "golemgarage:lantern_head@stone",
         "golemgarage:visor_head@stone",
+        "golemgarage:turret_head@stone",
         "golemgarage:plated_chest@stone",
         "golemgarage:cargo_barrel@stone",
         "golemgarage:sealed_hold@stone",
@@ -4076,6 +4539,7 @@
         "golemgarage:grabber_claws@stone",
         "golemgarage:hammer_arms@stone",
         "golemgarage:scythe_arms@stone",
+        "golemgarage:shield_arms@stone",
         "golemgarage:stub_legs@stone",
         "golemgarage:strider_legs@stone",
         "golemgarage:tread_legs@stone",
@@ -4085,6 +4549,7 @@
         "golemgarage:furnace_core@stone",
         "golemgarage:lightning_core@stone",
         "golemgarage:solar_core@stone",
+        "golemgarage:medic_core@stone",
         "golemgarage:soul_core@stone"
        ],
        "text": "Every Stone part. Click one to read about its shape.",
@@ -4094,6 +4559,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -4102,6 +4568,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -4111,6 +4578,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -4199,6 +4667,7 @@
         "golemgarage:scope_head@copper",
         "golemgarage:lantern_head@copper",
         "golemgarage:visor_head@copper",
+        "golemgarage:turret_head@copper",
         "golemgarage:plated_chest@copper",
         "golemgarage:cargo_barrel@copper",
         "golemgarage:sealed_hold@copper",
@@ -4207,6 +4676,7 @@
         "golemgarage:grabber_claws@copper",
         "golemgarage:hammer_arms@copper",
         "golemgarage:scythe_arms@copper",
+        "golemgarage:shield_arms@copper",
         "golemgarage:stub_legs@copper",
         "golemgarage:strider_legs@copper",
         "golemgarage:tread_legs@copper",
@@ -4216,6 +4686,7 @@
         "golemgarage:furnace_core@copper",
         "golemgarage:lightning_core@copper",
         "golemgarage:solar_core@copper",
+        "golemgarage:medic_core@copper",
         "golemgarage:soul_core@copper"
        ],
        "text": "Every Copper part. Click one to read about its shape.",
@@ -4225,6 +4696,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -4233,6 +4705,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -4242,6 +4715,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -4315,6 +4789,7 @@
         "golemgarage:scope_head@iron",
         "golemgarage:lantern_head@iron",
         "golemgarage:visor_head@iron",
+        "golemgarage:turret_head@iron",
         "golemgarage:plated_chest@iron",
         "golemgarage:cargo_barrel@iron",
         "golemgarage:sealed_hold@iron",
@@ -4323,6 +4798,7 @@
         "golemgarage:grabber_claws@iron",
         "golemgarage:hammer_arms@iron",
         "golemgarage:scythe_arms@iron",
+        "golemgarage:shield_arms@iron",
         "golemgarage:stub_legs@iron",
         "golemgarage:strider_legs@iron",
         "golemgarage:tread_legs@iron",
@@ -4332,6 +4808,7 @@
         "golemgarage:furnace_core@iron",
         "golemgarage:lightning_core@iron",
         "golemgarage:solar_core@iron",
+        "golemgarage:medic_core@iron",
         "golemgarage:soul_core@iron"
        ],
        "text": "Every Iron part. Click one to read about its shape.",
@@ -4341,6 +4818,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -4349,6 +4827,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -4358,6 +4837,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -4443,6 +4923,7 @@
         "golemgarage:scope_head@gold",
         "golemgarage:lantern_head@gold",
         "golemgarage:visor_head@gold",
+        "golemgarage:turret_head@gold",
         "golemgarage:plated_chest@gold",
         "golemgarage:cargo_barrel@gold",
         "golemgarage:sealed_hold@gold",
@@ -4451,6 +4932,7 @@
         "golemgarage:grabber_claws@gold",
         "golemgarage:hammer_arms@gold",
         "golemgarage:scythe_arms@gold",
+        "golemgarage:shield_arms@gold",
         "golemgarage:stub_legs@gold",
         "golemgarage:strider_legs@gold",
         "golemgarage:tread_legs@gold",
@@ -4460,6 +4942,7 @@
         "golemgarage:furnace_core@gold",
         "golemgarage:lightning_core@gold",
         "golemgarage:solar_core@gold",
+        "golemgarage:medic_core@gold",
         "golemgarage:soul_core@gold"
        ],
        "text": "Every Gold part. Click one to read about its shape.",
@@ -4469,6 +4952,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -4477,6 +4961,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -4486,6 +4971,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -4559,6 +5045,7 @@
         "golemgarage:scope_head@steel",
         "golemgarage:lantern_head@steel",
         "golemgarage:visor_head@steel",
+        "golemgarage:turret_head@steel",
         "golemgarage:plated_chest@steel",
         "golemgarage:cargo_barrel@steel",
         "golemgarage:sealed_hold@steel",
@@ -4567,6 +5054,7 @@
         "golemgarage:grabber_claws@steel",
         "golemgarage:hammer_arms@steel",
         "golemgarage:scythe_arms@steel",
+        "golemgarage:shield_arms@steel",
         "golemgarage:stub_legs@steel",
         "golemgarage:strider_legs@steel",
         "golemgarage:tread_legs@steel",
@@ -4576,6 +5064,7 @@
         "golemgarage:furnace_core@steel",
         "golemgarage:lightning_core@steel",
         "golemgarage:solar_core@steel",
+        "golemgarage:medic_core@steel",
         "golemgarage:soul_core@steel"
        ],
        "text": "Every Steel part. Click one to read about its shape.",
@@ -4585,6 +5074,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -4593,6 +5083,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -4602,6 +5093,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -4679,6 +5171,7 @@
         "golemgarage:scope_head@diamond",
         "golemgarage:lantern_head@diamond",
         "golemgarage:visor_head@diamond",
+        "golemgarage:turret_head@diamond",
         "golemgarage:plated_chest@diamond",
         "golemgarage:cargo_barrel@diamond",
         "golemgarage:sealed_hold@diamond",
@@ -4687,6 +5180,7 @@
         "golemgarage:grabber_claws@diamond",
         "golemgarage:hammer_arms@diamond",
         "golemgarage:scythe_arms@diamond",
+        "golemgarage:shield_arms@diamond",
         "golemgarage:stub_legs@diamond",
         "golemgarage:strider_legs@diamond",
         "golemgarage:tread_legs@diamond",
@@ -4696,6 +5190,7 @@
         "golemgarage:furnace_core@diamond",
         "golemgarage:lightning_core@diamond",
         "golemgarage:solar_core@diamond",
+        "golemgarage:medic_core@diamond",
         "golemgarage:soul_core@diamond"
        ],
        "text": "Every Diamond part. Click one to read about its shape.",
@@ -4705,6 +5200,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -4713,6 +5209,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -4722,6 +5219,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -4807,6 +5305,7 @@
         "golemgarage:scope_head@netherite",
         "golemgarage:lantern_head@netherite",
         "golemgarage:visor_head@netherite",
+        "golemgarage:turret_head@netherite",
         "golemgarage:plated_chest@netherite",
         "golemgarage:cargo_barrel@netherite",
         "golemgarage:sealed_hold@netherite",
@@ -4815,6 +5314,7 @@
         "golemgarage:grabber_claws@netherite",
         "golemgarage:hammer_arms@netherite",
         "golemgarage:scythe_arms@netherite",
+        "golemgarage:shield_arms@netherite",
         "golemgarage:stub_legs@netherite",
         "golemgarage:strider_legs@netherite",
         "golemgarage:tread_legs@netherite",
@@ -4824,6 +5324,7 @@
         "golemgarage:furnace_core@netherite",
         "golemgarage:lightning_core@netherite",
         "golemgarage:solar_core@netherite",
+        "golemgarage:medic_core@netherite",
         "golemgarage:soul_core@netherite"
        ],
        "text": "Every Netherite part. Click one to read about its shape.",
@@ -4833,6 +5334,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -4841,6 +5343,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -4850,6 +5353,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -4926,6 +5430,7 @@
         "golemgarage:scope_head@aluminum",
         "golemgarage:lantern_head@aluminum",
         "golemgarage:visor_head@aluminum",
+        "golemgarage:turret_head@aluminum",
         "golemgarage:plated_chest@aluminum",
         "golemgarage:cargo_barrel@aluminum",
         "golemgarage:sealed_hold@aluminum",
@@ -4934,6 +5439,7 @@
         "golemgarage:grabber_claws@aluminum",
         "golemgarage:hammer_arms@aluminum",
         "golemgarage:scythe_arms@aluminum",
+        "golemgarage:shield_arms@aluminum",
         "golemgarage:stub_legs@aluminum",
         "golemgarage:strider_legs@aluminum",
         "golemgarage:tread_legs@aluminum",
@@ -4943,6 +5449,7 @@
         "golemgarage:furnace_core@aluminum",
         "golemgarage:lightning_core@aluminum",
         "golemgarage:solar_core@aluminum",
+        "golemgarage:medic_core@aluminum",
         "golemgarage:soul_core@aluminum"
        ],
        "text": "Every Aluminum part. Click one to read about its shape.",
@@ -4952,6 +5459,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -4960,6 +5468,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -4969,6 +5478,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -5041,6 +5551,7 @@
         "golemgarage:scope_head@tin",
         "golemgarage:lantern_head@tin",
         "golemgarage:visor_head@tin",
+        "golemgarage:turret_head@tin",
         "golemgarage:plated_chest@tin",
         "golemgarage:cargo_barrel@tin",
         "golemgarage:sealed_hold@tin",
@@ -5049,6 +5560,7 @@
         "golemgarage:grabber_claws@tin",
         "golemgarage:hammer_arms@tin",
         "golemgarage:scythe_arms@tin",
+        "golemgarage:shield_arms@tin",
         "golemgarage:stub_legs@tin",
         "golemgarage:strider_legs@tin",
         "golemgarage:tread_legs@tin",
@@ -5058,6 +5570,7 @@
         "golemgarage:furnace_core@tin",
         "golemgarage:lightning_core@tin",
         "golemgarage:solar_core@tin",
+        "golemgarage:medic_core@tin",
         "golemgarage:soul_core@tin"
        ],
        "text": "Every Tin part. Click one to read about its shape.",
@@ -5067,6 +5580,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -5075,6 +5589,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -5084,6 +5599,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -5156,6 +5672,7 @@
         "golemgarage:scope_head@zinc",
         "golemgarage:lantern_head@zinc",
         "golemgarage:visor_head@zinc",
+        "golemgarage:turret_head@zinc",
         "golemgarage:plated_chest@zinc",
         "golemgarage:cargo_barrel@zinc",
         "golemgarage:sealed_hold@zinc",
@@ -5164,6 +5681,7 @@
         "golemgarage:grabber_claws@zinc",
         "golemgarage:hammer_arms@zinc",
         "golemgarage:scythe_arms@zinc",
+        "golemgarage:shield_arms@zinc",
         "golemgarage:stub_legs@zinc",
         "golemgarage:strider_legs@zinc",
         "golemgarage:tread_legs@zinc",
@@ -5173,6 +5691,7 @@
         "golemgarage:furnace_core@zinc",
         "golemgarage:lightning_core@zinc",
         "golemgarage:solar_core@zinc",
+        "golemgarage:medic_core@zinc",
         "golemgarage:soul_core@zinc"
        ],
        "text": "Every Zinc part. Click one to read about its shape.",
@@ -5182,6 +5701,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -5190,6 +5710,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -5199,6 +5720,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -5275,6 +5797,7 @@
         "golemgarage:scope_head@lead",
         "golemgarage:lantern_head@lead",
         "golemgarage:visor_head@lead",
+        "golemgarage:turret_head@lead",
         "golemgarage:plated_chest@lead",
         "golemgarage:cargo_barrel@lead",
         "golemgarage:sealed_hold@lead",
@@ -5283,6 +5806,7 @@
         "golemgarage:grabber_claws@lead",
         "golemgarage:hammer_arms@lead",
         "golemgarage:scythe_arms@lead",
+        "golemgarage:shield_arms@lead",
         "golemgarage:stub_legs@lead",
         "golemgarage:strider_legs@lead",
         "golemgarage:tread_legs@lead",
@@ -5292,6 +5816,7 @@
         "golemgarage:furnace_core@lead",
         "golemgarage:lightning_core@lead",
         "golemgarage:solar_core@lead",
+        "golemgarage:medic_core@lead",
         "golemgarage:soul_core@lead"
        ],
        "text": "Every Lead part. Click one to read about its shape.",
@@ -5301,6 +5826,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -5309,6 +5835,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -5318,6 +5845,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -5390,6 +5918,7 @@
         "golemgarage:scope_head@nickel",
         "golemgarage:lantern_head@nickel",
         "golemgarage:visor_head@nickel",
+        "golemgarage:turret_head@nickel",
         "golemgarage:plated_chest@nickel",
         "golemgarage:cargo_barrel@nickel",
         "golemgarage:sealed_hold@nickel",
@@ -5398,6 +5927,7 @@
         "golemgarage:grabber_claws@nickel",
         "golemgarage:hammer_arms@nickel",
         "golemgarage:scythe_arms@nickel",
+        "golemgarage:shield_arms@nickel",
         "golemgarage:stub_legs@nickel",
         "golemgarage:strider_legs@nickel",
         "golemgarage:tread_legs@nickel",
@@ -5407,6 +5937,7 @@
         "golemgarage:furnace_core@nickel",
         "golemgarage:lightning_core@nickel",
         "golemgarage:solar_core@nickel",
+        "golemgarage:medic_core@nickel",
         "golemgarage:soul_core@nickel"
        ],
        "text": "Every Nickel part. Click one to read about its shape.",
@@ -5416,6 +5947,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -5424,6 +5956,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -5433,6 +5966,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -5505,6 +6039,7 @@
         "golemgarage:scope_head@silver",
         "golemgarage:lantern_head@silver",
         "golemgarage:visor_head@silver",
+        "golemgarage:turret_head@silver",
         "golemgarage:plated_chest@silver",
         "golemgarage:cargo_barrel@silver",
         "golemgarage:sealed_hold@silver",
@@ -5513,6 +6048,7 @@
         "golemgarage:grabber_claws@silver",
         "golemgarage:hammer_arms@silver",
         "golemgarage:scythe_arms@silver",
+        "golemgarage:shield_arms@silver",
         "golemgarage:stub_legs@silver",
         "golemgarage:strider_legs@silver",
         "golemgarage:tread_legs@silver",
@@ -5522,6 +6058,7 @@
         "golemgarage:furnace_core@silver",
         "golemgarage:lightning_core@silver",
         "golemgarage:solar_core@silver",
+        "golemgarage:medic_core@silver",
         "golemgarage:soul_core@silver"
        ],
        "text": "Every Silver part. Click one to read about its shape.",
@@ -5531,6 +6068,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -5539,6 +6077,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -5548,6 +6087,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -5620,6 +6160,7 @@
         "golemgarage:scope_head@bronze",
         "golemgarage:lantern_head@bronze",
         "golemgarage:visor_head@bronze",
+        "golemgarage:turret_head@bronze",
         "golemgarage:plated_chest@bronze",
         "golemgarage:cargo_barrel@bronze",
         "golemgarage:sealed_hold@bronze",
@@ -5628,6 +6169,7 @@
         "golemgarage:grabber_claws@bronze",
         "golemgarage:hammer_arms@bronze",
         "golemgarage:scythe_arms@bronze",
+        "golemgarage:shield_arms@bronze",
         "golemgarage:stub_legs@bronze",
         "golemgarage:strider_legs@bronze",
         "golemgarage:tread_legs@bronze",
@@ -5637,6 +6179,7 @@
         "golemgarage:furnace_core@bronze",
         "golemgarage:lightning_core@bronze",
         "golemgarage:solar_core@bronze",
+        "golemgarage:medic_core@bronze",
         "golemgarage:soul_core@bronze"
        ],
        "text": "Every Bronze part. Click one to read about its shape.",
@@ -5646,6 +6189,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -5654,6 +6198,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -5663,6 +6208,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -5735,6 +6281,7 @@
         "golemgarage:scope_head@brass",
         "golemgarage:lantern_head@brass",
         "golemgarage:visor_head@brass",
+        "golemgarage:turret_head@brass",
         "golemgarage:plated_chest@brass",
         "golemgarage:cargo_barrel@brass",
         "golemgarage:sealed_hold@brass",
@@ -5743,6 +6290,7 @@
         "golemgarage:grabber_claws@brass",
         "golemgarage:hammer_arms@brass",
         "golemgarage:scythe_arms@brass",
+        "golemgarage:shield_arms@brass",
         "golemgarage:stub_legs@brass",
         "golemgarage:strider_legs@brass",
         "golemgarage:tread_legs@brass",
@@ -5752,6 +6300,7 @@
         "golemgarage:furnace_core@brass",
         "golemgarage:lightning_core@brass",
         "golemgarage:solar_core@brass",
+        "golemgarage:medic_core@brass",
         "golemgarage:soul_core@brass"
        ],
        "text": "Every Brass part. Click one to read about its shape.",
@@ -5761,6 +6310,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -5769,6 +6319,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -5778,6 +6329,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -5850,6 +6402,7 @@
         "golemgarage:scope_head@constantan",
         "golemgarage:lantern_head@constantan",
         "golemgarage:visor_head@constantan",
+        "golemgarage:turret_head@constantan",
         "golemgarage:plated_chest@constantan",
         "golemgarage:cargo_barrel@constantan",
         "golemgarage:sealed_hold@constantan",
@@ -5858,6 +6411,7 @@
         "golemgarage:grabber_claws@constantan",
         "golemgarage:hammer_arms@constantan",
         "golemgarage:scythe_arms@constantan",
+        "golemgarage:shield_arms@constantan",
         "golemgarage:stub_legs@constantan",
         "golemgarage:strider_legs@constantan",
         "golemgarage:tread_legs@constantan",
@@ -5867,6 +6421,7 @@
         "golemgarage:furnace_core@constantan",
         "golemgarage:lightning_core@constantan",
         "golemgarage:solar_core@constantan",
+        "golemgarage:medic_core@constantan",
         "golemgarage:soul_core@constantan"
        ],
        "text": "Every Constantan part. Click one to read about its shape.",
@@ -5876,6 +6431,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -5884,6 +6440,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -5893,6 +6450,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -5969,6 +6527,7 @@
         "golemgarage:scope_head@electrum",
         "golemgarage:lantern_head@electrum",
         "golemgarage:visor_head@electrum",
+        "golemgarage:turret_head@electrum",
         "golemgarage:plated_chest@electrum",
         "golemgarage:cargo_barrel@electrum",
         "golemgarage:sealed_hold@electrum",
@@ -5977,6 +6536,7 @@
         "golemgarage:grabber_claws@electrum",
         "golemgarage:hammer_arms@electrum",
         "golemgarage:scythe_arms@electrum",
+        "golemgarage:shield_arms@electrum",
         "golemgarage:stub_legs@electrum",
         "golemgarage:strider_legs@electrum",
         "golemgarage:tread_legs@electrum",
@@ -5986,6 +6546,7 @@
         "golemgarage:furnace_core@electrum",
         "golemgarage:lightning_core@electrum",
         "golemgarage:solar_core@electrum",
+        "golemgarage:medic_core@electrum",
         "golemgarage:soul_core@electrum"
        ],
        "text": "Every Electrum part. Click one to read about its shape.",
@@ -5995,6 +6556,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -6003,6 +6565,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -6012,6 +6575,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -6084,6 +6648,7 @@
         "golemgarage:scope_head@invar",
         "golemgarage:lantern_head@invar",
         "golemgarage:visor_head@invar",
+        "golemgarage:turret_head@invar",
         "golemgarage:plated_chest@invar",
         "golemgarage:cargo_barrel@invar",
         "golemgarage:sealed_hold@invar",
@@ -6092,6 +6657,7 @@
         "golemgarage:grabber_claws@invar",
         "golemgarage:hammer_arms@invar",
         "golemgarage:scythe_arms@invar",
+        "golemgarage:shield_arms@invar",
         "golemgarage:stub_legs@invar",
         "golemgarage:strider_legs@invar",
         "golemgarage:tread_legs@invar",
@@ -6101,6 +6667,7 @@
         "golemgarage:furnace_core@invar",
         "golemgarage:lightning_core@invar",
         "golemgarage:solar_core@invar",
+        "golemgarage:medic_core@invar",
         "golemgarage:soul_core@invar"
        ],
        "text": "Every Invar part. Click one to read about its shape.",
@@ -6110,6 +6677,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -6118,6 +6686,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -6127,6 +6696,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -6199,6 +6769,7 @@
         "golemgarage:scope_head@platinum",
         "golemgarage:lantern_head@platinum",
         "golemgarage:visor_head@platinum",
+        "golemgarage:turret_head@platinum",
         "golemgarage:plated_chest@platinum",
         "golemgarage:cargo_barrel@platinum",
         "golemgarage:sealed_hold@platinum",
@@ -6207,6 +6778,7 @@
         "golemgarage:grabber_claws@platinum",
         "golemgarage:hammer_arms@platinum",
         "golemgarage:scythe_arms@platinum",
+        "golemgarage:shield_arms@platinum",
         "golemgarage:stub_legs@platinum",
         "golemgarage:strider_legs@platinum",
         "golemgarage:tread_legs@platinum",
@@ -6216,6 +6788,7 @@
         "golemgarage:furnace_core@platinum",
         "golemgarage:lightning_core@platinum",
         "golemgarage:solar_core@platinum",
+        "golemgarage:medic_core@platinum",
         "golemgarage:soul_core@platinum"
        ],
        "text": "Every Platinum part. Click one to read about its shape.",
@@ -6225,6 +6798,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -6233,6 +6807,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -6242,6 +6817,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -6318,6 +6894,7 @@
         "golemgarage:scope_head@osmium",
         "golemgarage:lantern_head@osmium",
         "golemgarage:visor_head@osmium",
+        "golemgarage:turret_head@osmium",
         "golemgarage:plated_chest@osmium",
         "golemgarage:cargo_barrel@osmium",
         "golemgarage:sealed_hold@osmium",
@@ -6326,6 +6903,7 @@
         "golemgarage:grabber_claws@osmium",
         "golemgarage:hammer_arms@osmium",
         "golemgarage:scythe_arms@osmium",
+        "golemgarage:shield_arms@osmium",
         "golemgarage:stub_legs@osmium",
         "golemgarage:strider_legs@osmium",
         "golemgarage:tread_legs@osmium",
@@ -6335,6 +6913,7 @@
         "golemgarage:furnace_core@osmium",
         "golemgarage:lightning_core@osmium",
         "golemgarage:solar_core@osmium",
+        "golemgarage:medic_core@osmium",
         "golemgarage:soul_core@osmium"
        ],
        "text": "Every Osmium part. Click one to read about its shape.",
@@ -6344,6 +6923,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -6352,6 +6932,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -6361,6 +6942,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -6433,6 +7015,7 @@
         "golemgarage:scope_head@uranium",
         "golemgarage:lantern_head@uranium",
         "golemgarage:visor_head@uranium",
+        "golemgarage:turret_head@uranium",
         "golemgarage:plated_chest@uranium",
         "golemgarage:cargo_barrel@uranium",
         "golemgarage:sealed_hold@uranium",
@@ -6441,6 +7024,7 @@
         "golemgarage:grabber_claws@uranium",
         "golemgarage:hammer_arms@uranium",
         "golemgarage:scythe_arms@uranium",
+        "golemgarage:shield_arms@uranium",
         "golemgarage:stub_legs@uranium",
         "golemgarage:strider_legs@uranium",
         "golemgarage:tread_legs@uranium",
@@ -6450,6 +7034,7 @@
         "golemgarage:furnace_core@uranium",
         "golemgarage:lightning_core@uranium",
         "golemgarage:solar_core@uranium",
+        "golemgarage:medic_core@uranium",
         "golemgarage:soul_core@uranium"
        ],
        "text": "Every Uranium part. Click one to read about its shape.",
@@ -6459,6 +7044,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -6467,6 +7053,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -6476,6 +7063,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -6552,6 +7140,7 @@
         "golemgarage:scope_head@signalum",
         "golemgarage:lantern_head@signalum",
         "golemgarage:visor_head@signalum",
+        "golemgarage:turret_head@signalum",
         "golemgarage:plated_chest@signalum",
         "golemgarage:cargo_barrel@signalum",
         "golemgarage:sealed_hold@signalum",
@@ -6560,6 +7149,7 @@
         "golemgarage:grabber_claws@signalum",
         "golemgarage:hammer_arms@signalum",
         "golemgarage:scythe_arms@signalum",
+        "golemgarage:shield_arms@signalum",
         "golemgarage:stub_legs@signalum",
         "golemgarage:strider_legs@signalum",
         "golemgarage:tread_legs@signalum",
@@ -6569,6 +7159,7 @@
         "golemgarage:furnace_core@signalum",
         "golemgarage:lightning_core@signalum",
         "golemgarage:solar_core@signalum",
+        "golemgarage:medic_core@signalum",
         "golemgarage:soul_core@signalum"
        ],
        "text": "Every Signalum part. Click one to read about its shape.",
@@ -6578,6 +7169,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -6586,6 +7178,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -6595,6 +7188,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -6667,6 +7261,7 @@
         "golemgarage:scope_head@lumium",
         "golemgarage:lantern_head@lumium",
         "golemgarage:visor_head@lumium",
+        "golemgarage:turret_head@lumium",
         "golemgarage:plated_chest@lumium",
         "golemgarage:cargo_barrel@lumium",
         "golemgarage:sealed_hold@lumium",
@@ -6675,6 +7270,7 @@
         "golemgarage:grabber_claws@lumium",
         "golemgarage:hammer_arms@lumium",
         "golemgarage:scythe_arms@lumium",
+        "golemgarage:shield_arms@lumium",
         "golemgarage:stub_legs@lumium",
         "golemgarage:strider_legs@lumium",
         "golemgarage:tread_legs@lumium",
@@ -6684,6 +7280,7 @@
         "golemgarage:furnace_core@lumium",
         "golemgarage:lightning_core@lumium",
         "golemgarage:solar_core@lumium",
+        "golemgarage:medic_core@lumium",
         "golemgarage:soul_core@lumium"
        ],
        "text": "Every Lumium part. Click one to read about its shape.",
@@ -6693,6 +7290,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -6701,6 +7299,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -6710,6 +7309,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -6786,6 +7386,7 @@
         "golemgarage:scope_head@iridium",
         "golemgarage:lantern_head@iridium",
         "golemgarage:visor_head@iridium",
+        "golemgarage:turret_head@iridium",
         "golemgarage:plated_chest@iridium",
         "golemgarage:cargo_barrel@iridium",
         "golemgarage:sealed_hold@iridium",
@@ -6794,6 +7395,7 @@
         "golemgarage:grabber_claws@iridium",
         "golemgarage:hammer_arms@iridium",
         "golemgarage:scythe_arms@iridium",
+        "golemgarage:shield_arms@iridium",
         "golemgarage:stub_legs@iridium",
         "golemgarage:strider_legs@iridium",
         "golemgarage:tread_legs@iridium",
@@ -6803,6 +7405,7 @@
         "golemgarage:furnace_core@iridium",
         "golemgarage:lightning_core@iridium",
         "golemgarage:solar_core@iridium",
+        "golemgarage:medic_core@iridium",
         "golemgarage:soul_core@iridium"
        ],
        "text": "Every Iridium part. Click one to read about its shape.",
@@ -6812,6 +7415,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -6820,6 +7424,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -6829,6 +7434,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -6901,6 +7507,7 @@
         "golemgarage:scope_head@enderium",
         "golemgarage:lantern_head@enderium",
         "golemgarage:visor_head@enderium",
+        "golemgarage:turret_head@enderium",
         "golemgarage:plated_chest@enderium",
         "golemgarage:cargo_barrel@enderium",
         "golemgarage:sealed_hold@enderium",
@@ -6909,6 +7516,7 @@
         "golemgarage:grabber_claws@enderium",
         "golemgarage:hammer_arms@enderium",
         "golemgarage:scythe_arms@enderium",
+        "golemgarage:shield_arms@enderium",
         "golemgarage:stub_legs@enderium",
         "golemgarage:strider_legs@enderium",
         "golemgarage:tread_legs@enderium",
@@ -6918,6 +7526,7 @@
         "golemgarage:furnace_core@enderium",
         "golemgarage:lightning_core@enderium",
         "golemgarage:solar_core@enderium",
+        "golemgarage:medic_core@enderium",
         "golemgarage:soul_core@enderium"
        ],
        "text": "Every Enderium part. Click one to read about its shape.",
@@ -6927,6 +7536,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -6935,6 +7545,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -6944,6 +7555,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -7020,6 +7632,7 @@
         "golemgarage:scope_head@allthemodium",
         "golemgarage:lantern_head@allthemodium",
         "golemgarage:visor_head@allthemodium",
+        "golemgarage:turret_head@allthemodium",
         "golemgarage:plated_chest@allthemodium",
         "golemgarage:cargo_barrel@allthemodium",
         "golemgarage:sealed_hold@allthemodium",
@@ -7028,6 +7641,7 @@
         "golemgarage:grabber_claws@allthemodium",
         "golemgarage:hammer_arms@allthemodium",
         "golemgarage:scythe_arms@allthemodium",
+        "golemgarage:shield_arms@allthemodium",
         "golemgarage:stub_legs@allthemodium",
         "golemgarage:strider_legs@allthemodium",
         "golemgarage:tread_legs@allthemodium",
@@ -7037,6 +7651,7 @@
         "golemgarage:furnace_core@allthemodium",
         "golemgarage:lightning_core@allthemodium",
         "golemgarage:solar_core@allthemodium",
+        "golemgarage:medic_core@allthemodium",
         "golemgarage:soul_core@allthemodium"
        ],
        "text": "Every Allthemodium part. Click one to read about its shape.",
@@ -7046,6 +7661,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -7054,6 +7670,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -7063,6 +7680,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -7143,6 +7761,7 @@
         "golemgarage:scope_head@vibranium",
         "golemgarage:lantern_head@vibranium",
         "golemgarage:visor_head@vibranium",
+        "golemgarage:turret_head@vibranium",
         "golemgarage:plated_chest@vibranium",
         "golemgarage:cargo_barrel@vibranium",
         "golemgarage:sealed_hold@vibranium",
@@ -7151,6 +7770,7 @@
         "golemgarage:grabber_claws@vibranium",
         "golemgarage:hammer_arms@vibranium",
         "golemgarage:scythe_arms@vibranium",
+        "golemgarage:shield_arms@vibranium",
         "golemgarage:stub_legs@vibranium",
         "golemgarage:strider_legs@vibranium",
         "golemgarage:tread_legs@vibranium",
@@ -7160,6 +7780,7 @@
         "golemgarage:furnace_core@vibranium",
         "golemgarage:lightning_core@vibranium",
         "golemgarage:solar_core@vibranium",
+        "golemgarage:medic_core@vibranium",
         "golemgarage:soul_core@vibranium"
        ],
        "text": "Every Vibranium part. Click one to read about its shape.",
@@ -7169,6 +7790,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -7177,6 +7799,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -7186,6 +7809,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -7270,6 +7894,7 @@
         "golemgarage:scope_head@unobtainium",
         "golemgarage:lantern_head@unobtainium",
         "golemgarage:visor_head@unobtainium",
+        "golemgarage:turret_head@unobtainium",
         "golemgarage:plated_chest@unobtainium",
         "golemgarage:cargo_barrel@unobtainium",
         "golemgarage:sealed_hold@unobtainium",
@@ -7278,6 +7903,7 @@
         "golemgarage:grabber_claws@unobtainium",
         "golemgarage:hammer_arms@unobtainium",
         "golemgarage:scythe_arms@unobtainium",
+        "golemgarage:shield_arms@unobtainium",
         "golemgarage:stub_legs@unobtainium",
         "golemgarage:strider_legs@unobtainium",
         "golemgarage:tread_legs@unobtainium",
@@ -7287,6 +7913,7 @@
         "golemgarage:furnace_core@unobtainium",
         "golemgarage:lightning_core@unobtainium",
         "golemgarage:solar_core@unobtainium",
+        "golemgarage:medic_core@unobtainium",
         "golemgarage:soul_core@unobtainium"
        ],
        "text": "Every Unobtainium part. Click one to read about its shape.",
@@ -7296,6 +7923,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -7304,6 +7932,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -7313,6 +7942,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -7397,6 +8027,7 @@
         "golemgarage:scope_head@vibranium_allthemodium_alloy",
         "golemgarage:lantern_head@vibranium_allthemodium_alloy",
         "golemgarage:visor_head@vibranium_allthemodium_alloy",
+        "golemgarage:turret_head@vibranium_allthemodium_alloy",
         "golemgarage:plated_chest@vibranium_allthemodium_alloy",
         "golemgarage:cargo_barrel@vibranium_allthemodium_alloy",
         "golemgarage:sealed_hold@vibranium_allthemodium_alloy",
@@ -7405,6 +8036,7 @@
         "golemgarage:grabber_claws@vibranium_allthemodium_alloy",
         "golemgarage:hammer_arms@vibranium_allthemodium_alloy",
         "golemgarage:scythe_arms@vibranium_allthemodium_alloy",
+        "golemgarage:shield_arms@vibranium_allthemodium_alloy",
         "golemgarage:stub_legs@vibranium_allthemodium_alloy",
         "golemgarage:strider_legs@vibranium_allthemodium_alloy",
         "golemgarage:tread_legs@vibranium_allthemodium_alloy",
@@ -7414,6 +8046,7 @@
         "golemgarage:furnace_core@vibranium_allthemodium_alloy",
         "golemgarage:lightning_core@vibranium_allthemodium_alloy",
         "golemgarage:solar_core@vibranium_allthemodium_alloy",
+        "golemgarage:medic_core@vibranium_allthemodium_alloy",
         "golemgarage:soul_core@vibranium_allthemodium_alloy"
        ],
        "text": "Every Vibranium-Allthemodium Alloy part. Click one to read about its shape.",
@@ -7423,6 +8056,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -7431,6 +8065,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -7440,6 +8075,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -7528,6 +8164,7 @@
         "golemgarage:scope_head@unobtainium_allthemodium_alloy",
         "golemgarage:lantern_head@unobtainium_allthemodium_alloy",
         "golemgarage:visor_head@unobtainium_allthemodium_alloy",
+        "golemgarage:turret_head@unobtainium_allthemodium_alloy",
         "golemgarage:plated_chest@unobtainium_allthemodium_alloy",
         "golemgarage:cargo_barrel@unobtainium_allthemodium_alloy",
         "golemgarage:sealed_hold@unobtainium_allthemodium_alloy",
@@ -7536,6 +8173,7 @@
         "golemgarage:grabber_claws@unobtainium_allthemodium_alloy",
         "golemgarage:hammer_arms@unobtainium_allthemodium_alloy",
         "golemgarage:scythe_arms@unobtainium_allthemodium_alloy",
+        "golemgarage:shield_arms@unobtainium_allthemodium_alloy",
         "golemgarage:stub_legs@unobtainium_allthemodium_alloy",
         "golemgarage:strider_legs@unobtainium_allthemodium_alloy",
         "golemgarage:tread_legs@unobtainium_allthemodium_alloy",
@@ -7545,6 +8183,7 @@
         "golemgarage:furnace_core@unobtainium_allthemodium_alloy",
         "golemgarage:lightning_core@unobtainium_allthemodium_alloy",
         "golemgarage:solar_core@unobtainium_allthemodium_alloy",
+        "golemgarage:medic_core@unobtainium_allthemodium_alloy",
         "golemgarage:soul_core@unobtainium_allthemodium_alloy"
        ],
        "text": "Every Unobtainium-Allthemodium Alloy part. Click one to read about its shape.",
@@ -7554,6 +8193,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -7562,6 +8202,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -7571,6 +8212,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -7659,6 +8301,7 @@
         "golemgarage:scope_head@unobtainium_vibranium_alloy",
         "golemgarage:lantern_head@unobtainium_vibranium_alloy",
         "golemgarage:visor_head@unobtainium_vibranium_alloy",
+        "golemgarage:turret_head@unobtainium_vibranium_alloy",
         "golemgarage:plated_chest@unobtainium_vibranium_alloy",
         "golemgarage:cargo_barrel@unobtainium_vibranium_alloy",
         "golemgarage:sealed_hold@unobtainium_vibranium_alloy",
@@ -7667,6 +8310,7 @@
         "golemgarage:grabber_claws@unobtainium_vibranium_alloy",
         "golemgarage:hammer_arms@unobtainium_vibranium_alloy",
         "golemgarage:scythe_arms@unobtainium_vibranium_alloy",
+        "golemgarage:shield_arms@unobtainium_vibranium_alloy",
         "golemgarage:stub_legs@unobtainium_vibranium_alloy",
         "golemgarage:strider_legs@unobtainium_vibranium_alloy",
         "golemgarage:tread_legs@unobtainium_vibranium_alloy",
@@ -7676,6 +8320,7 @@
         "golemgarage:furnace_core@unobtainium_vibranium_alloy",
         "golemgarage:lightning_core@unobtainium_vibranium_alloy",
         "golemgarage:solar_core@unobtainium_vibranium_alloy",
+        "golemgarage:medic_core@unobtainium_vibranium_alloy",
         "golemgarage:soul_core@unobtainium_vibranium_alloy"
        ],
        "text": "Every Unobtainium-Vibranium Alloy part. Click one to read about its shape.",
@@ -7685,6 +8330,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -7693,6 +8339,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -7702,6 +8349,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -7774,6 +8422,7 @@
         "golemgarage:scope_head@crimson_iron",
         "golemgarage:lantern_head@crimson_iron",
         "golemgarage:visor_head@crimson_iron",
+        "golemgarage:turret_head@crimson_iron",
         "golemgarage:plated_chest@crimson_iron",
         "golemgarage:cargo_barrel@crimson_iron",
         "golemgarage:sealed_hold@crimson_iron",
@@ -7782,6 +8431,7 @@
         "golemgarage:grabber_claws@crimson_iron",
         "golemgarage:hammer_arms@crimson_iron",
         "golemgarage:scythe_arms@crimson_iron",
+        "golemgarage:shield_arms@crimson_iron",
         "golemgarage:stub_legs@crimson_iron",
         "golemgarage:strider_legs@crimson_iron",
         "golemgarage:tread_legs@crimson_iron",
@@ -7791,6 +8441,7 @@
         "golemgarage:furnace_core@crimson_iron",
         "golemgarage:lightning_core@crimson_iron",
         "golemgarage:solar_core@crimson_iron",
+        "golemgarage:medic_core@crimson_iron",
         "golemgarage:soul_core@crimson_iron"
        ],
        "text": "Every Crimson Iron part. Click one to read about its shape.",
@@ -7800,6 +8451,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -7808,6 +8460,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -7817,6 +8470,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -7893,6 +8547,7 @@
         "golemgarage:scope_head@crimson_steel",
         "golemgarage:lantern_head@crimson_steel",
         "golemgarage:visor_head@crimson_steel",
+        "golemgarage:turret_head@crimson_steel",
         "golemgarage:plated_chest@crimson_steel",
         "golemgarage:cargo_barrel@crimson_steel",
         "golemgarage:sealed_hold@crimson_steel",
@@ -7901,6 +8556,7 @@
         "golemgarage:grabber_claws@crimson_steel",
         "golemgarage:hammer_arms@crimson_steel",
         "golemgarage:scythe_arms@crimson_steel",
+        "golemgarage:shield_arms@crimson_steel",
         "golemgarage:stub_legs@crimson_steel",
         "golemgarage:strider_legs@crimson_steel",
         "golemgarage:tread_legs@crimson_steel",
@@ -7910,6 +8566,7 @@
         "golemgarage:furnace_core@crimson_steel",
         "golemgarage:lightning_core@crimson_steel",
         "golemgarage:solar_core@crimson_steel",
+        "golemgarage:medic_core@crimson_steel",
         "golemgarage:soul_core@crimson_steel"
        ],
        "text": "Every Crimson Steel part. Click one to read about its shape.",
@@ -7919,6 +8576,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -7927,6 +8585,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -7936,6 +8595,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -8008,6 +8668,7 @@
         "golemgarage:scope_head@azure_silver",
         "golemgarage:lantern_head@azure_silver",
         "golemgarage:visor_head@azure_silver",
+        "golemgarage:turret_head@azure_silver",
         "golemgarage:plated_chest@azure_silver",
         "golemgarage:cargo_barrel@azure_silver",
         "golemgarage:sealed_hold@azure_silver",
@@ -8016,6 +8677,7 @@
         "golemgarage:grabber_claws@azure_silver",
         "golemgarage:hammer_arms@azure_silver",
         "golemgarage:scythe_arms@azure_silver",
+        "golemgarage:shield_arms@azure_silver",
         "golemgarage:stub_legs@azure_silver",
         "golemgarage:strider_legs@azure_silver",
         "golemgarage:tread_legs@azure_silver",
@@ -8025,6 +8687,7 @@
         "golemgarage:furnace_core@azure_silver",
         "golemgarage:lightning_core@azure_silver",
         "golemgarage:solar_core@azure_silver",
+        "golemgarage:medic_core@azure_silver",
         "golemgarage:soul_core@azure_silver"
        ],
        "text": "Every Azure Silver part. Click one to read about its shape.",
@@ -8034,6 +8697,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -8042,6 +8706,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -8051,6 +8716,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -8127,6 +8793,7 @@
         "golemgarage:scope_head@azure_electrum",
         "golemgarage:lantern_head@azure_electrum",
         "golemgarage:visor_head@azure_electrum",
+        "golemgarage:turret_head@azure_electrum",
         "golemgarage:plated_chest@azure_electrum",
         "golemgarage:cargo_barrel@azure_electrum",
         "golemgarage:sealed_hold@azure_electrum",
@@ -8135,6 +8802,7 @@
         "golemgarage:grabber_claws@azure_electrum",
         "golemgarage:hammer_arms@azure_electrum",
         "golemgarage:scythe_arms@azure_electrum",
+        "golemgarage:shield_arms@azure_electrum",
         "golemgarage:stub_legs@azure_electrum",
         "golemgarage:strider_legs@azure_electrum",
         "golemgarage:tread_legs@azure_electrum",
@@ -8144,6 +8812,7 @@
         "golemgarage:furnace_core@azure_electrum",
         "golemgarage:lightning_core@azure_electrum",
         "golemgarage:solar_core@azure_electrum",
+        "golemgarage:medic_core@azure_electrum",
         "golemgarage:soul_core@azure_electrum"
        ],
        "text": "Every Azure Electrum part. Click one to read about its shape.",
@@ -8153,6 +8822,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -8161,6 +8831,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -8170,6 +8841,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -8246,6 +8918,7 @@
         "golemgarage:scope_head@tyrian_steel",
         "golemgarage:lantern_head@tyrian_steel",
         "golemgarage:visor_head@tyrian_steel",
+        "golemgarage:turret_head@tyrian_steel",
         "golemgarage:plated_chest@tyrian_steel",
         "golemgarage:cargo_barrel@tyrian_steel",
         "golemgarage:sealed_hold@tyrian_steel",
@@ -8254,6 +8927,7 @@
         "golemgarage:grabber_claws@tyrian_steel",
         "golemgarage:hammer_arms@tyrian_steel",
         "golemgarage:scythe_arms@tyrian_steel",
+        "golemgarage:shield_arms@tyrian_steel",
         "golemgarage:stub_legs@tyrian_steel",
         "golemgarage:strider_legs@tyrian_steel",
         "golemgarage:tread_legs@tyrian_steel",
@@ -8263,6 +8937,7 @@
         "golemgarage:furnace_core@tyrian_steel",
         "golemgarage:lightning_core@tyrian_steel",
         "golemgarage:solar_core@tyrian_steel",
+        "golemgarage:medic_core@tyrian_steel",
         "golemgarage:soul_core@tyrian_steel"
        ],
        "text": "Every Tyrian Steel part. Click one to read about its shape.",
@@ -8272,6 +8947,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -8280,6 +8956,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -8289,6 +8966,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -8369,6 +9047,7 @@
         "golemgarage:scope_head@blaze_gold",
         "golemgarage:lantern_head@blaze_gold",
         "golemgarage:visor_head@blaze_gold",
+        "golemgarage:turret_head@blaze_gold",
         "golemgarage:plated_chest@blaze_gold",
         "golemgarage:cargo_barrel@blaze_gold",
         "golemgarage:sealed_hold@blaze_gold",
@@ -8377,6 +9056,7 @@
         "golemgarage:grabber_claws@blaze_gold",
         "golemgarage:hammer_arms@blaze_gold",
         "golemgarage:scythe_arms@blaze_gold",
+        "golemgarage:shield_arms@blaze_gold",
         "golemgarage:stub_legs@blaze_gold",
         "golemgarage:strider_legs@blaze_gold",
         "golemgarage:tread_legs@blaze_gold",
@@ -8386,6 +9066,7 @@
         "golemgarage:furnace_core@blaze_gold",
         "golemgarage:lightning_core@blaze_gold",
         "golemgarage:solar_core@blaze_gold",
+        "golemgarage:medic_core@blaze_gold",
         "golemgarage:soul_core@blaze_gold"
        ],
        "text": "Every Blaze Gold part. Click one to read about its shape.",
@@ -8395,6 +9076,7 @@
         "shape_scope_head",
         "shape_lantern_head",
         "shape_visor_head",
+        "shape_turret_head",
         "shape_plated_chest",
         "shape_cargo_barrel",
         "shape_sealed_hold",
@@ -8403,6 +9085,7 @@
         "shape_grabber_claws",
         "shape_hammer_arms",
         "shape_scythe_arms",
+        "shape_shield_arms",
         "shape_stub_legs",
         "shape_strider_legs",
         "shape_tread_legs",
@@ -8412,6 +9095,7 @@
         "shape_furnace_core",
         "shape_lightning_core",
         "shape_solar_core",
+        "shape_medic_core",
         "shape_soul_core"
        ]
       }
@@ -8805,6 +9489,10 @@
         [
          "Solar Core",
          "Charges in daylight under open sky when it isn't raining (1 power a second)."
+        ],
+        [
+         "Medic Core",
+         "Recharges by burning redstone it carries: a redstone block gives 100, dust gives 12 (only while below 75%). Any golem can also charge next to a placed redstone block with the Recharge action."
         ],
         [
          "Soul Core",
@@ -10138,6 +10826,75 @@
        "title": "Fighting Back"
       }
      ]
+    },
+    {
+     "id": "veterans",
+     "title": "Veterans",
+     "icon": "minecraft:iron_sword",
+     "pages": [
+      {
+       "type": "text",
+       "text": "Golems learn on the job. They earn §lexperience§r from work (every few crops, stacks or chores) and from fights (more for tough mobs, 15 for a rogue, 200 for a Junk Titan). Experience stays with the golem when you pick it up or repair it.",
+       "title": "Experience"
+      },
+      {
+       "type": "table",
+       "rows": [
+        [
+         "Rookie",
+         "0 xp."
+        ],
+        [
+         "Seasoned",
+         "100 xp. +5% health and damage."
+        ],
+        [
+         "Veteran",
+         "300 xp. +10%, and a trait."
+        ],
+        [
+         "Elite",
+         "700 xp. +15%."
+        ],
+        [
+         "Legend",
+         "1500 xp. +20%, and Unbreakable."
+        ]
+       ],
+       "title": "Ranks"
+      },
+      {
+       "type": "text",
+       "text": "§lBrawler§r: golems that earned at least half their experience fighting hit 15% harder.\n\n§lTireless§r: workers use a third less power.\n\n§lUnbreakable§r: Legends' parts wear half as fast.",
+       "title": "Traits"
+      },
+      {
+       "type": "text",
+       "text": "Ranked golems show gold chevrons over their heads (red for Legends) when you're close, and their rank, progress and traits on the Status tab and in Jade."
+      }
+     ]
+    },
+    {
+     "id": "war_horn",
+     "title": "War Horn",
+     "icon": "golemgarage:war_horn",
+     "pages": [
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:war_horn",
+       "text": "Three copper ingots, redstone and leather.",
+       "title": "War Horn"
+      },
+      {
+       "type": "text",
+       "text": "Sound it and every one of your golems within 48 blocks drops what it's doing:\n\n§lRally§r: run to you and fight anything that comes near (30 seconds). §lHold§r: stand fast and fight anything within 8 blocks (1 minute). §lCharge§r: all attack whatever you're looking at (20 seconds).\n\nSneak + use to change the call.",
+       "title": "Calls"
+      },
+      {
+       "type": "text",
+       "text": "It needs 5 seconds to cool down."
+      }
+     ]
     }
    ]
   },
@@ -10800,6 +11557,7 @@
   "golemgarage:scope_head": "shape_scope_head",
   "golemgarage:lantern_head": "shape_lantern_head",
   "golemgarage:visor_head": "shape_visor_head",
+  "golemgarage:turret_head": "shape_turret_head",
   "golemgarage:plated_chest": "shape_plated_chest",
   "golemgarage:cargo_barrel": "shape_cargo_barrel",
   "golemgarage:sealed_hold": "shape_sealed_hold",
@@ -10808,6 +11566,7 @@
   "golemgarage:grabber_claws": "shape_grabber_claws",
   "golemgarage:hammer_arms": "shape_hammer_arms",
   "golemgarage:scythe_arms": "shape_scythe_arms",
+  "golemgarage:shield_arms": "shape_shield_arms",
   "golemgarage:stub_legs": "shape_stub_legs",
   "golemgarage:strider_legs": "shape_strider_legs",
   "golemgarage:tread_legs": "shape_tread_legs",
@@ -10817,6 +11576,7 @@
   "golemgarage:furnace_core": "shape_furnace_core",
   "golemgarage:lightning_core": "shape_lightning_core",
   "golemgarage:solar_core": "shape_solar_core",
+  "golemgarage:medic_core": "shape_medic_core",
   "golemgarage:soul_core": "shape_soul_core",
   "golemgarage:module_magnet": "module_magnet",
   "golemgarage:module_lamp": "module_lamp",

@@ -4,6 +4,7 @@
     "golemgarage:sentry_head",
     "golemgarage:scope_head",
     "golemgarage:lantern_head",
-    "golemgarage:visor_head"
+    "golemgarage:visor_head",
+    "golemgarage:turret_head"
   ]
 }

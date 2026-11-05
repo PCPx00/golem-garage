@@ -44,6 +44,51 @@ public final class ModEvents {
         event.getRelevantPlayers().forEach(p -> net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(p, payload));
     }
 
+    /** Golems earn veterancy from kills: more for rogues, a lot for a Junk Titan. */
+    @SubscribeEvent
+    public static void onDeathVeterancy(net.neoforged.neoforge.event.entity.living.LivingDeathEvent event) {
+        var dead = event.getEntity();
+        var killer = event.getSource().getEntity();
+        com.xtrip.golemgarage.entity.GolemEntity golem = killer instanceof com.xtrip.golemgarage.entity.GolemEntity g ? g
+                : event.getSource().getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile p
+                && p.getOwner() instanceof com.xtrip.golemgarage.entity.GolemEntity g2 ? g2 : null;
+        if (golem == null || dead.level().isClientSide) {
+            return;
+        }
+        int xp = dead instanceof com.xtrip.golemgarage.entity.GolemEntity rg && rg.isTitan() ? 200
+                : dead instanceof com.xtrip.golemgarage.entity.GolemEntity rg2 && rg2.isRogue() ? 15
+                : Math.max(3, (int) (dead.getMaxHealth() / 2));
+        golem.addXp(xp, true);
+    }
+
+    /** No friendly fire: your golems, rigs and turrets never hurt you, each other or your cubs. */
+    @SubscribeEvent
+    public static void onIncomingDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event) {
+        java.util.UUID attacker = ownerOf(event.getSource().getEntity());
+        if (attacker == null) {
+            return;
+        }
+        var victim = event.getEntity();
+        java.util.UUID victimOwner = victim instanceof Player p ? p.getUUID() : ownerOf(victim);
+        if (attacker.equals(victimOwner)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @org.jetbrains.annotations.Nullable
+    private static java.util.UUID ownerOf(@org.jetbrains.annotations.Nullable net.minecraft.world.entity.Entity e) {
+        if (e instanceof com.xtrip.golemgarage.entity.GolemEntity g) {
+            return g.isRogue() ? null : g.getOwnerUuid();
+        }
+        if (e instanceof com.xtrip.golemgarage.entity.CubEntity c) {
+            return c.getOwnerUuid();
+        }
+        if (e instanceof com.xtrip.golemgarage.entity.RigEntity r) {
+            return r.isRogue() ? null : r.getOwnerUuid();
+        }
+        return null;
+    }
+
     @SubscribeEvent
     public static void onCommands(net.neoforged.neoforge.event.RegisterCommandsEvent event) {
         com.xtrip.golemgarage.command.GolemCommands.register(event.getDispatcher());

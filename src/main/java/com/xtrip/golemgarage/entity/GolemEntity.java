@@ -104,6 +104,9 @@ public class GolemEntity extends PathfinderMob {
             SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_GROUP =
             SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.INT);
+    /** Veterancy experience, synced for the panel, Jade and the rank badge. */
+    private static final EntityDataAccessor<Integer> DATA_XP =
+            SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.INT);
     private boolean paused;
     @Nullable
     private BlockPos dockedAt;
@@ -174,6 +177,7 @@ public class GolemEntity extends PathfinderMob {
         builder.define(DATA_OWNER, java.util.Optional.empty());
         builder.define(DATA_GROUP, 0);
         builder.define(DATA_MODE, 0);
+        builder.define(DATA_XP, 0);
         builder.define(DATA_STATUS, "");
         builder.define(DATA_FLAGS, (byte) 0);
     }
@@ -295,6 +299,190 @@ public class GolemEntity extends PathfinderMob {
         }
     }
 
+    // =================================================================== veterancy
+    private int combatXp;
+
+    public int getXp() {
+        return entityData.get(DATA_XP);
+    }
+
+    public int combatXp() {
+        return combatXp;
+    }
+
+    public int rank() {
+        return Veterancy.rank(getXp());
+    }
+
+    public boolean hasTrait(Veterancy.Trait trait) {
+        return Veterancy.traits(this).contains(trait);
+    }
+
+    /** Earns experience; a new rank refreshes stats, celebrates and tells the owner. */
+    public void addXp(int amount, boolean combat) {
+        if (isRogue() || amount <= 0 || level().isClientSide) {
+            return;
+        }
+        int before = rank();
+        entityData.set(DATA_XP, getXp() + amount);
+        if (combat) {
+            combatXp += amount;
+        }
+        int after = rank();
+        if (after > before) {
+            refresh();
+            heal(getMaxHealth());
+            playSound(SoundEvents.PLAYER_LEVELUP, 0.8f, 0.8f);
+            if (level() instanceof ServerLevel sl) {
+                sl.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, getX(), getY() + 1.5, getZ(), 30, 0.5, 0.8, 0.5, 0.2);
+            }
+            Player owner = getOwner();
+            if (owner != null) {
+                owner.displayClientMessage(Component.translatable("golemgarage.rank.up", getDisplayName(),
+                        Component.translatable(Veterancy.rankKey(after))).withStyle(ChatFormatting.GOLD), false);
+                if (after >= 2) {
+                    com.xtrip.golemgarage.advancement.ModTriggers.award(owner, "veteran");
+                }
+                if (after >= 4) {
+                    com.xtrip.golemgarage.advancement.ModTriggers.award(owner, "legend");
+                }
+            }
+        }
+    }
+
+    // =================================================================== support parts
+    private void fireTurret() {
+        if (broken || hasFlag(FLAG_BREAKING) || getMode() == com.xtrip.golemgarage.golem.GolemMode.PEACEFUL) {
+            return;
+        }
+        LivingEntity target = getTarget();
+        if (target == null || !target.isAlive() || distanceToSqr(target) > 16 * 16) {
+            target = null;
+            double best = 16 * 16;
+            for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(16),
+                    e -> (isRogue() ? rogueWants(e) : isHostile(e)) && canAttack(e) && hasLineOfSight(e))) {
+                double d = distanceToSqr(e);
+                if (d < best) {
+                    best = d;
+                    target = e;
+                }
+            }
+        }
+        if (target == null) {
+            return;
+        }
+        Vec3 gun = position().add(0, getBbHeight() + 0.1, 0);
+        Vec3 aim = target.getEyePosition().subtract(gun);
+        net.minecraft.world.entity.projectile.Arrow arrow = new net.minecraft.world.entity.projectile.Arrow(EntityType.ARROW, level());
+        arrow.setPos(gun.add(aim.normalize()));
+        arrow.setOwner(this);
+        arrow.pickup = net.minecraft.world.entity.projectile.AbstractArrow.Pickup.DISALLOWED;
+        arrow.setBaseDamage(3.0 + rank());
+        arrow.shoot(aim.x, aim.y + aim.horizontalDistance() * 0.08, aim.z, 2.6f, 2f);
+        level().addFreshEntity(arrow);
+        playSound(SoundEvents.CROSSBOW_SHOOT, 0.6f, 1.1f + random.nextFloat() * 0.2f);
+        drainPower(1);
+    }
+
+    private void medic() {
+        boolean healed = false;
+        for (LivingEntity e : level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(6),
+                e -> e.isAlive() && e.getHealth() < e.getMaxHealth()
+                        && (e instanceof GolemEntity g && java.util.Objects.equals(g.getOwnerUuid(), getOwnerUuid()) && !g.isBroken()
+                        || e instanceof CubEntity c && java.util.Objects.equals(c.getOwnerUuid(), getOwnerUuid())))) {
+            e.heal(3f);
+            healed = true;
+            if (level() instanceof ServerLevel sl) {
+                sl.sendParticles(ParticleTypes.HEART, e.getX(), e.getY() + e.getBbHeight() + 0.2, e.getZ(), 2, 0.3, 0.2, 0.3, 0);
+            }
+        }
+        if (healed) {
+            drainPower(1);
+        }
+    }
+
+    // =================================================================== war horn orders
+    public enum Order { NONE, RALLY, HOLD, CHARGE }
+
+    private Order order = Order.NONE;
+    private long orderUntil;
+    @Nullable
+    private BlockPos holdAt;
+    @Nullable
+    private UUID orderTarget;
+
+    public Order order() {
+        if (order != Order.NONE && level().getGameTime() > orderUntil) {
+            order = Order.NONE;
+        }
+        return order;
+    }
+
+    public void giveOrder(Order o, int ticks, @Nullable LivingEntity target) {
+        order = o;
+        orderUntil = level().getGameTime() + ticks;
+        holdAt = blockPosition();
+        orderTarget = target == null ? null : target.getUUID();
+        if (o == Order.CHARGE && target != null) {
+            setTarget(target);
+        }
+        if (o == Order.RALLY || o == Order.HOLD) {
+            setTarget(null);
+        }
+        if (level() instanceof ServerLevel sl) {
+            sl.sendParticles(o == Order.CHARGE ? ParticleTypes.ANGRY_VILLAGER : ParticleTypes.NOTE, getX(), getY() + getBbHeight() + 0.4,
+                    getZ(), 3, 0.3, 0.1, 0.3, 0);
+        }
+    }
+
+    /** Runs a War Horn order instead of the golem's rules. Returns true while an order is in force. */
+    public boolean runOrder() {
+        Order o = order();
+        if (o == Order.NONE) {
+            return false;
+        }
+        switch (o) {
+            case RALLY -> {
+                Player owner = getOwner();
+                if (owner == null) {
+                    return false;
+                }
+                if (getTarget() == null && distanceToSqr(owner) > 9) {
+                    getNavigation().moveTo(owner, 1.25);
+                }
+                // Fight anything that comes close while rallied.
+                if (getTarget() == null) {
+                    level().getEntitiesOfClass(net.minecraft.world.entity.Mob.class, getBoundingBox().inflate(8),
+                            e -> isHostile(e) && canAttack(e)).stream().findFirst().ifPresent(this::setTarget);
+                }
+            }
+            case HOLD -> {
+                if (getTarget() == null) {
+                    level().getEntitiesOfClass(net.minecraft.world.entity.Mob.class, getBoundingBox().inflate(8),
+                            e -> isHostile(e) && canAttack(e)).stream().findFirst().ifPresent(this::setTarget);
+                }
+                if (getTarget() == null && holdAt != null && blockPosition().distSqr(holdAt) > 4) {
+                    getNavigation().moveTo(holdAt.getX() + 0.5, holdAt.getY(), holdAt.getZ() + 0.5, 1.1);
+                } else if (getTarget() == null) {
+                    getNavigation().stop();
+                }
+            }
+            case CHARGE -> {
+                Entity t = orderTarget == null || !(level() instanceof ServerLevel sl) ? null : sl.getEntity(orderTarget);
+                if (t instanceof LivingEntity le && le.isAlive()) {
+                    setTarget(le);
+                } else {
+                    order = Order.NONE;
+                    return false;
+                }
+            }
+            default -> {
+            }
+        }
+        setStatus(com.xtrip.golemgarage.golem.GolemText.of("order_" + o.name().toLowerCase(java.util.Locale.ROOT)));
+        return true;
+    }
+
     /** Where a raid is heading, or null. */
     @Nullable
     public BlockPos raidTarget() {
@@ -356,6 +544,14 @@ public class GolemEntity extends PathfinderMob {
     }
 
     private void applyAttributes() {
+        if (isTitan()) {
+            stats.maxHealth = 320f;
+            stats.attack = 18f;
+            stats.speed = 0.22f;
+            stats.knockbackResist = 1f;
+        } else if (!isRogue()) {
+            Veterancy.apply(this, stats);
+        }
         set(Attributes.MAX_HEALTH, stats.maxHealth);
         float powerFactor = stats.capacity > 0 && power <= 0 ? 0.4f : 1f;
         set(Attributes.MOVEMENT_SPEED, stats.speed * powerFactor);
@@ -409,6 +605,12 @@ public class GolemEntity extends PathfinderMob {
         }
         if (tickCount % 100 == 7 && getServer() != null) {
             com.xtrip.golemgarage.golem.GolemRegistry.get(getServer()).update(this);
+        }
+        if (stats.turret && tickCount % 22 == 0) {
+            fireTurret();
+        }
+        if (stats.medic && !isRogue() && tickCount % 50 == 0) {
+            medic();
         }
         if (dockedAt != null && tickCount % 20 == 0 && (distanceToSqr(Vec3.atBottomCenterOf(dockedAt)) > 2.5
                 || activeAction() != GolemRule.Action.GO_HOME)) {
@@ -498,6 +700,9 @@ public class GolemEntity extends PathfinderMob {
     public void drainPower(int amount) {
         if (isRogue()) {
             return; // rogues run on whatever they scavenged
+        }
+        if (hasTrait(Veterancy.Trait.TIRELESS) && random.nextInt(3) == 0) {
+            return;
         }
         if (stats.capacity <= 0) {
             return;
@@ -589,7 +794,7 @@ public class GolemEntity extends PathfinderMob {
             return;
         }
         amount = scaled(amount, com.xtrip.golemgarage.Config.WEAR_MULTIPLIER.get());
-        if (amount <= 0) {
+        if (amount <= 0 || hasTrait(Veterancy.Trait.UNBREAKABLE) && random.nextBoolean()) {
             return;
         }
         if (part.material().has(GolemTrait.HARDENED) && random.nextFloat() < 0.3f) {
@@ -672,6 +877,9 @@ public class GolemEntity extends PathfinderMob {
     /** Called by behaviors after each unit of work (moving a stack, harvesting a crop). */
     public void onWorkDone() {
         workOps++;
+        if (workOps % 4 == 0) {
+            addXp(1, false);
+        }
         level().broadcastEntityEvent(this, EVENT_WORK);
         if (workOps % 3 == 0) {
             crowdSound(com.xtrip.golemgarage.ModSounds.GOLEM_WORK.get(), com.xtrip.golemgarage.golem.SoundCrowd.Kind.WORK, 0.35f, 0.9f + random.nextFloat() * 0.2f);
@@ -1272,6 +1480,13 @@ public class GolemEntity extends PathfinderMob {
         }
         if (hasFlag(FLAG_BREAKING)) {
             return false;
+        }
+        if (stats.shield && !hasFlag(FLAG_BREAKING)) {
+            if (source.getDirectEntity() instanceof net.minecraft.world.entity.projectile.Projectile && random.nextInt(4) != 0) {
+                playSound(SoundEvents.SHIELD_BLOCK, 0.8f, 0.9f + random.nextFloat() * 0.2f);
+                return false;
+            }
+            amount *= 0.66f;
         }
         if (isRogue()) {
             boolean hit = super.hurt(source, amount);
@@ -1938,6 +2153,8 @@ public class GolemEntity extends PathfinderMob {
         tag.putInt("Group", getGroup());
         tag.putString("Mode", getMode().id());
         tag.putBoolean("Paused", paused);
+        tag.putInt("Xp", getXp());
+        tag.putInt("XpCombat", combatXp);
         CompoundTag l = new CompoundTag();
         links.forEach((m, p) -> l.putLong(m.name(), p.asLong()));
         tag.put("Links", l);
@@ -1978,6 +2195,8 @@ public class GolemEntity extends PathfinderMob {
             }
         }
         paused = tag.getBoolean("Paused");
+        entityData.set(DATA_XP, tag.getInt("Xp"));
+        combatXp = tag.getInt("XpCombat");
         if (tag.contains("Modules")) {
             readModules(tag);
         } else {

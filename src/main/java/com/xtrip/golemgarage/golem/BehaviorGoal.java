@@ -69,6 +69,9 @@ public class BehaviorGoal extends Goal {
 
     @Override
     public void tick() {
+        if (golem.runOrder()) {
+            return;
+        }
         if (golem.getRulesVersion() != seenRulesVersion) {
             seenRulesVersion = golem.getRulesVersion();
             failStreak = 0;

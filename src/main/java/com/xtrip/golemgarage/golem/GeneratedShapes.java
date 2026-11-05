@@ -13,6 +13,7 @@ final class GeneratedShapes {
             new PartShape("scope_head", PartSlot.HEAD, 3F, 32F, 0, 0F, 0F, 0F, 0.6F, 0F, 0, 0.8F, Set.of(ShapeAbility.SPOTTER), 0x000000),
             new PartShape("lantern_head", PartSlot.HEAD, 4F, 12F, 0, 0F, 0F, 0F, 0.6F, 0F, 0, 0.8F, Set.of(ShapeAbility.LIGHT), 0x000000),
             new PartShape("visor_head", PartSlot.HEAD, 6F, 14F, 0, 0F, 0F, 0F, 0.6F, 0F, 0, 0.8F, Set.of(ShapeAbility.SEALED), 0x000000),
+            new PartShape("turret_head", PartSlot.HEAD, 4F, 18F, 0, 0F, 0F, 0F, 0.6F, 0F, 0, 0.8F, Set.of(ShapeAbility.TURRET), 0x000000),
             new PartShape("plated_chest", PartSlot.TORSO, 40F, 0F, 9, 0F, 0F, 0F, 0.6F, 0F, 0, 1.2F, Set.of(), 0x000000),
             new PartShape("cargo_barrel", PartSlot.TORSO, 26F, 0F, 27, 0F, 0F, 0F, 0.6F, 0F, 0, 1.2F, Set.of(), 0x000000),
             new PartShape("sealed_hold", PartSlot.TORSO, 32F, 0F, 18, 0F, 0F, 0F, 0.6F, 0F, 0, 1.2F, Set.of(ShapeAbility.SEALED), 0x000000),
@@ -21,6 +22,7 @@ final class GeneratedShapes {
             new PartShape("grabber_claws", PartSlot.ARMS, 7F, 0F, 0, 5F, 1.2F, 0F, 0.6F, 0F, 0, 1.0F, Set.of(ShapeAbility.COLLECT, ShapeAbility.HARVEST), 0x000000),
             new PartShape("hammer_arms", PartSlot.ARMS, 9F, 0F, 0, 12F, 0.7F, 0F, 0.6F, 0F, 0, 1.0F, Set.of(ShapeAbility.SWEEP, ShapeAbility.KNOCKBACK), 0x000000),
             new PartShape("scythe_arms", PartSlot.ARMS, 7F, 0F, 0, 9F, 1.5F, 0F, 0.6F, 0F, 0, 1.0F, Set.of(ShapeAbility.HARVEST, ShapeAbility.SWEEP), 0x000000),
+            new PartShape("shield_arms", PartSlot.ARMS, 14F, 0F, 0, 5F, 0.7F, 0F, 0.6F, 0F, 0, 1.0F, Set.of(ShapeAbility.SHIELD), 0x000000),
             new PartShape("stub_legs", PartSlot.LEGS, 12F, 0F, 0, 0F, 0F, 0.8F, 0.6F, 0.6F, 0, 1.0F, Set.of(ShapeAbility.STURDY), 0x000000),
             new PartShape("strider_legs", PartSlot.LEGS, 8F, 0F, 0, 0F, 0F, 1.1F, 1.1F, 0.1F, 0, 1.0F, Set.of(ShapeAbility.TALL_STEP), 0x000000),
             new PartShape("tread_legs", PartSlot.LEGS, 14F, 0F, 0, 0F, 0F, 0.92F, 0.6F, 1.0F, 0, 1.0F, Set.of(ShapeAbility.TREADS), 0x000000),
@@ -30,6 +32,7 @@ final class GeneratedShapes {
             new PartShape("furnace_core", PartSlot.CORE, 0F, 0F, 0, 0F, 0F, 0F, 0.6F, 0F, 200, 0.9F, Set.of(ShapeAbility.RECHARGE_FUEL), 0xFF8A2A),
             new PartShape("lightning_core", PartSlot.CORE, 0F, 0F, 0, 0F, 0F, 0F, 0.6F, 0F, 250, 0.9F, Set.of(ShapeAbility.RECHARGE_STORM), 0x9FD8FF),
             new PartShape("solar_core", PartSlot.CORE, 0F, 0F, 0, 0F, 0F, 0F, 0.6F, 0F, 120, 0.9F, Set.of(ShapeAbility.RECHARGE_SUN), 0xFFE45A),
+            new PartShape("medic_core", PartSlot.CORE, 0F, 0F, 0, 0F, 0F, 0F, 0.6F, 0F, 160, 0.9F, Set.of(ShapeAbility.RECHARGE_REDSTONE, ShapeAbility.MEDIC), 0x5AFF7A),
             new PartShape("soul_core", PartSlot.CORE, 0F, 0F, 0, 0F, 0F, 0F, 0.6F, 0F, 220, 0.9F, Set.of(ShapeAbility.RECHARGE_SOUL), 0x45E0E8));
 
     private GeneratedShapes() {

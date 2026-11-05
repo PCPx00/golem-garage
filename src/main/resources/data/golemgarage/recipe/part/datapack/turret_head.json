@@ -1,0 +1,17 @@
+{
+  "type": "golemgarage:datapack_part",
+  "shape": "turret_head",
+  "pattern": [
+    " C ",
+    "MMM",
+    "MRM"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:crossbow"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  }
+}

@@ -84,5 +84,35 @@ def raids():
     ])
 
 
+def veterans():
+    return entry("veterans", "Veterans", "minecraft:iron_sword", [
+        text("Golems learn on the job. They earn " + B("experience") + " from work (every few crops, stacks or "
+             "chores) and from fights (more for tough mobs, 15 for a rogue, 200 for a Junk Titan). Experience stays "
+             "with the golem when you pick it up or repair it.", "Experience"),
+        table([
+            ("Rookie", "0 xp."),
+            ("Seasoned", "100 xp. +5% health and damage."),
+            ("Veteran", "300 xp. +10%, and a trait."),
+            ("Elite", "700 xp. +15%."),
+            ("Legend", "1500 xp. +20%, and Unbreakable."),
+        ], "Ranks"),
+        text(B("Brawler") + ": golems that earned at least half their experience fighting hit 15% harder.\n\n"
+             + B("Tireless") + ": workers use a third less power.\n\n" + B("Unbreakable") + ": Legends' parts "
+             "wear half as fast.\n\nRanked golems show gold chevrons over their heads (red for Legends) when "
+             "you're close, and their rank, progress and traits on the Status tab and in Jade.", "Traits"),
+    ])
+
+
+def horn():
+    return entry("war_horn", "War Horn", MODID + ":war_horn", [
+        craft(MODID + ":war_horn", "Three copper ingots, redstone and leather.", "War Horn"),
+        text("Sound it and every one of your golems within 48 blocks drops what it's doing:\n\n"
+             + B("Rally") + ": run to you and fight anything that comes near (30 seconds).\n"
+             + B("Hold") + ": stand fast and fight anything within 8 blocks (1 minute).\n"
+             + B("Charge") + ": all attack whatever you're looking at (20 seconds).\n\n"
+             "Sneak + use to change the call. It needs 5 seconds to cool down.", "Calls"),
+    ])
+
+
 # Later updates add their entries here.
-EXTRA = [finds, cards, raids]
+EXTRA = [finds, cards, raids, veterans, horn]

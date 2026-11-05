@@ -65,6 +65,44 @@ public class GolemRenderer extends MobRenderer<GolemEntity, GolemModel> {
         if (com.xtrip.golemgarage.Config.SHOW_STATUS_ICONS.get()) {
             renderStatusIcon(golem, partialTick, pose, buffers);
         }
+        renderRank(golem, pose, buffers);
+    }
+
+    /** Gold chevrons over a ranked golem's head, one per rank, when you're within 10 blocks. */
+    private void renderRank(GolemEntity golem, PoseStack pose, MultiBufferSource buffers) {
+        int rank = golem.rank();
+        if (rank <= 0 || golem.isInvisible() || GuiPreview.active || golem.isRogue()
+                || entityRenderDispatcher.distanceToSqr(golem) > 100 || statusIcon(golem) >= 0) {
+            return;
+        }
+        pose.pushPose();
+        pose.translate(0, golem.getBbHeight() + 0.35, 0);
+        pose.mulPose(entityRenderDispatcher.cameraOrientation());
+        pose.scale(0.025f, -0.025f, 0.025f);
+        var m = pose.last().pose();
+        var vc = buffers.getBuffer(RenderType.textBackgroundSeeThrough());
+        for (int i = 0; i < rank; i++) {
+            float y = -i * 4f;
+            int col = rank >= 4 ? 0xFFFF5A3A : 0xFFFFC14A;
+            chevron(vc, m, y, 0xFF201810, 1.5f);
+            chevron(vc, m, y, col, 0f);
+        }
+        pose.popPose();
+    }
+
+    private static void chevron(com.mojang.blaze3d.vertex.VertexConsumer vc, org.joml.Matrix4f m, float y, int argb, float pad) {
+        int a = argb >>> 24, r = argb >> 16 & 255, g = argb >> 8 & 255, b = argb & 255;
+        int light = 0xF000F0;
+        float w = 7 + pad, t = 2 + pad;
+        // Left and right arms of a "^".
+        vc.addVertex(m, -w, y + 3 + pad, 0).setColor(r, g, b, a).setLight(light);
+        vc.addVertex(m, -w + t, y + 3 + pad, 0).setColor(r, g, b, a).setLight(light);
+        vc.addVertex(m, 0, y - 2 - pad + t, 0).setColor(r, g, b, a).setLight(light);
+        vc.addVertex(m, 0, y - 2 - pad, 0).setColor(r, g, b, a).setLight(light);
+        vc.addVertex(m, 0, y - 2 - pad, 0).setColor(r, g, b, a).setLight(light);
+        vc.addVertex(m, 0, y - 2 - pad + t, 0).setColor(r, g, b, a).setLight(light);
+        vc.addVertex(m, w - t, y + 3 + pad, 0).setColor(r, g, b, a).setLight(light);
+        vc.addVertex(m, w, y + 3 + pad, 0).setColor(r, g, b, a).setLight(light);
     }
 
     /** Which icon to float over the golem: 0 stopped, 1 stuck, 2 broken part, 3 no power, 4 low power; -1 none. */
