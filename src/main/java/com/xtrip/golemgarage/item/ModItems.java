@@ -57,6 +57,18 @@ public final class ModItems {
     /** Commands every golem nearby: rally, hold or charge. */
     public static final DeferredItem<WarHornItem> WAR_HORN = extra(ITEMS.registerItem("war_horn", WarHornItem::new,
             new Item.Properties().stacksTo(1)));
+    /** Spray cans, one per finish. */
+    public static final Map<String, DeferredItem<SprayCanItem>> SPRAY_CANS = new LinkedHashMap<>();
+
+    static {
+        for (String f : SprayCanItem.FINISHES) {
+            SPRAY_CANS.put(f, extra(ITEMS.registerItem("spray_can_" + f, p -> new SprayCanItem(f, p))));
+        }
+    }
+
+    public static final DeferredItem<BlockItem> FABRICATOR = extra(ITEMS.registerSimpleBlockItem("fabricator", ModBlocks.FABRICATOR));
+    public static final DeferredItem<GolemTabletItem> GOLEM_TABLET = extra(ITEMS.registerItem("golem_tablet", GolemTabletItem::new,
+            new Item.Properties().stacksTo(1)));
     /** The in-game guide book. */
     public static final DeferredItem<ManualItem> MANUAL = ITEMS.registerItem("manual", ManualItem::new);
 

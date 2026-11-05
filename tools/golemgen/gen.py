@@ -159,6 +159,9 @@ def paint_overlay(boxes, atlas_h, kind, level=0):
             elif kind == "paint":
                 if b["style"] == "trim" and not b["glow"]:
                     paint.fill_face(c, rect, paint.ramp("#ececec"), "trim", M.BY_ID["iron"], fname, rng)
+            elif kind.startswith("finish_"):
+                if not b["glow"] and b["style"] in ("metal", "trim", "dark") and b["shape"].split("_")[0] != "frame":
+                    paint.finish_face(c, kind[7:], fname, rect, rng)
             elif kind == "vines":
                 if not b["glow"] and b["style"] in ("metal", "trim") and b["shape"].split("_")[0] != "frame":
                     paint.vine_face(c, fname, rect, rng)
@@ -175,6 +178,8 @@ def write_textures(boxes, atlas_h):
         paint_overlay(boxes, atlas_h, "cracks", lvl).save(os.path.join(out, "cracks_%d.png" % lvl))
     paint_overlay(boxes, atlas_h, "vines").save(os.path.join(out, "vines.png"))
     paint_overlay(boxes, atlas_h, "paint").save(os.path.join(out, "paint.png"))
+    for fin in paint.FINISHES:
+        paint_overlay(boxes, atlas_h, "finish_" + fin).save(os.path.join(out, "finish_%s.png" % fin))
 
 
 # =============================================================== Java

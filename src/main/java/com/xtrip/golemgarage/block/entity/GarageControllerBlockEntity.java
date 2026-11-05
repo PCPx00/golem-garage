@@ -63,6 +63,7 @@ public class GarageControllerBlockEntity extends BlockEntity {
 
     /** Whether the room around the controller is a complete Garage (checked every 2 seconds, synced). */
     private boolean formed;
+    private int tier = 1;
     private BlockPos bayMin;
     private BlockPos bayMax;
     private final List<BlockPos> litEmitters = new ArrayList<>();
@@ -101,6 +102,10 @@ public class GarageControllerBlockEntity extends BlockEntity {
 
     public boolean isFormed() {
         return formed;
+    }
+
+    public int tier() {
+        return tier;
     }
 
     @Nullable
@@ -301,7 +306,8 @@ public class GarageControllerBlockEntity extends BlockEntity {
         } else {
             removeLights(level);
         }
-        boolean changed = nowFormed != formed || !java.util.Objects.equals(min, bayMin) || !java.util.Objects.equals(max, bayMax)
+        int newTier = bay == null ? 1 : bay.tier(level);
+        boolean changed = newTier != tier || nowFormed != formed || !java.util.Objects.equals(min, bayMin) || !java.util.Objects.equals(max, bayMax)
                 || !litEmitters.equals(lit);
         if (!changed) {
             return;
@@ -325,6 +331,7 @@ public class GarageControllerBlockEntity extends BlockEntity {
             level.playSound(null, worldPosition, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 0.6f, 1.3f);
         }
         formed = nowFormed;
+        tier = newTier;
         bayMin = min;
         bayMax = max;
         litEmitters.clear();
@@ -652,6 +659,10 @@ public class GarageControllerBlockEntity extends BlockEntity {
         if (progress % 5 == 0 && bay.hasSteelEmitter(level)) {
             progress++;
         }
+        // Workshops work a quarter faster, Industrial Bays half again as fast.
+        if (tier >= 2 && progress % (tier >= 3 ? 2 : 4) == 0) {
+            progress++;
+        }
         if (progress == LIFT_TICKS) {
             level.playSound(null, worldPosition, com.xtrip.golemgarage.ModSounds.GARAGE_START.get(), SoundSource.BLOCKS, 1f, 1f);
         }
@@ -769,6 +780,10 @@ public class GarageControllerBlockEntity extends BlockEntity {
         } else {
             msg = Component.translatable(bay.hasSteelEmitter(level) ? "golemgarage.msg.garage_ok_steel" : "golemgarage.msg.garage_ok",
                     bay.emitters().size()).withStyle(ChatFormatting.GREEN);
+            msg.append(" ").append(Component.translatable("golemgarage.tier." + bay.tier(level)).withStyle(ChatFormatting.GOLD));
+            if (bay.tier(level) < 3) {
+                msg.append(" ").append(Component.translatable("golemgarage.tier.next." + bay.tier(level)).withStyle(ChatFormatting.GRAY));
+            }
         }
         if (isBusy()) {
             int pct = Math.round(100f * progress / Math.max(1, required));
@@ -831,6 +846,7 @@ public class GarageControllerBlockEntity extends BlockEntity {
         }
         tag.put("Emitters", list);
         tag.putBoolean("Formed", formed);
+        tag.putInt("Tier", tier);
         if (bayMin != null && bayMax != null) {
             tag.putLong("BayMin", bayMin.asLong());
             tag.putLong("BayMax", bayMax.asLong());
@@ -867,6 +883,7 @@ public class GarageControllerBlockEntity extends BlockEntity {
             formedAt = level.getGameTime();
         }
         formed = nowFormed;
+        tier = Math.max(1, tag.getInt("Tier"));
         bayMin = tag.contains("BayMin") ? BlockPos.of(tag.getLong("BayMin")) : null;
         bayMax = tag.contains("BayMax") ? BlockPos.of(tag.getLong("BayMax")) : null;
         litEmitters.clear();

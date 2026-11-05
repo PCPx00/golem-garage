@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:spyglass"
+      "id": "golemgarage:golem_tablet"
     },
     "title": {
       "translate": "advancement.golemgarage.tablet"

@@ -18,7 +18,7 @@ public final class GolemNetwork {
 
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("4");
+        PayloadRegistrar registrar = event.registrar("5");
         registrar.playToClient(MaterialsPayload.TYPE, MaterialsPayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> {
                     // A singleplayer client shares the server's list already; only remote clients need this.
@@ -31,6 +31,11 @@ public final class GolemNetwork {
         registrar.playToServer(SetGolemRulesPayload.TYPE, SetGolemRulesPayload.STREAM_CODEC, GolemNetwork::handleRules);
         registrar.playToServer(GolemActionPayload.TYPE, GolemActionPayload.STREAM_CODEC, GolemNetwork::handleAction);
         registrar.playToServer(PickUpPayload.TYPE, PickUpPayload.STREAM_CODEC, GolemNetwork::handlePickUp);
+        registrar.playToServer(com.xtrip.golemgarage.tablet.TabletPayloads.Action.TYPE,
+                com.xtrip.golemgarage.tablet.TabletPayloads.Action.STREAM_CODEC, com.xtrip.golemgarage.tablet.TabletServer::handle);
+        registrar.playToClient(com.xtrip.golemgarage.tablet.TabletPayloads.Data.TYPE,
+                com.xtrip.golemgarage.tablet.TabletPayloads.Data.STREAM_CODEC, (payload, context) ->
+                        context.enqueueWork(() -> com.xtrip.golemgarage.client.ClientHooks.tabletData(payload)));
     }
 
     /** The golem the player may edit: theirs (or unowned), and within reach. */

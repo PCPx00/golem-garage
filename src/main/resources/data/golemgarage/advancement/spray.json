@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "minecraft:brush"
+      "id": "golemgarage:spray_can_flames"
     },
     "title": {
       "translate": "advancement.golemgarage.spray"

@@ -156,6 +156,23 @@ ICONS = {
         ".oOYOo..........",
         "..ooo...........",
         "................"],
+    "golem_tablet": [
+        "................",
+        "..kkkkkkkkkkkk..",
+        ".kgGGGGGGGGGGgk.",
+        ".kGttttttttttGk.",
+        ".kGtTTTTTTcTtGk.",
+        ".kGtTcTTTTTTtGk.",
+        ".kGtTTTTCTTTtGk.",
+        ".kGtTTTCWCTTtGk.",
+        ".kGtTTTTCTTTtGk.",
+        ".kGtTTcTTTTTtGk.",
+        ".kGtTTTTTTcTtGk.",
+        ".kGttttttttttGk.",
+        ".kGGGGGGsGGGGGk.",
+        ".kgGGGGGGGGGGgk.",
+        "..kkkkkkkkkkkk..",
+        "................"],
 }
 
 # id -> English name
@@ -168,9 +185,57 @@ NAMES = {
     "rig_plating": "Rig Plating",
     "rule_card": "Rule Card",
     "war_horn": "War Horn",
+    "golem_tablet": "Golem Tablet",
+    "fabricator": "Parts Fabricator",
 }
 
+SPRAY = {
+    # finish: (name, cap colour, band colours, dyes)
+    "flames": ("Flames Spray Can", (214, 60, 26), [(250, 220, 110), (240, 120, 30), (214, 60, 26)],
+               ["minecraft:red_dye", "minecraft:orange_dye", "minecraft:yellow_dye"]),
+    "hazard": ("Hazard Spray Can", (226, 180, 48), [(226, 180, 48), (30, 28, 30), (226, 180, 48)],
+               ["minecraft:yellow_dye", "minecraft:black_dye"]),
+    "rust": ("Rust Spray Can", (150, 76, 36), [(176, 104, 52), (122, 62, 28), (98, 48, 24)],
+             ["minecraft:orange_dye", "minecraft:brown_dye"]),
+    "camo": ("Camo Spray Can", (84, 92, 52), [(84, 92, 52), (116, 104, 68), (40, 44, 30)],
+             ["minecraft:green_dye", "minecraft:brown_dye"]),
+    "chrome": ("Chrome Spray Can", (220, 224, 230), [(245, 245, 250), (176, 180, 186), (220, 224, 230)],
+               ["minecraft:quartz", "minecraft:white_dye"]),
+    "tiger": ("Tiger Spray Can", (226, 128, 36), [(226, 128, 36), (24, 20, 20), (226, 128, 36)],
+              ["minecraft:orange_dye", "minecraft:black_dye"]),
+}
+
+
+def spray_icon(cap, bands):
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = img.load()
+    for y in range(4, 15):
+        for x in range(5, 11):
+            edge = x in (5, 10) or y == 14
+            if edge:
+                px[x, y] = (40, 40, 44, 255)
+            else:
+                band = bands[min(2, (y - 5) // 3)]
+                shade = 1.15 if x == 6 else 0.85 if x == 9 else 1.0
+                px[x, y] = tuple(min(255, int(c * shade)) for c in band) + (255,)
+    for x in range(6, 10):
+        px[x, 3] = (150, 150, 156, 255)
+        px[x, 4] = (110, 110, 116, 255)
+    for x in range(7, 9):
+        px[x, 2] = cap + (255,)
+        px[x, 1] = cap + (255,)
+    px[9, 1] = (60, 60, 64, 255)
+    return img
+
 RECIPES = {
+    "golem_tablet": {"type": "minecraft:crafting_shaped", "category": "tools", "pattern": ["III", "IGI", "IRI"],
+                     "key": {"I": {"tag": "c:ingots/iron"}, "G": {"item": "minecraft:glass_pane"},
+                             "R": {"item": "minecraft:redstone_block"}},
+                     "result": {"id": "golemgarage:golem_tablet", "count": 1}},
+    "fabricator": {"type": "minecraft:crafting_shaped", "category": "misc", "pattern": ["SPS", "SCS", "SRS"],
+                   "key": {"S": {"tag": "c:ingots/steel"}, "P": {"item": "minecraft:piston"},
+                           "C": {"item": "minecraft:crafting_table"}, "R": {"item": "minecraft:redstone"}},
+                   "result": {"id": "golemgarage:fabricator", "count": 1}},
     "war_horn": {"type": "minecraft:crafting_shapeless", "category": "tools",
                  "ingredients": [{"tag": "c:ingots/copper"}, {"tag": "c:ingots/copper"}, {"tag": "c:ingots/copper"},
                                  {"item": "minecraft:redstone"}, {"item": "minecraft:leather"}],
@@ -228,6 +293,16 @@ def generate(assets, data, lang):
         _json(os.path.join(assets, "models/item", iid + ".json"),
               {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (MODID, iid)}})
     for iid, name in NAMES.items():
+        lang[("block" if iid == "fabricator" else "item") + ".%s.%s" % (MODID, iid)] = name
+    for fin, (name, cap, bands, dyes) in SPRAY.items():
+        iid = "spray_can_" + fin
+        spray_icon(cap, bands).save(os.path.join(assets, "textures/item", iid + ".png"))
+        _json(os.path.join(assets, "models/item", iid + ".json"),
+              {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (MODID, iid)}})
         lang["item.%s.%s" % (MODID, iid)] = name
+        _json(os.path.join(data, MODID, "recipe", iid + ".json"),
+              {"type": "minecraft:crafting_shapeless", "category": "misc",
+               "ingredients": [{"tag": "c:ingots/iron"}, {"item": "minecraft:gunpowder"}] + [{"item": d} for d in dyes],
+               "result": {"id": "%s:%s" % (MODID, iid), "count": 1}})
     for rid, recipe in RECIPES.items():
         _json(os.path.join(data, MODID, "recipe", rid + ".json"), recipe)

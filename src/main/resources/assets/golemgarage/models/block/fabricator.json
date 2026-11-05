@@ -1,0 +1,67 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "golemgarage:block/fabricator_side",
+    "side": "golemgarage:block/fabricator_side",
+    "top": "golemgarage:block/fabricator_top",
+    "bottom": "golemgarage:block/emitter_side"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bottom"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side",
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#side",
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

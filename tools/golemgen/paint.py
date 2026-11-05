@@ -477,3 +477,61 @@ def glow_face(c, rect, deco_name):
             edge = xx in (0, w - 1) or yy in (0, h - 1)
             v = 205 if edge and w > 2 and h > 2 else 255
             c.set(x0 + xx, y0 + yy, (v, v, v), 255)
+
+
+# ---------------------------------------------------------------- spray-can finishes
+FINISHES = ["flames", "hazard", "rust", "camo", "chrome", "tiger"]
+
+
+def finish_face(c, kind, fname, rect, rng):
+    """Paints one face of a spray-can finish overlay. Side faces get the shaped designs; tops and bottoms a wash."""
+    x0, y0, x1, y1 = rect
+    w, h = x1 - x0, y1 - y0
+    if w < 1 or h < 1:
+        return
+    side = fname in ("front", "back", "left", "right")
+    if kind == "flames":
+        if not side or h < 4:
+            return
+        for x in range(x0, x1):
+            # Tongues of flame licking up from the bottom edge.
+            tongue = int(h * (0.35 + 0.45 * abs(((x - x0) * 7 % 11) / 11.0 - 0.5) * 2) * rng.uniform(0.7, 1.0))
+            for k in range(tongue):
+                y = y1 - 1 - k
+                f = k / max(1, tongue)
+                col = (250, 236, 120) if f > 0.75 else (248, 168, 40) if f > 0.4 else (214, 60, 26)
+                c.set(x, y, col, 255)
+    elif kind == "hazard":
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                yellow = ((x + y) // 2) % 2 == 0
+                c.set(x, y, (232, 186, 48) if yellow else (30, 28, 30), 255)
+    elif kind == "rust":
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                n = rng.random()
+                if n < 0.55:
+                    c.set(x, y, rng.choice([(122, 62, 28), (150, 80, 36), (98, 48, 24), (176, 104, 52)]), 255)
+        if side:
+            for _ in range(max(1, w // 4)):
+                x = rng.randint(x0, x1 - 1)
+                for y in range(y0, min(y1, y0 + rng.randint(2, max(2, h)))):
+                    c.set(x, y, (84, 40, 20), 255)
+    elif kind == "camo":
+        cols = [(84, 92, 52), (62, 70, 40), (116, 104, 68), (40, 44, 30)]
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                k = int((((x * 0.37 + y * 0.21) % 3) + ((x * 0.11 - y * 0.43) % 2)) * 1.4 + rng.random() * 0.6) % 4
+                c.set(x, y, cols[k], 255)
+    elif kind == "chrome":
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                t = (x - x0 + (y - y0) * 0.6) / max(1.0, w + h * 0.6)
+                band = abs(((t * 3) % 1) - 0.5) * 2
+                v = int(150 + 100 * band)
+                c.set(x, y, (v, v + 4, min(255, v + 12)), 255)
+    elif kind == "tiger":
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                stripe = ((x - x0) + (y - y0) // 2 + rng.randint(0, 1)) % 5 < 2
+                c.set(x, y, (24, 20, 20) if stripe else (226, 128, 36), 255)

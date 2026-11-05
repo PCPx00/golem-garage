@@ -114,5 +114,28 @@ def horn():
     ])
 
 
+def workshop():
+    return entry("workshop", "Workshop Upgrades", MODID + ":fabricator", [
+        table([
+            ("Scrap Shack", "Any finished Garage. Normal repair speed."),
+            ("Workshop", "5 x 5 inside and 3 emitters. Repairs a quarter faster."),
+            ("Industrial Bay", "7 x 7 inside, 4 emitters with at least 2 steel. Repairs half again as fast."),
+        ], "Garage Tiers"),
+        text("The tier shows on the neon sign, and right-clicking the controller says what the next tier needs. "
+             "Steel Emitters still add their own 20% on top.", "Tiers"),
+        craft(MODID + ":fabricator", "Steel, a piston, a crafting table and redstone.", "Parts Fabricator"),
+        text(B("Sneak + right-click") + " to choose the part (it hovers as a hologram). Then feed it " + B("one material")
+             + ": 6 for heads and cores, 7 for legs, 8 for arms, 9 for torsos. No extra ingredients needed. Its robot "
+             "arm welds the part in 5 seconds.\n\nFeed it by hand, with a hopper on top or the side, or with a golem's "
+             "\"deposit\" job. Take the part with a right-click or a hopper underneath.", "Using It"),
+        craft(MODID + ":spray_can_flames", "Iron, gunpowder and dyes. Six finishes: flames, hazard, rust, camo, "
+              "chrome and tiger stripes. Each can does 16 golems; a water bucket washes it off.", "Spray Cans"),
+        craft(MODID + ":golem_tablet", "Iron, a glass pane and a redstone block.", "Golem Tablet"),
+        text("A " + B("radar map") + " of all your golems around you and a list with their health, rank and what "
+             "they're doing. Select one to " + B("Recall") + " it, " + B("Stop") + " or " + B("Go") + " (resume), or "
+             + B("Watch") + " through its eyes if it's nearby. Sneak to stop watching.", "Using the Tablet"),
+    ])
+
+
 # Later updates add their entries here.
-EXTRA = [finds, cards, raids, veterans, horn]
+EXTRA = [finds, cards, raids, veterans, horn, workshop]

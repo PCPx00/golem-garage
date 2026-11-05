@@ -199,6 +199,10 @@ public class GolemRenderer extends MobRenderer<GolemEntity, GolemModel> {
                 model.renderToBuffer(pose, buffers.getBuffer(RenderType.entityCutoutNoCull(PAINT)), light, overlay,
                         0xFF000000 | dye);
             }
+            if (!golem.getFinish().isEmpty()) {
+                model.renderToBuffer(pose, buffers.getBuffer(RenderType.entityCutoutNoCull(tex("finish_" + golem.getFinish()))),
+                        light, overlay, 0xFFFFFFFF);
+            }
             if (golem.hasVines()) {
                 model.renderToBuffer(pose, buffers.getBuffer(RenderType.entityCutoutNoCull(VINES)), light, overlay, 0xFFFFFFFF);
             }

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SPS",
+    "SCS",
+    "SRS"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "C": {
+      "item": "minecraft:crafting_table"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:fabricator",
+    "count": 1
+  }
+}

@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.18.0, by xTrip",
+ "subtitle": "Version 0.19.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -10895,6 +10895,68 @@
        "text": "It needs 5 seconds to cool down."
       }
      ]
+    },
+    {
+     "id": "workshop",
+     "title": "Workshop Upgrades",
+     "icon": "golemgarage:fabricator",
+     "pages": [
+      {
+       "type": "table",
+       "rows": [
+        [
+         "Scrap Shack",
+         "Any finished Garage. Normal repair speed."
+        ],
+        [
+         "Workshop",
+         "5 x 5 inside and 3 emitters. Repairs a quarter faster."
+        ],
+        [
+         "Industrial Bay",
+         "7 x 7 inside, 4 emitters with at least 2 steel. Repairs half again as fast."
+        ]
+       ],
+       "title": "Garage Tiers"
+      },
+      {
+       "type": "text",
+       "text": "The tier shows on the neon sign, and right-clicking the controller says what the next tier needs. Steel Emitters still add their own 20% on top.",
+       "title": "Tiers"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:fabricator",
+       "text": "Steel, a piston, a crafting table and redstone.",
+       "title": "Parts Fabricator"
+      },
+      {
+       "type": "text",
+       "text": "§lSneak + right-click§r to choose the part (it hovers as a hologram). Then feed it §lone material§r: 6 for heads and cores, 7 for legs, 8 for arms, 9 for torsos. No extra ingredients needed. Its robot arm welds the part in 5 seconds.\n\nFeed it by hand, with a hopper on top or the side, or with a golem's \"deposit\" job.",
+       "title": "Using It"
+      },
+      {
+       "type": "text",
+       "text": "Take the part with a right-click or a hopper underneath."
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:spray_can_flames",
+       "text": "Iron, gunpowder and dyes. Six finishes: flames, hazard, rust, camo, chrome and tiger stripes. Each can does 16 golems; a water bucket washes it off.",
+       "title": "Spray Cans"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:golem_tablet",
+       "text": "Iron, a glass pane and a redstone block.",
+       "title": "Golem Tablet"
+      },
+      {
+       "type": "text",
+       "text": "A §lradar map§r of all your golems around you and a list with their health, rank and what they're doing. Select one to §lRecall§r it, §lStop§r or §lGo§r (resume), or §lWatch§r through its eyes if it's nearby. Sneak to stop watching.",
+       "title": "Using the Tablet"
+      }
+     ]
     }
    ]
   },
@@ -11550,6 +11612,9 @@
   "golemgarage:tyre": "rig",
   "golemgarage:scrap": "rig",
   "golemgarage:rule_card": "rule_cards",
+  "golemgarage:war_horn": "war_horn",
+  "golemgarage:fabricator": "workshop",
+  "golemgarage:golem_tablet": "workshop",
   "minecraft:honeycomb": "copper_care",
   "minecraft:vine": "vines",
   "minecraft:redstone_block": "power_basics",

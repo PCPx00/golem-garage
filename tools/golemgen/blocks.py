@@ -257,6 +257,31 @@ def window():
     return img
 
 
+def fabricator_side():
+    c, pal = metal_panel("#4a4f57", 61, rivets=True)
+    for x in range(16):
+        for y in (12, 13):
+            c.set(x, y, (232, 186, 48) if ((x + y) // 2) % 2 == 0 else (34, 32, 36))
+    for x in range(3, 13):
+        c.set(x, 3, pal[1]); c.set(x, 9, pal[5])
+    for y in range(3, 10):
+        c.set(3, y, pal[1]); c.set(12, y, pal[5])
+    for (x, y) in ((5, 5), (7, 5), (9, 5), (5, 7), (7, 7), (9, 7)):
+        c.set(x, y, (90, 220, 240) if (x + y) % 4 == 0 else (40, 60, 70))
+    return c.img
+
+
+def fabricator_top():
+    c, pal = metal_panel("#6a7079", 62, rivets=True)
+    for i in range(2, 14):
+        c.set(i, 2, pal[1]); c.set(i, 13, pal[5]); c.set(2, i, pal[1]); c.set(13, i, pal[5])
+    for y in range(4, 12):
+        for x in range(4, 12):
+            if (x + y) % 3 == 0:
+                c.set(x, y, pal[2])
+    return c.img
+
+
 def generate(assets):
     tex = os.path.join(assets, "textures/block")
     _save(controller(), os.path.join(tex, "garage_controller.png"))
@@ -273,6 +298,8 @@ def generate(assets):
     _save(door_texture(), os.path.join(assets, "textures/entity/garage_door.png"))
     _save(door_icon(), os.path.join(assets, "textures/item/garage_door.png"))
     _save(window(), os.path.join(tex, "garage_window.png"))
+    _save(fabricator_side(), os.path.join(tex, "fabricator_side.png"))
+    _save(fabricator_top(), os.path.join(tex, "fabricator_top.png"))
     for old in ("laser_emitter.png", "steel_emitter.png"):
         p = os.path.join(tex, old)
         if os.path.exists(p):
@@ -299,10 +326,20 @@ def generate(assets):
     _json(os.path.join(models, "block/garage_window.json"),
           {"parent": "minecraft:block/cube_all", "render_type": "minecraft:translucent",
            "textures": {"all": "golemgarage:block/garage_window"}})
-    for b in ("garage_controller", "laser_emitter", "steel_emitter", "signal_plate", "golem_dock", "garage_window"):
+    _json(os.path.join(models, "block/fabricator.json"), {
+        "parent": "minecraft:block/block",
+        "textures": {"particle": "golemgarage:block/fabricator_side", "side": "golemgarage:block/fabricator_side",
+                     "top": "golemgarage:block/fabricator_top", "bottom": "golemgarage:block/emitter_side"},
+        "elements": [{"from": [0, 0, 0], "to": [16, 14, 16], "faces": {
+            "down": {"texture": "#bottom"}, "up": {"texture": "#top"},
+            "north": {"texture": "#side", "uv": [0, 2, 16, 16]}, "south": {"texture": "#side", "uv": [0, 2, 16, 16]},
+            "east": {"texture": "#side", "uv": [0, 2, 16, 16]}, "west": {"texture": "#side", "uv": [0, 2, 16, 16]}}}]})
+    for b in ("garage_controller", "laser_emitter", "steel_emitter", "signal_plate", "golem_dock", "garage_window",
+              "fabricator"):
         _json(os.path.join(models, "item/%s.json" % b), {"parent": "golemgarage:block/%s" % b})
 
     bs = os.path.join(assets, "blockstates")
+    _json(os.path.join(bs, "fabricator.json"), {"variants": {"": {"model": "golemgarage:block/fabricator"}}})
     for b in ("laser_emitter", "steel_emitter"):
         _json(os.path.join(bs, b + ".json"), {"variants": {"": {"model": "golemgarage:block/" + b}}})
     # The controller's screen faces into the room it was placed toward.

@@ -75,9 +75,9 @@ TREE = [
      "Have one of your golems reach Legend rank", ev("legend"), False),
     ("war_horn", "golem_kill", "war_horn", "task", "Sound the Horn",
      "Rally your golems with a War Horn", ev("war_horn"), False),
-    ("tablet", "first_golem", "minecraft:spyglass", "task", "Eye in the Sky",
+    ("tablet", "first_golem", "golem_tablet", "task", "Eye in the Sky",
      "Watch one of your golems through a Golem Tablet", ev("tablet_camera"), False),
-    ("spray", "paint", "minecraft:brush", "task", "Custom Job",
+    ("spray", "paint", "spray_can_flames", "task", "Custom Job",
      "Give a golem a custom finish with a Spray Can", ev("spray"), False),
 ]
 

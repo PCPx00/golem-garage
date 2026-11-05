@@ -54,6 +54,12 @@ public final class ModBlocks {
                     .strength(2.0f, 6.0f).sound(SoundType.METAL).noOcclusion()
                     .lightLevel(s -> s.getValue(GolemDockBlock.OCCUPIED) ? 9 : 3)));
 
+    /** Builds parts from raw materials with an animated robot arm. */
+    public static final DeferredBlock<FabricatorBlock> FABRICATOR = BLOCKS.register(
+            "fabricator",
+            () -> new FabricatorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(3.5f, 6.0f).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops()));
+
     private ModBlocks() {
     }
 }

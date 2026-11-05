@@ -107,6 +107,9 @@ public class GolemEntity extends PathfinderMob {
     /** Veterancy experience, synced for the panel, Jade and the rank badge. */
     private static final EntityDataAccessor<Integer> DATA_XP =
             SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.INT);
+    /** Spray-can finish ("" for none): flames, hazard, rust, camo, chrome or tiger. */
+    private static final EntityDataAccessor<String> DATA_FINISH =
+            SynchedEntityData.defineId(GolemEntity.class, EntityDataSerializers.STRING);
     private boolean paused;
     @Nullable
     private BlockPos dockedAt;
@@ -178,6 +181,7 @@ public class GolemEntity extends PathfinderMob {
         builder.define(DATA_GROUP, 0);
         builder.define(DATA_MODE, 0);
         builder.define(DATA_XP, 0);
+        builder.define(DATA_FINISH, "");
         builder.define(DATA_STATUS, "");
         builder.define(DATA_FLAGS, (byte) 0);
     }
@@ -297,6 +301,10 @@ public class GolemEntity extends PathfinderMob {
             spawnAtLocation(new ItemStack(Items.DIAMOND, 2 + random.nextInt(3)));
             level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, getX(), getY() + 1, getZ(), 1, 0, 0, 0, 0);
         }
+    }
+
+    public String getFinish() {
+        return entityData.get(DATA_FINISH);
     }
 
     // =================================================================== veterancy
@@ -1774,8 +1782,21 @@ public class GolemEntity extends PathfinderMob {
             }
             return InteractionResult.SUCCESS;
         }
-        if (held.is(Items.WATER_BUCKET) && getPaint() >= 0) {
+        if (held.getItem() instanceof com.xtrip.golemgarage.item.SprayCanItem can) {
+            if (!getFinish().equals(can.finish())) {
+                entityData.set(DATA_FINISH, can.finish());
+                held.hurtAndBreak(1, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(player.getUsedItemHand()));
+                com.xtrip.golemgarage.advancement.ModTriggers.award(player, "spray");
+                playSound(SoundEvents.FIRE_EXTINGUISH, 0.5f, 1.8f);
+                if (level() instanceof ServerLevel sl) {
+                    sl.sendParticles(ParticleTypes.CLOUD, getX(), getY() + 1.4, getZ(), 12, 0.6, 0.8, 0.6, 0.02);
+                }
+            }
+            return InteractionResult.SUCCESS;
+        }
+        if (held.is(Items.WATER_BUCKET) && (getPaint() >= 0 || !getFinish().isEmpty())) {
             setPaint(-1);
+            entityData.set(DATA_FINISH, "");
             playSound(SoundEvents.BUCKET_EMPTY, 0.8f, 1.3f);
             return InteractionResult.SUCCESS;
         }
@@ -2154,6 +2175,7 @@ public class GolemEntity extends PathfinderMob {
         tag.putString("Mode", getMode().id());
         tag.putBoolean("Paused", paused);
         tag.putInt("Xp", getXp());
+        tag.putString("Finish", getFinish());
         tag.putInt("XpCombat", combatXp);
         CompoundTag l = new CompoundTag();
         links.forEach((m, p) -> l.putLong(m.name(), p.asLong()));
@@ -2196,6 +2218,7 @@ public class GolemEntity extends PathfinderMob {
         }
         paused = tag.getBoolean("Paused");
         entityData.set(DATA_XP, tag.getInt("Xp"));
+        entityData.set(DATA_FINISH, tag.getString("Finish"));
         combatXp = tag.getInt("XpCombat");
         if (tag.contains("Modules")) {
             readModules(tag);

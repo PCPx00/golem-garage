@@ -130,6 +130,28 @@ public record GarageBay(BlockPos min, BlockPos max, List<BlockPos> emitters) {
         return false;
     }
 
+    /**
+     * The Garage's tier: 1 Scrap Shack, 2 Workshop (5 x 5 inside and 3 emitters), 3 Industrial Bay (7 x 7 inside,
+     * 4 emitters, at least 2 of them steel). Higher tiers repair faster.
+     */
+    public int tier(Level level) {
+        int w = max.getX() - min.getX() + 1;
+        int d = max.getZ() - min.getZ() + 1;
+        int steel = 0;
+        for (BlockPos e : emitters) {
+            if (level.getBlockState(e).is(ModBlocks.STEEL_EMITTER.get())) {
+                steel++;
+            }
+        }
+        if (w >= 7 && d >= 7 && emitters.size() >= 4 && steel >= 2) {
+            return 3;
+        }
+        if (w >= 5 && d >= 5 && emitters.size() >= 3) {
+            return 2;
+        }
+        return 1;
+    }
+
     /** Center of the bay floor, used as the repair target for beams. */
     public BlockPos center() {
         return new BlockPos((min.getX() + max.getX()) / 2, min.getY(), (min.getZ() + max.getZ()) / 2);

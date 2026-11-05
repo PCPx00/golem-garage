@@ -306,7 +306,7 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
         text(pose, buffers, Component.translatable("golemgarage.sign.title"), 0f, 0.1f, 2.5f, 0.06f,
                 flickerOn ? 0xFF8A2A : 0x4A2410, flickerOn ? 0x5A1400 : 0x1A0A04);
         Component status = busy ? Component.translatable("golemgarage.sign.repairing", pct)
-                : Component.translatable("golemgarage.sign.open");
+                : Component.translatable("golemgarage.sign.open_tier", Component.translatable("golemgarage.tier." + garage.tier()));
         boolean blink = !busy || ((int) (time / 10)) % 2 == 0;
         text(pose, buffers, status, 0f, -0.25f, 1.2f, 0.06f,
                 busy ? (blink ? 0xFFC04A : 0xA0701C) : 0x7CFF8A, busy ? 0x6A3A00 : 0x0E5A1A);

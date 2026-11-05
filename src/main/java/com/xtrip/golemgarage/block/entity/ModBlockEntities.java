@@ -21,6 +21,11 @@ public final class ModBlockEntities {
                     () -> BlockEntityType.Builder.of(GarageDoorBlockEntity::new, ModBlocks.GARAGE_DOOR.get())
                             .build(null));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FabricatorBlockEntity>> FABRICATOR =
+            BLOCK_ENTITIES.register("fabricator",
+                    () -> BlockEntityType.Builder.of(FabricatorBlockEntity::new, ModBlocks.FABRICATOR.get())
+                            .build(null));
+
     private ModBlockEntities() {
     }
 }

@@ -9,6 +9,14 @@ public final class ClientHooks {
         Minecraft.getInstance().setScreen(new GolemScreen(golem));
     }
 
+    public static void openTablet() {
+        Minecraft.getInstance().setScreen(new TabletScreen());
+    }
+
+    public static void tabletData(com.xtrip.golemgarage.tablet.TabletPayloads.Data data) {
+        TabletScreen.receive(data);
+    }
+
     public static void openManual() {
         Minecraft.getInstance().setScreen(new com.xtrip.golemgarage.client.manual.ManualScreen());
     }

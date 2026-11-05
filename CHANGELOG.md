@@ -2,6 +2,21 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.19.0
+
+### Added
+- **Garage tiers:** Scrap Shack, **Workshop** (5 x 5 inside and 3 emitters, repairs a quarter faster) and
+  **Industrial Bay** (7 x 7 inside, 4 emitters with 2 steel, repairs half again as fast). The neon sign shows the
+  tier, and the controller tells you what the next tier needs.
+- **Parts Fabricator:** a workbench with an animated robot arm that welds golem parts from one material. Pick the
+  part with sneak + right-click (it hovers as a hologram), feed it by hand, hopper or golem, and take the part out
+  by hand or with a hopper underneath.
+- **Spray Cans:** six custom finishes for golems: flames, hazard stripes, rust, camo, chrome and tiger stripes. A
+  water bucket washes them off.
+- **Golem Tablet:** a radar map and list of all your golems with health, rank and status. Recall, stop or restart
+  any of them, or watch through a nearby golem's eyes (sneak to stop).
+- Advancements: Custom Job and Eye in the Sky.
+
 ## 0.18.0
 
 ### Added
