@@ -31,8 +31,9 @@ public class RigRenderer extends EntityRenderer<RigEntity> {
         float time = rig.tickCount + partial;
         float wheels = Mth.lerp(partial, rig.wheelAngleO, rig.wheelAngle);
         CarModel.render(Minecraft.getInstance().getBlockRenderer(), pose, buffers, light, time,
-                new CarModel.Options(rig.has(RigEntity.RAM), rig.has(RigEntity.TURRET), rig.has(RigEntity.PLATING),
-                        wheels, rig.turretYaw(), rig.engineOn(), false));
+                new CarModel.Options(rig.variant(), rig.has(RigEntity.RAM), rig.has(RigEntity.TURRET),
+                        rig.has(RigEntity.PLATING), wheels, rig.turretYaw(), rig.engineOn(), false, rig.boosting(),
+                        rig.flash(partial)));
         pose.popPose();
         super.render(rig, yaw, partial, pose, buffers, light);
     }

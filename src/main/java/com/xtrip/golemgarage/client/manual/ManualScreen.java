@@ -363,8 +363,22 @@ public class ManualScreen extends Screen {
         ctx.g.renderItem(icon, 0, 0);
         pose.popPose();
         int tx = x + Math.round(16 * s) + 4;
-        String text = font.plainSubstrByWidth(label, x + PAGE_W - tx);
-        ctx.g.drawString(font, text, tx, y + (h - 8) / 2, hover ? ManualPage.TITLE : ManualPage.TEXT, false);
+        int room = x + PAGE_W - tx;
+        int w = font.width(label);
+        int col = hover ? ManualPage.TITLE : ManualPage.TEXT;
+        if (w <= room) {
+            ctx.g.drawString(font, label, tx, y + (h - 8) / 2, col, false);
+        } else if (w * 0.8f <= room) {
+            // A little long: squeeze it rather than cut it off.
+            float k = room / (float) w;
+            pose.pushPose();
+            pose.translate(tx, y + (h - 8 * k) / 2f, 0);
+            pose.scale(k, k, 1f);
+            ctx.g.drawString(font, label, 0, 0, col, false);
+            pose.popPose();
+        } else {
+            ctx.g.drawString(font, font.plainSubstrByWidth(label, room - font.width("...")) + "...", tx, y + (h - 8) / 2, col, false);
+        }
         hots.add(new Hot(x - 2, y, PAGE_W + 3, h, null, entryId, categoryId));
     }
 

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "golemgarage:block/wind_turbine"
+    },
+    "facing=east": {
+      "model": "golemgarage:block/wind_turbine",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "golemgarage:block/wind_turbine",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "golemgarage:block/wind_turbine",
+      "y": 270
+    }
+  }
+}

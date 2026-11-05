@@ -20,6 +20,7 @@ public class GolemGarage {
 
     public GolemGarage(IEventBus modEventBus, ModContainer modContainer) {
         ModDataComponents.COMPONENTS.register(modEventBus);
+        com.xtrip.golemgarage.power.PowerBlocks.init();
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.TABS.register(modEventBus);
@@ -32,6 +33,7 @@ public class GolemGarage {
         com.xtrip.golemgarage.advancement.ModTriggers.TRIGGERS.register(modEventBus);
         com.xtrip.golemgarage.data.ModRecipes.SERIALIZERS.register(modEventBus);
         modEventBus.addListener(ModEntities::onAttributes);
+        modEventBus.addListener(com.xtrip.golemgarage.power.PowerBlocks::capabilities);
         modEventBus.addListener((net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent e) ->
                 e.registerBlockEntity(net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage.BLOCK,
                         ModBlockEntities.GOLEM_DOCK.get(), (be, side) -> be.energy()));

@@ -22,6 +22,11 @@ public final class ModItems {
         return item;
     }
 
+    /** A block item for one of the newer blocks, added to the end of the creative tab. */
+    public static DeferredItem<BlockItem> extraBlock(String name, net.neoforged.neoforge.registries.DeferredBlock<?> block) {
+        return extra(ITEMS.registerSimpleBlockItem(name, block));
+    }
+
     public static final DeferredItem<BlockItem> GARAGE_CONTROLLER =
             ITEMS.registerSimpleBlockItem("garage_controller", ModBlocks.GARAGE_CONTROLLER);
     public static final DeferredItem<BlockItem> LASER_EMITTER =
@@ -49,6 +54,12 @@ public final class ModItems {
     public static final DeferredItem<Item> TYRE = extra(ITEMS.registerSimpleItem("tyre"));
     /** The Wasteland Rig, packed up. Use it on the ground to drive. */
     public static final DeferredItem<RigItem> RIG = extra(ITEMS.registerItem("rig", RigItem::new, new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<RigItem> RIG_INTERCEPTOR = extra(ITEMS.registerItem("rig_interceptor",
+            p -> new RigItem(p, com.xtrip.golemgarage.entity.RigVariant.INTERCEPTOR), new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<RigItem> RIG_JUGGERNAUT = extra(ITEMS.registerItem("rig_juggernaut",
+            p -> new RigItem(p, com.xtrip.golemgarage.entity.RigVariant.JUGGERNAUT), new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<RigItem> RIG_SKIMMER = extra(ITEMS.registerItem("rig_skimmer",
+            p -> new RigItem(p, com.xtrip.golemgarage.entity.RigVariant.SKIMMER), new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> RIG_RAM = extra(ITEMS.registerSimpleItem("rig_ram"));
     public static final DeferredItem<Item> RIG_TURRET = extra(ITEMS.registerSimpleItem("rig_turret"));
     public static final DeferredItem<Item> RIG_PLATING = extra(ITEMS.registerSimpleItem("rig_plating"));

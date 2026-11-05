@@ -68,3 +68,12 @@ except ImportError:
 os.makedirs(os.path.join(world, "serverconfig"), exist_ok=True)
 with open(os.path.join(world, "serverconfig", "golemgarage-server.toml"), "w") as fh:
     fh.write("[garage]\n\trepairSeconds = 40\n")
+
+# A golem owned by the nearest player, five blocks ahead (screens, shoulder rides).
+write("ride", [
+    'execute at @p run summon golemgarage:golem ^ ^ ^5 {PersistenceRequired:1b,Tags:["r"],Parts:{head:{Shape:"sentry_head",'
+    'Material:"iron"},torso:{Shape:"plated_chest",Material:"iron"},arms:{Shape:"golem_fists",Material:"iron"},'
+    'legs:{Shape:"stub_legs",Material:"iron"},core:{Shape:"redstone_core",Material:"iron"}}}',
+    "execute as @e[tag=r] run data modify entity @s Owner set from entity @p UUID",
+    'tellraw @p "ride placed"',
+])

@@ -82,7 +82,7 @@ def rivets(t, pts, light, dark):
 
 
 def generate(assets):
-    img = Image.new("RGBA", (128, 64), (0, 0, 0, 255))
+    img = Image.new("RGBA", (128, 128), (0, 0, 0, 255))
 
     # 0: rusty corrugated sheet (inside walls)
     t = Tile(img, 0, 1)
@@ -500,6 +500,9 @@ def generate(assets):
             t.set(x, y, (20, 18, 18) if x % 3 != 0 else PANEL[4])
     for x in range(16):
         t.set(x, 0, PANEL[5]); t.set(x, 15, PANEL[1])
+
+    import vehicles  # noqa: E402  (rig variants, wind turbine)
+    vehicles.tiles(img, Tile, rivets, PANEL, RUST)
 
     path = os.path.join(assets, "textures/entity/garage_skin.png")
     os.makedirs(os.path.dirname(path), exist_ok=True)

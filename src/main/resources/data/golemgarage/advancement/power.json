@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "id": "golemgarage:solar_panel"
+    },
+    "title": {
+      "translate": "advancement.golemgarage.power"
+    },
+    "description": {
+      "translate": "advancement.golemgarage.power.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "golemgarage:solar_panel",
+              "golemgarage:wind_turbine",
+              "golemgarage:burner_generator"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "golemgarage:root"
+}

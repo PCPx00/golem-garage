@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "transportation",
+  "pattern": [
+    "TST",
+    "GFG",
+    "T T"
+  ],
+  "key": {
+    "T": {
+      "item": "golemgarage:tyre"
+    },
+    "S": {
+      "item": "golemgarage:scrap"
+    },
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "F": {
+      "item": "minecraft:blast_furnace"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig_interceptor",
+    "count": 1
+  }
+}

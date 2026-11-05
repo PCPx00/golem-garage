@@ -179,7 +179,10 @@ ICONS = {
 NAMES = {
     "scrap": "Scrap",
     "tyre": "Tyre",
-    "rig": "Wasteland Rig",
+    "rig": "War Rig",
+    "rig_interceptor": "Interceptor",
+    "rig_juggernaut": "Juggernaut",
+    "rig_skimmer": "Swamp Skimmer",
     "rig_ram": "Spiked Ram",
     "rig_turret": "Rig Turret",
     "rig_plating": "Rig Plating",
@@ -230,6 +233,18 @@ def spray_icon(cap, bands):
     return img
 
 RECIPES = {
+    "rig_interceptor": {"type": "minecraft:crafting_shaped", "category": "transportation", "pattern": ["TST", "GFG", "T T"],
+                        "key": {"T": {"item": "golemgarage:tyre"}, "S": {"item": "golemgarage:scrap"},
+                                "G": {"tag": "c:ingots/gold"}, "F": {"item": "minecraft:blast_furnace"}},
+                        "result": {"id": "golemgarage:rig_interceptor", "count": 1}},
+    "rig_juggernaut": {"type": "minecraft:crafting_shaped", "category": "transportation", "pattern": ["OIO", "TFT", "TTT"],
+                       "key": {"O": {"tag": "c:obsidians"}, "I": {"tag": "c:storage_blocks/iron"},
+                               "T": {"item": "golemgarage:tyre"}, "F": {"item": "minecraft:blast_furnace"}},
+                       "result": {"id": "golemgarage:rig_juggernaut", "count": 1}},
+    "rig_skimmer": {"type": "minecraft:crafting_shaped", "category": "transportation", "pattern": ["STS", "BFB", "BBB"],
+                    "key": {"S": {"item": "golemgarage:scrap"}, "T": {"item": "golemgarage:tyre"},
+                            "B": {"tag": "minecraft:boats"}, "F": {"item": "minecraft:blast_furnace"}},
+                    "result": {"id": "golemgarage:rig_skimmer", "count": 1}},
     "garage_radio": {"type": "minecraft:crafting_shaped", "category": "decorations", "pattern": [" I ", "CJC", "III"],
                      "key": {"I": {"tag": "c:ingots/iron"}, "C": {"tag": "c:ingots/copper"}, "J": {"item": "minecraft:jukebox"}},
                      "result": {"id": "golemgarage:garage_radio", "count": 1}},
@@ -314,3 +329,7 @@ def generate(assets, data, lang):
                "result": {"id": "%s:%s" % (MODID, iid), "count": 1}})
     for rid, recipe in RECIPES.items():
         _json(os.path.join(data, MODID, "recipe", rid + ".json"), recipe)
+    # Rigs are drawn as little 3D models by RigItemRenderer.
+    for rid in ("rig", "rig_interceptor", "rig_juggernaut", "rig_skimmer"):
+        _json(os.path.join(assets, "models/item", rid + ".json"),
+              {"parent": "minecraft:builtin/entity", "textures": {"particle": "%s:item/rig" % MODID}, "gui_light": "side"})

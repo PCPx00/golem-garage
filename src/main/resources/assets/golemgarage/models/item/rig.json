@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "minecraft:builtin/entity",
   "textures": {
-    "layer0": "golemgarage:item/rig"
-  }
+    "particle": "golemgarage:item/rig"
+  },
+  "gui_light": "side"
 }

@@ -46,8 +46,13 @@ import java.util.UUID;
  * a golem rides on the deck to work it. Iron, scrap and repair kits fix it, and so does parking it in a finished
  * Garage. Sneak + right-click with an empty hand packs it back into an item.
  */
-public class RigEntity extends Mob {
+public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerRideableJumping {
     private static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Byte> VARIANT = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.BYTE);
+    /** Ticks of nitro left (Interceptor) and of cannon flash (Juggernaut), for speed and the renderer. */
+    private static final EntityDataAccessor<Integer> BOOST = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> FLASH = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.INT);
+    private int boostCooldown;
     private static final EntityDataAccessor<Byte> UPGRADES = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Float> TURRET_YAW = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.FLOAT);
 
@@ -87,6 +92,9 @@ public class RigEntity extends Mob {
         builder.define(FUEL, 0);
         builder.define(UPGRADES, (byte) 0);
         builder.define(TURRET_YAW, 0f);
+        builder.define(VARIANT, (byte) 0);
+        builder.define(BOOST, 0);
+        builder.define(FLASH, 0);
     }
 
     // =================================================================== state
@@ -105,8 +113,35 @@ public class RigEntity extends Mob {
     public void fit(int upgrade) {
         entityData.set(UPGRADES, (byte) (entityData.get(UPGRADES) | upgrade));
         if (upgrade == PLATING) {
-            getAttribute(Attributes.ARMOR).setBaseValue(18.0);
+            getAttribute(Attributes.ARMOR).setBaseValue(variant().armor + 10.0);
         }
+    }
+
+    public RigVariant variant() {
+        return RigVariant.of(entityData.get(VARIANT));
+    }
+
+    /** Makes this rig a War Rig, Interceptor, Juggernaut or Skimmer, with that rig's toughness and speed. */
+    public void setVariant(RigVariant v) {
+        entityData.set(VARIANT, (byte) v.ordinal());
+        boolean full = getHealth() >= getMaxHealth();
+        getAttribute(Attributes.MAX_HEALTH).setBaseValue(v.health);
+        getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(v.speed);
+        getAttribute(Attributes.ARMOR).setBaseValue(v.armor + (has(PLATING) ? 10.0 : 0.0));
+        getAttribute(Attributes.STEP_HEIGHT).setBaseValue(v.step);
+        if (full || getHealth() > getMaxHealth()) {
+            setHealth(getMaxHealth());
+        }
+    }
+
+    public boolean boosting() {
+        return entityData.get(BOOST) > 0;
+    }
+
+    /** Cannon flash, 1 just after a shot fading to 0. */
+    public float flash(float partial) {
+        int f = entityData.get(FLASH);
+        return f <= 0 ? 0 : Math.max(0, (f - partial) / 6f);
     }
 
     public float turretYaw() {
@@ -213,6 +248,9 @@ public class RigEntity extends Mob {
     @Override
     protected float getRiddenSpeed(Player player) {
         float speed = (float) getAttributeValue(Attributes.MOVEMENT_SPEED);
+        if (boosting()) {
+            speed *= 1.6f;
+        }
         return getFuel() > 0 ? speed : speed * 0.25f;
     }
 
@@ -223,9 +261,26 @@ public class RigEntity extends Mob {
     @Override
     protected Vec3 getPassengerAttachmentPoint(Entity passenger, EntityDimensions dims, float scale) {
         float s = SCALE;
-        Vec3 driver = new Vec3(0.22 * s, 0.38 * s, -0.25 * s);
-        Vec3 shotgun = new Vec3(-0.22 * s, 0.38 * s, -0.25 * s);
-        Vec3 deck = new Vec3(0, passenger instanceof GolemEntity ? 0.38 * s : 0.72 * s, -0.95 * s);
+        boolean golem = passenger instanceof GolemEntity;
+        // Seat height and depth, and where the deck is, for each rig.
+        double seatY, seatZ, deckY, deckZ;
+        switch (variant()) {
+            case INTERCEPTOR -> {
+                seatY = 0.3; seatZ = -0.15; deckY = golem ? 0.5 : 0.66; deckZ = -0.9;
+            }
+            case JUGGERNAUT -> {
+                seatY = 0.66; seatZ = 0.55; deckY = golem ? 0.72 : 0.82; deckZ = -0.95;
+            }
+            case SKIMMER -> {
+                seatY = 0.42; seatZ = 0.05; deckY = golem ? 0.45 : 0.6; deckZ = -0.45;
+            }
+            default -> {
+                seatY = 0.38; seatZ = -0.25; deckY = golem ? 0.38 : 0.72; deckZ = -0.95;
+            }
+        }
+        Vec3 driver = new Vec3(0.22 * s, seatY * s, seatZ * s);
+        Vec3 shotgun = new Vec3(-0.22 * s, seatY * s, seatZ * s);
+        Vec3 deck = new Vec3(0, deckY * s, deckZ * s);
         if (passenger instanceof Player) {
             return riders(true).indexOf(passenger) == 0 ? driver : shotgun;
         }
@@ -289,13 +344,26 @@ public class RigEntity extends Mob {
         if (engineOn() && speed > 0.02) {
             setFuel(getFuel() - 1);
         }
+        if (entityData.get(BOOST) > 0) {
+            entityData.set(BOOST, entityData.get(BOOST) - 1);
+        }
+        if (entityData.get(FLASH) > 0) {
+            entityData.set(FLASH, entityData.get(FLASH) - 1);
+        }
+        if (boostCooldown > 0) {
+            boostCooldown--;
+        }
         if (isRogue()) {
             tickRogue();
         }
         if (speed > 0.2) {
             ram(speed);
         }
-        tickTurret();
+        if (variant() == RigVariant.JUGGERNAUT) {
+            tickCannon();
+        } else {
+            tickTurret();
+        }
     }
 
     private void clientEffects(double speed) {
@@ -304,6 +372,52 @@ public class RigEntity extends Mob {
         }
         Vec3 back = Vec3.directionFromRotation(0, getYRot()).scale(-0.9 * SCALE);
         Vec3 side = Vec3.directionFromRotation(0, getYRot() + 90).scale(0.36 * SCALE);
+        RigVariant v = variant();
+        if (v == RigVariant.SKIMMER) {
+            // Spray and bubbles on water, dust on land, blown back by the fan.
+            boolean water = isInWater();
+            for (int k = 0; k < (speed > 0.1 ? 3 : 1); k++) {
+                double ox = (random.nextDouble() - 0.5) * 1.6, oz = (random.nextDouble() - 0.5) * 1.6;
+                level().addParticle(water ? ParticleTypes.SPLASH : ParticleTypes.POOF, getX() + ox, getY() + 0.1,
+                        getZ() + oz, back.x * 0.05, 0.02, back.z * 0.05);
+            }
+            if (water && speed > 0.1) {
+                level().addParticle(ParticleTypes.BUBBLE_POP, getX() + back.x * 1.3, getY() + 0.15, getZ() + back.z * 1.3, 0, 0.02, 0);
+            }
+            return;
+        }
+        if (boosting()) {
+            for (int k = -1; k <= 1; k += 2) {
+                level().addParticle(ParticleTypes.SOUL_FIRE_FLAME, getX() + back.x * 1.4 + side.x * k * 0.5, getY() + 0.4,
+                        getZ() + back.z * 1.4 + side.z * k * 0.5, back.x * 0.1, 0.01, back.z * 0.1);
+            }
+        }
+        if (v == RigVariant.JUGGERNAUT) {
+            back = back.scale(1.1);
+            side = side.scale(0.75);
+            if (tickCount % (speed > 0.05 ? 4 : 8) == 0) {
+                int k = (tickCount / 4) % 2 == 0 ? -1 : 1;
+                level().addParticle(ParticleTypes.SMOKE, getX() + back.x + side.x * k, getY() + 1.75 * SCALE,
+                        getZ() + back.z + side.z * k, 0, 0.05, 0);
+            }
+            if (speed > 0.05 && tickCount % 4 == 0) {
+                level().addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, getX() + side.x * 2.5, getY() + 0.1, getZ() + side.z * 2.5, 0, 0.005, 0);
+                level().addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, getX() - side.x * 2.5, getY() + 0.1, getZ() - side.z * 2.5, 0, 0.005, 0);
+            }
+            return;
+        }
+        if (v == RigVariant.INTERCEPTOR) {
+            // Smoke puffs from the zoomie pipes along each side.
+            Vec3 fwd = Vec3.directionFromRotation(0, getYRot()).scale(0.45 * SCALE);
+            Vec3 out = side.scale(1.75);
+            if (tickCount % (speed > 0.1 ? 3 : 6) == 0) {
+                for (int k = -1; k <= 1; k += 2) {
+                    level().addParticle(ParticleTypes.SMOKE, getX() + fwd.x + out.x * k, getY() + 0.55 * SCALE,
+                            getZ() + fwd.z + out.z * k, out.x * k * 0.05, 0.03, out.z * k * 0.05);
+                }
+            }
+            return;
+        }
         if (tickCount % (speed > 0.1 ? 2 : 5) == 0) {
             for (int k = -1; k <= 1; k += 2) {
                 level().addParticle(ParticleTypes.SMOKE, getX() + back.x * 0.7 + side.x * k, getY() + 1.5 * SCALE,
@@ -324,7 +438,7 @@ public class RigEntity extends Mob {
         if (hit.isEmpty()) {
             return;
         }
-        float damage = (float) ((has(RAM) ? 26 : 8) * speed);
+        float damage = (float) ((has(RAM) ? 26 : 8) * speed * variant().ram);
         for (Entity e : hit) {
             if (e.hurt(damageSources().mobAttack(this), damage)) {
                 e.push(fwd.x * speed * 2, 0.35, fwd.z * speed * 2);
@@ -353,7 +467,7 @@ public class RigEntity extends Mob {
         }
         Vec3 gun = position().add(0, 1.5 * SCALE, 0);
         LivingEntity target = level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(18),
-                        e -> GolemEntity.isHostile(e) && hasLineOfSight(e))
+                        e -> enemy(e) && hasLineOfSight(e))
                 .stream().min(Comparator.comparingDouble(this::distanceToSqr)).orElse(null);
         if (target == null) {
             turretCooldown = 10;
@@ -371,6 +485,106 @@ public class RigEntity extends Mob {
         level().addFreshEntity(arrow);
         playSound(SoundEvents.CROSSBOW_SHOOT, 0.8f, 0.8f + random.nextFloat() * 0.2f);
         turretCooldown = 14;
+    }
+
+    /** The Juggernaut's cannon: a heavy shell at the nearest hostile every few seconds while it's crewed. */
+    private void tickCannon() {
+        if (getPassengers().isEmpty() || --turretCooldown > 0) {
+            return;
+        }
+        Vec3 gun = position().add(0, 1.2 * SCALE, 0);
+        LivingEntity target = level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(24),
+                        e -> enemy(e) && hasLineOfSight(e))
+                .stream().min(Comparator.comparingDouble(this::distanceToSqr)).orElse(null);
+        if (target == null) {
+            turretCooldown = 10;
+            return;
+        }
+        Vec3 aim = target.position().add(0, target.getBbHeight() / 2, 0).subtract(gun);
+        entityData.set(TURRET_YAW, (float) (getYRot() + 90 - Math.toDegrees(Math.atan2(aim.z, aim.x))));
+        entityData.set(FLASH, 6);
+        playSound(SoundEvents.GENERIC_EXPLODE.value(), 1.4f, 0.6f);
+        if (level() instanceof ServerLevel sl) {
+            Vec3 muzzle = gun.add(aim.normalize().scale(2.2));
+            sl.sendParticles(ParticleTypes.LARGE_SMOKE, muzzle.x, muzzle.y, muzzle.z, 6, 0.1, 0.1, 0.1, 0.02);
+            Vec3 hit = target.position();
+            sl.sendParticles(ParticleTypes.EXPLOSION, hit.x, hit.y + 0.5, hit.z, 2, 0.4, 0.3, 0.4, 0);
+            sl.playSound(null, hit.x, hit.y, hit.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.NEUTRAL, 1f, 1.1f);
+            for (LivingEntity e : sl.getEntitiesOfClass(LivingEntity.class, target.getBoundingBox().inflate(2.5),
+                    this::enemy)) {
+                e.hurt(damageSources().mobAttack(this), e == target ? 18f : 9f);
+                Vec3 push = e.position().subtract(hit).normalize().scale(0.6);
+                e.push(push.x, 0.3, push.z);
+            }
+        }
+        turretCooldown = 50;
+    }
+
+    /** Who the guns shoot at: hostile mobs, or for raiders' rigs, players and their golems. */
+    private boolean enemy(LivingEntity e) {
+        if (isRogue()) {
+            return e.isAlive() && (e instanceof Player p && !p.isCreative() && !p.isSpectator()
+                    || e instanceof GolemEntity g && !g.isRogue());
+        }
+        return GolemEntity.isHostile(e);
+    }
+
+    // =================================================================== nitro (Interceptor)
+    @Override
+    public boolean canJump() {
+        return variant() == RigVariant.INTERCEPTOR && getFuel() > 300 && boostCooldown <= 0 && !boosting();
+    }
+
+    @Override
+    public void onPlayerJump(int power) {
+        // Client: the driver's own client moves the rig, so the kick happens here.
+        if (canJump() && power > 0) {
+            Vec3 fwd = Vec3.directionFromRotation(0, getYRot());
+            setDeltaMovement(getDeltaMovement().add(fwd.scale(0.4 + power / 100.0 * 0.8)));
+        }
+    }
+
+    @Override
+    public void handleStartJump(int power) {
+        if (level().isClientSide || !canJump()) {
+            return;
+        }
+        entityData.set(BOOST, 20 + power / 3);
+        boostCooldown = 80;
+        setFuel(getFuel() - 300);
+        playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.2f, 0.7f);
+        playSound(SoundEvents.BLAZE_SHOOT, 0.8f, 0.6f);
+    }
+
+    @Override
+    public void handleStopJump() {
+    }
+
+    @Override
+    public int getJumpCooldown() {
+        return boostCooldown;
+    }
+
+    // =================================================================== water (Skimmer)
+    @Override
+    public void travel(Vec3 input) {
+        if (variant() == RigVariant.SKIMMER && isInWater()) {
+            double depth = getFluidHeight(net.minecraft.tags.FluidTags.WATER);
+            moveRelative(getSpeed() * 0.3f, input);
+            Vec3 v = getDeltaMovement();
+            double vy = depth > 0.12 ? Math.min(v.y + 0.05, 0.15) : v.y - 0.025;
+            setDeltaMovement(v.x, vy, v.z);
+            move(net.minecraft.world.entity.MoverType.SELF, getDeltaMovement());
+            setDeltaMovement(getDeltaMovement().multiply(0.86, 0.6, 0.86));
+            calculateEntityAnimation(false);
+            return;
+        }
+        super.travel(input);
+    }
+
+    @Override
+    public boolean isPushedByFluid() {
+        return variant() != RigVariant.SKIMMER && super.isPushedByFluid();
     }
 
     // =================================================================== using it
@@ -414,6 +628,12 @@ public class RigEntity extends Mob {
         // Upgrades.
         int upgrade = held.is(ModItems.RIG_RAM.get()) ? RAM : held.is(ModItems.RIG_TURRET.get()) ? TURRET
                 : held.is(ModItems.RIG_PLATING.get()) ? PLATING : 0;
+        if (upgrade == TURRET && variant() == RigVariant.JUGGERNAUT) {
+            if (!client) {
+                player.displayClientMessage(Component.translatable("golemgarage.rig.has_cannon"), true);
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
         if (upgrade != 0 && !has(upgrade)) {
             if (!client) {
                 fit(upgrade);
@@ -509,6 +729,7 @@ public class RigEntity extends Mob {
         super.addAdditionalSaveData(tag);
         tag.putInt("Fuel", getFuel());
         tag.putByte("Upgrades", entityData.get(UPGRADES));
+        tag.putString("Variant", variant().id());
         if (owner != null) {
             tag.putUUID("Owner", owner);
         }
@@ -517,6 +738,15 @@ public class RigEntity extends Mob {
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
+        float hp = getHealth();
+        for (RigVariant v : RigVariant.values()) {
+            if (v.id().equals(tag.getString("Variant"))) {
+                setVariant(v);
+            }
+        }
+        if (tag.contains("Health")) {
+            setHealth(Math.min(hp, getMaxHealth()));
+        }
         setFuel(tag.getInt("Fuel"));
         byte up = tag.getByte("Upgrades");
         for (int u : new int[]{RAM, TURRET, PLATING}) {
@@ -529,7 +759,7 @@ public class RigEntity extends Mob {
 
     /** The rig as an item, keeping its fuel, health and upgrades. */
     public ItemStack toItem() {
-        ItemStack stack = new ItemStack(ModItems.RIG.get());
+        ItemStack stack = new ItemStack(variant().item());
         CompoundTag t = new CompoundTag();
         t.putInt("Fuel", getFuel());
         t.putByte("Upgrades", entityData.get(UPGRADES));
@@ -540,6 +770,9 @@ public class RigEntity extends Mob {
 
     /** Sets a freshly placed rig up from its item. */
     public void fromItem(ItemStack stack) {
+        if (stack.getItem() instanceof com.xtrip.golemgarage.item.RigItem ri) {
+            setVariant(ri.variant());
+        }
         var data = stack.get(ModDataComponents.RIG_DATA.get());
         if (data == null) {
             setFuel(20 * 60 * 2);

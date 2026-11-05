@@ -60,7 +60,7 @@ public class GolemDockBlock extends net.minecraft.world.level.block.BaseEntityBl
             BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.phys.BlockHitResult hit) {
         if (!level.isClientSide && level.getBlockEntity(pos) instanceof com.xtrip.golemgarage.block.entity.GolemDockBlockEntity dock) {
             player.displayClientMessage(net.minecraft.network.chat.Component.translatable("golemgarage.dock.energy",
-                    dock.energy().getEnergyStored(), dock.energy().getMaxEnergyStored()), true);
+                    GeneratorInfo.fe(dock.energy().getEnergyStored()), GeneratorInfo.fe(dock.energy().getMaxEnergyStored())), true);
         }
         return net.minecraft.world.InteractionResult.sidedSuccess(level.isClientSide);
     }

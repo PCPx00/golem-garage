@@ -367,6 +367,8 @@ def main():
     advancements.generate(DATA, lang)
     import extras  # noqa: E402  (wasteland update items)
     extras.generate(ASSETS, DATA, lang)
+    import power  # noqa: E402  (solar panel, wind turbine, scrap burner)
+    power.generate(ASSETS, DATA, lang)
     # Hand-written UI text (screens, chat, statuses, JEI/Jade), kept in one file for translators.
     with open(os.path.join(HERE, "strings_en.json")) as fh:
         lang.update(json.load(fh))

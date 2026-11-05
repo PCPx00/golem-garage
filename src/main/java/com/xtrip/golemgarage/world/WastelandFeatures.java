@@ -184,6 +184,7 @@ public final class WastelandFeatures {
                 if (at != null && rig != null) {
                     rig.moveTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, rnd.nextFloat() * 360, 0);
                     rig.finalizeSpawn(level, level.getCurrentDifficultyAt(at), MobSpawnType.STRUCTURE, null);
+                    rig.setVariant(com.xtrip.golemgarage.entity.RigVariant.values()[rnd.nextInt(4)]);
                     rig.setFuel(0);
                     rig.setHealth(8 + rnd.nextInt(10));
                     if (rnd.nextInt(3) == 0) {

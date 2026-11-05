@@ -110,6 +110,10 @@ public final class Raids {
             rig.moveTo(spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, rnd.nextFloat() * 360, 0);
             rig.finalizeSpawn(level, level.getCurrentDifficultyAt(spawn), MobSpawnType.EVENT, null);
             rig.addTag(RigEntity.ROGUE_TAG);
+            // Raiders turn up in War Rigs, sometimes Interceptors; a Titan's convoy brings a Juggernaut.
+            rig.setVariant(titan ? com.xtrip.golemgarage.entity.RigVariant.JUGGERNAUT
+                    : rnd.nextInt(3) == 0 ? com.xtrip.golemgarage.entity.RigVariant.INTERCEPTOR
+                    : com.xtrip.golemgarage.entity.RigVariant.WAR_RIG);
             rig.fit(RigEntity.RAM);
             rig.setFuel(20 * 60 * 3);
             rig.setRaidTarget(home);

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "transportation",
+  "pattern": [
+    "OIO",
+    "TFT",
+    "TTT"
+  ],
+  "key": {
+    "O": {
+      "tag": "c:obsidians"
+    },
+    "I": {
+      "tag": "c:storage_blocks/iron"
+    },
+    "T": {
+      "item": "golemgarage:tyre"
+    },
+    "F": {
+      "item": "minecraft:blast_furnace"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig_juggernaut",
+    "count": 1
+  }
+}

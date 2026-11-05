@@ -4,9 +4,15 @@ from manual import B, TIP, category, craft, entry, table, text, MODID  # noqa: F
 
 def chapter():
     entries = [
-        entry("rig", "Wasteland Rig", MODID + ":rig", [
+        entry("rig", "Rigs", MODID + ":rig", [
+            table([
+                ("War Rig", "All-rounder."),
+                ("Interceptor", "Fastest, with nitro."),
+                ("Juggernaut", "Armoured tank, cannon."),
+                ("Swamp Skimmer", "Land and water."),
+            ], "Four Rigs"),
             craft(MODID + ":rig", "Four tyres, scrap, two iron blocks and a blast furnace. Use it on the ground "
-                  "to unpack it facing the way you look.", "Wasteland Rig"),
+                  "to unpack it facing the way you look.", "War Rig"),
             text(B("Driving") + ": right-click to get in. W and S drive, A and D steer, sneak gets out. A second "
                  "player can ride shotgun, and a golem or cub rides on the back deck.\n\n" + B("Fuel") + ": "
                  "right-click it with coal, charcoal, logs or any furnace fuel. Without fuel it only crawls.", "Driving"),
@@ -39,14 +45,14 @@ def finds():
              "wall and one emitter hanging on. Their crates always hold a broken golem. Patch the walls and "
              "roof, add a second emitter and it works again: repair the golem right there.", "Abandoned Garages"),
         table([
-            ("Scrap and tyres", "Always / often."),
-            ("Loose parts", "Any material, now and then a rare one."),
-            ("Broken golems", "Worn right down. Repair them in a Garage and they're yours."),
-            ("Rig upgrades", "Rarely: a ram, turret or plating."),
-            ("Rule cards, coal, nuggets", "Sometimes."),
+            ("Scrap and tyres", "Nearly always."),
+            ("Loose parts", "Any material, sometimes rare."),
+            ("Broken golems", "Repair one to keep it."),
+            ("Rig upgrades", "Rarely."),
+            ("Cards, coal, nuggets", "Sometimes."),
         ], "What You Find"),
-        text("Server owners can turn these off with " + B("generateWastelandFinds") + " in the server settings, "
-             "or change where they appear with the " + B("golemgarage:has_wasteland_finds") + " biome tag.",
+        text("Server owners can turn these off with the server setting\ngenerateWastelandFinds\n\nTo choose the "
+             "biomes they appear in, edit the biome tag\nhas_wasteland_finds\n(in golemgarage).",
              "Turning Them Off"),
     ])
 
@@ -101,11 +107,11 @@ def veterans():
              "wear half as fast.\n\nRanked golems show gold chevrons over their heads (red for Legends) when "
              "you're close, and their rank, progress and traits on the Status tab and in Jade.", "Traits"),
         table([
-            ("Cheerful", "Hums little notes. Walks 5% faster."),
-            ("Grumpy", "Huffs now and then. Takes 10% less damage."),
-            ("Lazy", "Yawns clouds. Uses less power but walks 5% slower."),
-            ("Brave", "Itching for a fight. Hits 10% harder."),
-            ("Curious", "Looks around at everything. Walks a little faster."),
+            ("Cheerful", "Hums. 5% faster."),
+            ("Grumpy", "Huffs. 10% less damage."),
+            ("Lazy", "Yawns. Less power, 5% slower."),
+            ("Brave", "Hits 10% harder."),
+            ("Curious", "Looks around. A bit faster."),
         ], "Personality"),
         text("Every golem is born with a " + B("personality") + ". It shows on the Status tab and in Jade, "
              "stays with the golem for life, and comes through in little idle moments.", "Born That Way"),
@@ -115,11 +121,11 @@ def veterans():
 def horn():
     return entry("war_horn", "War Horn", MODID + ":war_horn", [
         craft(MODID + ":war_horn", "Three copper ingots, redstone and leather.", "War Horn"),
-        text("Sound it and every one of your golems within 48 blocks drops what it's doing:\n\n"
-             + B("Rally") + ": run to you and fight anything that comes near (30 seconds).\n"
-             + B("Hold") + ": stand fast and fight anything within 8 blocks (1 minute).\n"
-             + B("Charge") + ": all attack whatever you're looking at (20 seconds).\n\n"
-             "Sneak + use to change the call. It needs 5 seconds to cool down.", "Calls"),
+        text("Sound it and your golems within 48 blocks drop what they're doing:\n\n"
+             + B("Rally") + ": come to you and fight (30 s).\n"
+             + B("Hold") + ": stand fast, fight within 8 blocks (1 min).\n"
+             + B("Charge") + ": attack what you look at (20 s).\n\n"
+             "Sneak + use changes the call. 5 s cooldown.", "Calls"),
     ])
 
 
@@ -147,4 +153,27 @@ def workshop():
 
 
 # Later updates add their entries here.
-EXTRA = [finds, cards, raids, veterans, horn, workshop]
+def rig_variants():
+    return entry("rig_variants", "More Rigs", MODID + ":rig_interceptor", [
+        craft(MODID + ":rig_interceptor", "Tyres, scrap, gold and a blast furnace.", "Interceptor"),
+        text("Low, light and red, with a blower through the bonnet. The fastest thing on wheels, but it can't "
+             "take much of a beating.\n\n" + B("Nitro") + ": hold " + B("jump") + " while driving to charge it "
+             "(the bar fills like a horse's jump), let go to fire it. It kicks you forward and keeps you faster "
+             "for a second or two, uses a bit of fuel, then needs a few seconds to recharge.", "Nitro"),
+        craft(MODID + ":rig_juggernaut", "Obsidian, an iron block, five tyres and a blast furnace.", "Juggernaut"),
+        text("A tracked tank in olive drab. Slow, but with more than twice a War Rig's health and armour, a ram "
+             "that hits much harder, and tracks that climb a block and a half.", "Tank"),
+        text("While anyone rides it, the turret turns to the nearest hostile mob within 24 blocks and fires a "
+             "shell every few seconds. Shells blast everything hostile where they land and never break "
+             "blocks.\n\nIt has its own gun, so it doesn't take the Rig Turret.", "Cannon"),
+        craft(MODID + ":rig_skimmer", "Scrap, a tyre, any five boats and a blast furnace.", "Swamp Skimmer"),
+        text("An airboat on a rubber skirt, pushed along by a big caged fan. It floats and keeps going over "
+             "rivers, lakes and the sea at full speed, then runs straight up onto the bank. Golems and Cubs "
+             "ride in front of the engine.", "Land and Water"),
+        text("Every rig takes fuel, repairs, the Linker, the Spiked Ram and Rig Plating the same way. Raiders "
+             "sometimes come in Interceptors, and a Titan's convoy brings a Juggernaut. Wrecks of any kind turn "
+             "up in scrapyards.", "All Rigs"),
+    ])
+
+
+EXTRA = [rig_variants, finds, cards, raids, veterans, horn, workshop]

@@ -9,6 +9,9 @@
     "golemgarage:garage_door",
     "golemgarage:garage_window",
     "golemgarage:fabricator",
-    "golemgarage:garage_radio"
+    "golemgarage:garage_radio",
+    "golemgarage:solar_panel",
+    "golemgarage:wind_turbine",
+    "golemgarage:burner_generator"
   ]
 }

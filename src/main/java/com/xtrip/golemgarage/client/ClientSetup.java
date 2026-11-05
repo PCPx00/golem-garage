@@ -42,11 +42,29 @@ public final class ClientSetup {
         event.registerBlockEntityRenderer(ModBlockEntities.GARAGE_CONTROLLER.get(), GarageControllerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.GARAGE_DOOR.get(), GarageDoorRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.FABRICATOR.get(), FabricatorRenderer::new);
+        event.registerBlockEntityRenderer(com.xtrip.golemgarage.power.PowerBlocks.WIND_TURBINE_BE.get(), WindTurbineRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerItemExtensions(net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent event) {
+        event.registerItem(new net.neoforged.neoforge.client.extensions.common.IClientItemExtensions() {
+            @Override
+            public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return RigItemRenderer.INSTANCE;
+            }
+        }, ModItems.RIG.get(), ModItems.RIG_INTERCEPTOR.get(), ModItems.RIG_JUGGERNAUT.get(), ModItems.RIG_SKIMMER.get());
+        event.registerItem(new net.neoforged.neoforge.client.extensions.common.IClientItemExtensions() {
+            @Override
+            public net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return PowerItemRenderer.INSTANCE;
+            }
+        }, com.xtrip.golemgarage.power.PowerBlocks.WIND_TURBINE_ITEM.get());
     }
 
     @SubscribeEvent
     public static void registerScreens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) {
         event.register(com.xtrip.golemgarage.menu.ModMenus.CUB.get(), CubScreen::new);
+        event.register(com.xtrip.golemgarage.power.PowerBlocks.BURNER_MENU.get(), BurnerScreen::new);
     }
 
     @SubscribeEvent

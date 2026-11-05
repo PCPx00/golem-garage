@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:builtin/entity",
+  "textures": {
+    "particle": "golemgarage:item/rig"
+  },
+  "gui_light": "side"
+}

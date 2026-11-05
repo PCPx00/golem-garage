@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "transportation",
+  "pattern": [
+    "STS",
+    "BFB",
+    "BBB"
+  ],
+  "key": {
+    "S": {
+      "item": "golemgarage:scrap"
+    },
+    "T": {
+      "item": "golemgarage:tyre"
+    },
+    "B": {
+      "tag": "minecraft:boats"
+    },
+    "F": {
+      "item": "minecraft:blast_furnace"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig_skimmer",
+    "count": 1
+  }
+}

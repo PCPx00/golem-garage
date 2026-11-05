@@ -19,8 +19,19 @@ import java.util.List;
 
 /** A packed-up Wasteland Rig. Use it on the ground to unpack it, facing the way you're looking. */
 public class RigItem extends Item {
+    private final com.xtrip.golemgarage.entity.RigVariant variant;
+
     public RigItem(Properties properties) {
+        this(properties, com.xtrip.golemgarage.entity.RigVariant.WAR_RIG);
+    }
+
+    public RigItem(Properties properties, com.xtrip.golemgarage.entity.RigVariant variant) {
         super(properties);
+        this.variant = variant;
+    }
+
+    public com.xtrip.golemgarage.entity.RigVariant variant() {
+        return variant;
     }
 
     @Override
@@ -57,6 +68,7 @@ public class RigItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> tooltip, TooltipFlag flag) {
+        tooltip.add(Component.translatable("golemgarage.rig.about." + variant.id()).withStyle(net.minecraft.ChatFormatting.GOLD));
         var data = stack.get(ModDataComponents.RIG_DATA.get());
         int fuel = data == null ? 20 * 60 * 2 : data.copyTag().getInt("Fuel");
         tooltip.add(Component.translatable("golemgarage.rig.fuel", fuel / 1200).withStyle(net.minecraft.ChatFormatting.GRAY));

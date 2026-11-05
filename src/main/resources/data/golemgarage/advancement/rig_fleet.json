@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "id": "golemgarage:rig_interceptor"
+    },
+    "title": {
+      "translate": "advancement.golemgarage.rig_fleet"
+    },
+    "description": {
+      "translate": "advancement.golemgarage.rig_fleet.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "golemgarage:rig_interceptor",
+              "golemgarage:rig_juggernaut",
+              "golemgarage:rig_skimmer"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "golemgarage:rig"
+}

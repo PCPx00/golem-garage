@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.21.0, by xTrip",
+ "subtitle": "Version 0.22.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -10330,6 +10330,56 @@
      ]
     },
     {
+     "id": "generators",
+     "title": "Generators",
+     "icon": "golemgarage:solar_panel",
+     "pages": [
+      {
+       "type": "text",
+       "text": "Three blocks make §lForge Energy§r (FE) for Golem Docks and for other mods' machines. Each one pushes its power into whatever it touches.",
+       "title": "Making Power"
+      },
+      {
+       "type": "text",
+       "text": "Pipes and cables can pull from any side: §lGrim Pipe Industries§r energy pipes, Mekanism cables and the like.\n\nWith Grim pipes, click the pipe end at the generator with the Reaper Wrench to set it to §lInput§r.",
+       "title": "Pipes"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:solar_panel",
+       "text": "Glass panes, lapis, redstone, iron and scrap.",
+       "title": "Solar Panel"
+      },
+      {
+       "type": "text",
+       "text": "Up to §l40 FE/t§r under open sky, following the sun: the most at noon, a trickle at dawn and dusk, nothing at night. Rain cuts it to about a third. It stores 20,000 FE. Right-click for a reading.",
+       "title": "Sunshine"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:wind_turbine",
+       "text": "Iron, iron bars, copper, redstone and scrap.",
+       "title": "Wind Turbine"
+      },
+      {
+       "type": "text",
+       "text": "A scrap windmill on a lattice mast. The higher you build it, the more it makes: about §l6 FE/t§r near sea level, up to §l70 FE/t§r high in the hills, half again in rain and double in a storm. Keep the three blocks above it and the space round the rotor clear; right-click to see how much wind is blocked. No wind in the Nether or the End.",
+       "title": "Wind"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:burner_generator",
+       "text": "Scrap, copper, iron, redstone and a blast furnace.",
+       "title": "Scrap Burner"
+      },
+      {
+       "type": "text",
+       "text": "Burns anything a furnace can for §l60 FE/t§r, or lava for §l120 FE/t§r (a bucket lasts about 100 seconds). Right-click to open it: a fuel slot, a lava tank and an energy gauge. Pour lava buckets in by hand or pipe lava in; item pipes can feed it fuel and take the empty buckets out. It holds its fire when its 100,000 FE buffer is full.",
+       "title": "Burning"
+      }
+     ]
+    },
+    {
      "id": "radio",
      "title": "Garage Radio",
      "icon": "golemgarage:garage_radio",
@@ -10793,14 +10843,36 @@
    "entries": [
     {
      "id": "rig",
-     "title": "Wasteland Rig",
+     "title": "Rigs",
      "icon": "golemgarage:rig",
      "pages": [
+      {
+       "type": "table",
+       "rows": [
+        [
+         "War Rig",
+         "All-rounder."
+        ],
+        [
+         "Interceptor",
+         "Fastest, with nitro."
+        ],
+        [
+         "Juggernaut",
+         "Armoured tank, cannon."
+        ],
+        [
+         "Swamp Skimmer",
+         "Land and water."
+        ]
+       ],
+       "title": "Four Rigs"
+      },
       {
        "type": "crafting",
        "recipe": "golemgarage:rig",
        "text": "Four tyres, scrap, two iron blocks and a blast furnace. Use it on the ground to unpack it facing the way you look.",
-       "title": "Wasteland Rig"
+       "title": "War Rig"
       },
       {
        "type": "text",
@@ -10845,6 +10917,56 @@
      ]
     },
     {
+     "id": "rig_variants",
+     "title": "More Rigs",
+     "icon": "golemgarage:rig_interceptor",
+     "pages": [
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig_interceptor",
+       "text": "Tyres, scrap, gold and a blast furnace.",
+       "title": "Interceptor"
+      },
+      {
+       "type": "text",
+       "text": "Low, light and red, with a blower through the bonnet. The fastest thing on wheels, but it can't take much of a beating.\n\n§lNitro§r: hold §ljump§r while driving to charge it (the bar fills like a horse's jump), let go to fire it. It kicks you forward and keeps you faster for a second or two, uses a bit of fuel, then needs a few seconds to recharge.",
+       "title": "Nitro"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig_juggernaut",
+       "text": "Obsidian, an iron block, five tyres and a blast furnace.",
+       "title": "Juggernaut"
+      },
+      {
+       "type": "text",
+       "text": "A tracked tank in olive drab. Slow, but with more than twice a War Rig's health and armour, a ram that hits much harder, and tracks that climb a block and a half.",
+       "title": "Tank"
+      },
+      {
+       "type": "text",
+       "text": "While anyone rides it, the turret turns to the nearest hostile mob within 24 blocks and fires a shell every few seconds. Shells blast everything hostile where they land and never break blocks.\n\nIt has its own gun, so it doesn't take the Rig Turret.",
+       "title": "Cannon"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig_skimmer",
+       "text": "Scrap, a tyre, any five boats and a blast furnace.",
+       "title": "Swamp Skimmer"
+      },
+      {
+       "type": "text",
+       "text": "An airboat on a rubber skirt, pushed along by a big caged fan. It floats and keeps going over rivers, lakes and the sea at full speed, then runs straight up onto the bank. Golems and Cubs ride in front of the engine.",
+       "title": "Land and Water"
+      },
+      {
+       "type": "text",
+       "text": "Every rig takes fuel, repairs, the Linker, the Spiked Ram and Rig Plating the same way. Raiders sometimes come in Interceptors, and a Titan's convoy brings a Juggernaut. Wrecks of any kind turn up in scrapyards.",
+       "title": "All Rigs"
+      }
+     ]
+    },
+    {
      "id": "finds",
      "title": "Scrapyards and Ruins",
      "icon": "minecraft:barrel",
@@ -10864,22 +10986,22 @@
        "rows": [
         [
          "Scrap and tyres",
-         "Always / often."
+         "Nearly always."
         ],
         [
          "Loose parts",
-         "Any material, now and then a rare one."
+         "Any material, sometimes rare."
         ],
         [
          "Broken golems",
-         "Worn right down. Repair them in a Garage and they're yours."
+         "Repair one to keep it."
         ],
         [
          "Rig upgrades",
-         "Rarely: a ram, turret or plating."
+         "Rarely."
         ],
         [
-         "Rule cards, coal, nuggets",
+         "Cards, coal, nuggets",
          "Sometimes."
         ]
        ],
@@ -10887,7 +11009,7 @@
       },
       {
        "type": "text",
-       "text": "Server owners can turn these off with §lgenerateWastelandFinds§r in the server settings, or change where they appear with the §lgolemgarage:has_wasteland_finds§r biome tag.",
+       "text": "Server owners can turn these off with the server setting\ngenerateWastelandFinds\n\nTo choose the biomes they appear in, edit the biome tag\nhas_wasteland_finds\n(in golemgarage).",
        "title": "Turning Them Off"
       }
      ]
@@ -11004,23 +11126,23 @@
        "rows": [
         [
          "Cheerful",
-         "Hums little notes. Walks 5% faster."
+         "Hums. 5% faster."
         ],
         [
          "Grumpy",
-         "Huffs now and then. Takes 10% less damage."
+         "Huffs. 10% less damage."
         ],
         [
          "Lazy",
-         "Yawns clouds. Uses less power but walks 5% slower."
+         "Yawns. Less power, 5% slower."
         ],
         [
          "Brave",
-         "Itching for a fight. Hits 10% harder."
+         "Hits 10% harder."
         ],
         [
          "Curious",
-         "Looks around at everything. Walks a little faster."
+         "Looks around. A bit faster."
         ]
        ],
        "title": "Personality"
@@ -11045,12 +11167,8 @@
       },
       {
        "type": "text",
-       "text": "Sound it and every one of your golems within 48 blocks drops what it's doing:\n\n§lRally§r: run to you and fight anything that comes near (30 seconds). §lHold§r: stand fast and fight anything within 8 blocks (1 minute). §lCharge§r: all attack whatever you're looking at (20 seconds).\n\nSneak + use to change the call.",
+       "text": "Sound it and your golems within 48 blocks drop what they're doing:\n\n§lRally§r: come to you and fight (30 s). §lHold§r: stand fast, fight within 8 blocks (1 min). §lCharge§r: attack what you look at (20 s).\n\nSneak + use changes the call. 5 s cooldown.",
        "title": "Calls"
-      },
-      {
-       "type": "text",
-       "text": "It needs 5 seconds to cool down."
       }
      ]
     },
@@ -11805,6 +11923,12 @@
   "golemgarage:fabricator": "workshop",
   "golemgarage:golem_tablet": "workshop",
   "golemgarage:cub_bed": "cub_personality",
+  "golemgarage:solar_panel": "generators",
+  "golemgarage:wind_turbine": "generators",
+  "golemgarage:burner_generator": "generators",
+  "golemgarage:rig_interceptor": "rig_variants",
+  "golemgarage:rig_juggernaut": "rig_variants",
+  "golemgarage:rig_skimmer": "rig_variants",
   "minecraft:honeycomb": "copper_care",
   "minecraft:vine": "vines",
   "minecraft:redstone_block": "power_basics",

@@ -29,6 +29,29 @@ public class GolemGarageJade implements IWailaPlugin {
     public void registerClient(IWailaClientRegistration reg) {
         reg.registerEntityComponent(GolemInfo.INSTANCE, GolemEntity.class);
         reg.registerEntityComponent(CubInfo.INSTANCE, CubEntity.class);
+        reg.registerBlockComponent(PowerInfo.INSTANCE, com.xtrip.golemgarage.block.SolarPanelBlock.class);
+        reg.registerBlockComponent(PowerInfo.INSTANCE, com.xtrip.golemgarage.block.WindTurbineBlock.class);
+        reg.registerBlockComponent(PowerInfo.INSTANCE, com.xtrip.golemgarage.block.BurnerGeneratorBlock.class);
+    }
+
+    /** Generators: what they're making and what they hold. */
+    enum PowerInfo implements snownee.jade.api.IBlockComponentProvider {
+        INSTANCE;
+
+        @Override
+        public void appendTooltip(ITooltip t, snownee.jade.api.BlockAccessor accessor, IPluginConfig config) {
+            if (accessor.getBlockEntity() instanceof com.xtrip.golemgarage.power.GeneratorBlockEntity gen) {
+                t.add(Component.translatable("jade.golemgarage.power.rate", gen.rate())
+                        .withStyle(gen.rate() > 0 ? ChatFormatting.GREEN : ChatFormatting.GRAY));
+                t.add(Component.translatable("golemgarage.power.fe_of", com.xtrip.golemgarage.block.GeneratorInfo.fe(gen.stored()),
+                        com.xtrip.golemgarage.block.GeneratorInfo.fe(gen.capacity())).withStyle(ChatFormatting.AQUA));
+            }
+        }
+
+        @Override
+        public ResourceLocation getUid() {
+            return ResourceLocation.fromNamespaceAndPath(GolemGarage.MOD_ID, "power");
+        }
     }
 
     enum GolemInfo implements IEntityComponentProvider {

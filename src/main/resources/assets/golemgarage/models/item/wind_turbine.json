@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:builtin/entity",
+  "textures": {
+    "particle": "golemgarage:block/wind_turbine_side"
+  },
+  "gui_light": "side"
+}

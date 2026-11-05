@@ -885,6 +885,27 @@ def tools_chapter():
                  " and heals four times as fast, using 2,000 FE each time it charges. Right-click the dock to see "
                  "how much it holds.", "Fast Charging"),
         ]),
+        entry("generators", "Generators", MODID + ":solar_panel", [
+            text("Three blocks make " + B("Forge Energy") + " (FE) for Golem Docks and for other mods' "
+                 "machines. Each one pushes its power into whatever it touches.", "Making Power"),
+            text("Pipes and cables can pull from any side: " + B("Grim Pipe Industries") + " energy pipes, "
+                 "Mekanism cables and the like.\n\nWith Grim pipes, click the pipe end at the generator with "
+                 "the Reaper Wrench to set it to " + B("Input") + ".", "Pipes"),
+            craft(MODID + ":solar_panel", "Glass panes, lapis, redstone, iron and scrap.", "Solar Panel"),
+            text("Up to " + B("40 FE/t") + " under open sky, following the sun: the most at noon, a trickle at "
+                 "dawn and dusk, nothing at night. Rain cuts it to about a third. It stores 20,000 FE. Right-click "
+                 "for a reading.", "Sunshine"),
+            craft(MODID + ":wind_turbine", "Iron, iron bars, copper, redstone and scrap.", "Wind Turbine"),
+            text("A scrap windmill on a lattice mast. The higher you build it, the more it makes: about "
+                 + B("6 FE/t") + " near sea level, up to " + B("70 FE/t") + " high in the hills, half again in "
+                 "rain and double in a storm. Keep the three blocks above it and the space round the rotor "
+                 "clear; right-click to see how much wind is blocked. No wind in the Nether or the End.", "Wind"),
+            craft(MODID + ":burner_generator", "Scrap, copper, iron, redstone and a blast furnace.", "Scrap Burner"),
+            text("Burns anything a furnace can for " + B("60 FE/t") + ", or lava for " + B("120 FE/t") + " (a "
+                 "bucket lasts about 100 seconds). Right-click to open it: a fuel slot, a lava tank and an energy "
+                 "gauge. Pour lava buckets in by hand or pipe lava in; item pipes can feed it fuel and take the "
+                 "empty buckets out. It holds its fire when its 100,000 FE buffer is full.", "Burning"),
+        ]),
         entry("radio", "Garage Radio", MODID + ":garage_radio", [
             craft(MODID + ":garage_radio", "A jukebox with copper ingots on each side, iron below and on top.",
                   "Garage Radio"),
@@ -1166,7 +1187,11 @@ def build_index():
         MODID + ":golem_dock": "dock", MODID + ":rig": "rig", MODID + ":rig_ram": "rig", MODID + ":rig_turret": "rig",
         MODID + ":rig_plating": "rig", MODID + ":tyre": "rig", MODID + ":scrap": "rig",
         MODID + ":rule_card": "rule_cards", MODID + ":war_horn": "war_horn", MODID + ":fabricator": "workshop",
-        MODID + ":golem_tablet": "workshop", MODID + ":cub_bed": "cub_personality", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
+        MODID + ":golem_tablet": "workshop", MODID + ":cub_bed": "cub_personality",
+             MODID + ":solar_panel": "generators", MODID + ":wind_turbine": "generators",
+             MODID + ":burner_generator": "generators",
+             MODID + ":rig_interceptor": "rig_variants", MODID + ":rig_juggernaut": "rig_variants",
+             MODID + ":rig_skimmer": "rig_variants", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
         "minecraft:redstone_block": "power_basics",
     }
     for sh in S.SHAPES:

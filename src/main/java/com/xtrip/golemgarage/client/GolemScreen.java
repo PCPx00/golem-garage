@@ -118,17 +118,17 @@ public class GolemScreen extends Screen {
         int bx = x0 + 300;
         addRenderableWidget(Button.builder(Component.translatable("screen.golemgarage.golem.post_here"), b ->
                 PacketDistributor.sendToServer(new GolemActionPayload(golem.getId(), GolemActionPayload.SET_POST_HERE, 0)))
-                .bounds(bx, y0 + H - 26, 54, 16).build());
+                .bounds(bx, y0 + H - 26, 52, 16).build());
         addRenderableWidget(Button.builder(Component.translatable("screen.golemgarage.golem.clear_links"), b ->
                 PacketDistributor.sendToServer(new GolemActionPayload(golem.getId(), GolemActionPayload.CLEAR_LINKS, 0)))
-                .bounds(bx + 58, y0 + H - 26, 54, 16).build());
+                .bounds(bx + 54, y0 + H - 26, 60, 16).build());
     }
 
     private void renderStatus(GuiGraphics g, int x0, int y0, int mouseX, int mouseY) {
         // 3D preview.
         g.fill(x0 + 8, y0 + 28, x0 + 138, y0 + H - 8, PANEL);
         g.renderOutline(x0 + 8, y0 + 28, 130, H - 36, EDGE);
-        GuiPreview.render(g, x0 + 10, y0 + 30, x0 + 136, y0 + H - 34, 30, mouseX, mouseY, golem);
+        GuiPreview.render(g, x0 + 10, y0 + 30, x0 + 136, y0 + H - 60, 30, mouseX, mouseY, golem);
         String name = golem.hasCustomName() && golem.getCustomName() != null ? golem.getCustomName().getString() : I18n.get("entity.golemgarage.golem");
         g.drawCenteredString(font, name, x0 + 73, y0 + 32, TEXT);
         if (golem.getGroup() > 0) {
@@ -138,7 +138,7 @@ public class GolemScreen extends Screen {
         int xp = golem.getXp();
         int rank = com.xtrip.golemgarage.entity.Veterancy.rank(xp);
         int next = com.xtrip.golemgarage.entity.Veterancy.next(xp);
-        int ry = y0 + H - 32;
+        int ry = y0 + H - 46;
         String rankLine = I18n.get(com.xtrip.golemgarage.entity.Veterancy.rankKey(rank)) + "  " + "^".repeat(rank);
         g.drawCenteredString(font, rankLine, x0 + 73, ry - 10, 0xFFFFC14A);
         g.fill(x0 + 18, ry, x0 + 128, ry + 3, 0xFF0B0E14);

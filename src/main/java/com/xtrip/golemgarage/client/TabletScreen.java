@@ -21,6 +21,7 @@ public class TabletScreen extends Screen {
     private static final int W = 360, H = 220;
     private static final int BG = 0xF0141A22, PANEL = 0xFF0B1016, EDGE = 0xFF3A4A5E, TEXT = 0xFFE6ECF4, DIM = 0xFF8A96A8,
             ACCENT = 0xFF5FE8FF, GOLD = 0xFFFFC14A;
+    private static final int ROWS = 7, ROW_H = 22;
     private static List<TabletPayloads.Row> rows = List.of();
     private int selected;
     private int scroll;
@@ -87,8 +88,8 @@ public class TabletScreen extends Screen {
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
         int lx = x0() + 186, ly = y0() + 24;
-        if (mx >= lx && mx < lx + 166 && my >= ly && my < ly + 8 * 20) {
-            int i = (int) ((my - ly) / 20) + scroll;
+        if (mx >= lx && mx < lx + 166 && my >= ly && my < ly + ROWS * ROW_H) {
+            int i = (int) ((my - ly) / ROW_H) + scroll;
             if (i < rows.size()) {
                 selected = i;
                 return true;
@@ -111,7 +112,7 @@ public class TabletScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mx, double my, double dx, double dy) {
-        scroll = Math.max(0, Math.min(Math.max(0, rows.size() - 8), scroll - (int) Math.signum(dy)));
+        scroll = Math.max(0, Math.min(Math.max(0, rows.size() - ROWS), scroll - (int) Math.signum(dy)));
         return true;
     }
 
@@ -148,7 +149,16 @@ public class TabletScreen extends Screen {
             g.fill((int) (cx + Math.cos(sweep) * k), (int) (cy + Math.sin(sweep) * k),
                     (int) (cx + Math.cos(sweep) * k) + 1, (int) (cy + Math.sin(sweep) * k) + 1, 0x705FE8FF);
         }
-        g.fill(cx - 2, cy - 2, cx + 2, cy + 2, 0xFFFFFFFF);
+        // You: a cyan marker with a tick showing which way you face.
+        var me = Minecraft.getInstance().player;
+        g.fill(cx - 2, cy - 2, cx + 3, cy + 3, ACCENT);
+        if (me != null) {
+            double yaw = Math.toRadians(me.getYRot());
+            for (int k = 3; k < 8; k++) {
+                int fx = (int) Math.round(cx - Math.sin(yaw) * k), fy = (int) Math.round(cy + Math.cos(yaw) * k);
+                g.fill(fx, fy, fx + 1, fy + 1, ACCENT);
+            }
+        }
         var p = Minecraft.getInstance().player;
         double scale = mapScale();
         for (int i = 0; p != null && i < rows.size(); i++) {
@@ -157,30 +167,47 @@ public class TabletScreen extends Screen {
             dx = Math.max(mx0 + 3, Math.min(mx0 + ms - 3, dx));
             dy = Math.max(my0 + 3, Math.min(my0 + ms - 3, dy));
             boolean problem = GolemText.isProblem(r.status());
-            int col = i == selected ? 0xFFFFFFFF : r.entityId() < 0 ? 0xFF6A7488 : problem ? 0xFFFF6A6A : 0xFF5AFF8A;
+            int col = r.entityId() < 0 ? 0xFF6A7488 : problem ? 0xFFFF6A6A : 0xFF5AFF8A;
+            if (i == selected) {
+                g.renderOutline(dx - 4, dy - 4, 9, 9, 0xFFFFFFFF);
+            }
             g.fill(dx - 2, dy - 2, dx + 3, dy + 3, col);
         }
         g.drawCenteredString(font, Component.translatable("golemgarage.tablet.range", (int) (78 / scale)), cx, my0 + ms + 6, DIM);
 
         // List.
         int lx = x0 + 186, ly = y0 + 24;
-        g.drawString(font, Component.translatable("golemgarage.tablet.count", rows.size()), lx, y0 + 8, DIM);
-        for (int k = 0; k < 8 && k + scroll < rows.size(); k++) {
+        g.drawString(font, Component.translatable(rows.size() == 1 ? "golemgarage.tablet.count_one" : "golemgarage.tablet.count",
+                rows.size()), lx, y0 + 8, DIM);
+        for (int k = 0; k < ROWS && k + scroll < rows.size(); k++) {
             int i = k + scroll;
             TabletPayloads.Row r = rows.get(i);
-            int y = ly + k * 20;
-            g.fill(lx, y, lx + 166, y + 18, i == selected ? 0xFF22324A : PANEL);
-            String name = font.plainSubstrByWidth(r.name(), 100) + (r.rank() > 0 ? " " + "^".repeat(r.rank()) : "");
-            g.drawString(font, name, lx + 4, y + 2, r.rank() > 0 ? GOLD : TEXT);
+            int y = ly + k * ROW_H;
+            g.fill(lx, y, lx + 166, y + ROW_H - 2, i == selected ? 0xFF22324A : PANEL);
+            if (i == selected) {
+                g.fill(lx, y, lx + 2, y + ROW_H - 2, ACCENT);
+            }
             int dist = p == null ? 0 : (int) Math.sqrt(Math.pow(r.x() - p.getX(), 2) + Math.pow(r.z() - p.getZ(), 2));
-            g.drawString(font, dist + "m", lx + 162 - font.width(dist + "m"), y + 2, DIM);
+            String d = dist + "m";
+            String ranks = r.rank() > 0 ? " " + "^".repeat(r.rank()) : "";
+            String name = font.plainSubstrByWidth(r.name(), 154 - font.width(d) - font.width(ranks) - 6) + ranks;
+            g.drawString(font, name, lx + 5, y + 2, r.rank() > 0 ? GOLD : TEXT);
+            g.drawString(font, d, lx + 162 - font.width(d), y + 2, DIM);
             String status = GolemText.show(r.status()).getString();
-            g.drawString(font, font.plainSubstrByWidth(status, 120), lx + 4, y + 10, GolemText.isProblem(r.status()) ? 0xFFFF8A6A : DIM);
+            g.drawString(font, font.plainSubstrByWidth(status, 112), lx + 5, y + 11, GolemText.isProblem(r.status()) ? 0xFFFF8A6A : DIM);
             if (r.maxHealth() > 0) {
                 int bw = 36;
-                g.fill(lx + 126, y + 12, lx + 126 + bw, y + 15, 0xFF000000);
-                g.fill(lx + 126, y + 12, lx + 126 + Math.round(bw * r.health() / r.maxHealth()), y + 15, 0xFF59E07A);
+                g.fill(lx + 126, y + 14, lx + 126 + bw, y + 17, 0xFF000000);
+                g.fill(lx + 126, y + 14, lx + 126 + Math.round(bw * r.health() / r.maxHealth()), y + 17, 0xFF59E07A);
             }
+        }
+        if (rows.size() > ROWS) {
+            // Scroll position.
+            int track = ROWS * ROW_H - 2;
+            int th = Math.max(8, track * ROWS / rows.size());
+            int ty = ly + (track - th) * scroll / Math.max(1, rows.size() - ROWS);
+            g.fill(lx + 167, ly, lx + 169, ly + track, 0xFF0B1016);
+            g.fill(lx + 167, ty, lx + 169, ty + th, EDGE);
         }
         if (rows.isEmpty()) {
             g.drawString(font, I18n.get("golemgarage.tablet.none"), lx + 4, ly + 4, DIM);

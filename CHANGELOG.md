@@ -2,6 +2,46 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.22.0
+
+### Added
+- **Power generators**, all making Forge Energy (FE):
+  - **Solar Panel**: up to 40 FE/t under open sky, following the sun. Less in rain, nothing at night.
+  - **Wind Turbine**: a scrap windmill on a lattice mast whose rotor spins up with the wind. 6 FE/t near sea level
+    up to 70 FE/t high up, more in rain and storms. Blocks around the rotor steal its wind.
+  - **Scrap Burner**: burns any furnace fuel (60 FE/t) or lava (120 FE/t), with its own screen showing the fuel
+    slot, an animated lava tank and an energy gauge. Lava buckets can be poured in by hand.
+- **Pipe and cable support**: every generator pushes power into whatever it touches, and pipes can pull energy
+  from any side. The Scrap Burner also takes fuel and lava from pipes and gives back empty buckets. Tested with
+  Grim Pipe Industries energy pipes (set the pipe end at the generator to Input with the Reaper Wrench).
+- **Three new rigs**, each with its own model, handling and recipe:
+  - **Interceptor**: low, red and fast, with a blower and a rear wing. Hold jump to charge the **nitro**, let go
+    to fire it.
+  - **Juggernaut**: a tracked tank with thick armour, a heavy ram, tracks that climb 1.5 blocks and a **cannon**
+    that shells hostile mobs while anyone rides it.
+  - **Swamp Skimmer**: a hovercraft with a caged fan that runs over water as easily as land.
+- Rig items are now little 3D models of the rig in your inventory and hand.
+- Raiders sometimes come in Interceptors, and a Junk Titan's convoy brings a Juggernaut. Scrapyard wrecks can be
+  any of the four rigs.
+- Jade shows what a generator is making and holding.
+- Advancements: Power Up and Motor Pool.
+- Manual pages for the generators and the new rigs.
+
+### Changed
+- The War Rig looks better: an open-top cab with a mesh windscreen guard (you can see out while driving), wheel
+  arches, chrome hubcaps, a roof light bar, wing mirrors, a bull bar and tail lights. Wheels on every rig now
+  have hubcaps.
+- The original rig is now called the War Rig.
+- Golem screen: the rank and traits no longer run under the Mode button, and the link buttons fit their labels.
+- Golem Tablet: taller rows so the status line isn't clipped, a scroll bar for long lists, "1 golem" instead of
+  "1 golems", and clearer radar markers (you in cyan with a facing tick, the selected golem ringed in white).
+- Manual: long entry titles are squeezed to fit the list instead of being cut off, and several pages were
+  tightened so they no longer spill a line or two onto the next page.
+- The Golem Dock's readout uses readable numbers (45.2k FE).
+
+### Fixed
+- Raider rigs' turrets could pick the raiders' own golems as targets.
+
 ## 0.21.0
 
 ### Added
