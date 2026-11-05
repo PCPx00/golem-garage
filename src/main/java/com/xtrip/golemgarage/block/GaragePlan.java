@@ -27,7 +27,7 @@ public final class GaragePlan {
 
     public enum Kind {
         WALL(0xE8E8F0), FLOOR(0x8FA4C8), CEILING(0x8FA4C8),
-        EMITTER(0x5FE8FF), CONTROLLER(0xFFD84A), DOOR(0xFF9A3C), CLEAR(0xFF4A4A);
+        EMITTER(0x5FE8FF), CONTROLLER(0xFFD84A), DOOR(0xFF9A3C), WINDOW(0xB8F0FF), CLEAR(0xFF4A4A);
         public final int color;
 
         Kind(int color) {
@@ -80,6 +80,10 @@ public final class GaragePlan {
 
     /** Lays out the room behind the controller at c, facing f, and checks every block against the world. */
     public static List<Cell> plan(Level level, BlockPos c, Direction f, int w, int depth, int h) {
+        return plan(level, c, f, w, depth, h, GarageStyle.WASTELAND);
+    }
+
+    public static List<Cell> plan(Level level, BlockPos c, Direction f, int w, int depth, int h, GarageStyle style) {
         List<Cell> cells = new ArrayList<>();
         int half = w / 2;
         Direction right = f.getClockWise();
@@ -104,6 +108,9 @@ public final class GaragePlan {
                             boolean emitter = isEmitter(s);
                             if (spot) {
                                 cells.add(new Cell(p.immutable(), Kind.EMITTER, emitter, !emitter && !free));
+                            } else if (style.skylight()) {
+                                boolean ok = s.isSolidRender(level, p) || glass(level, p, s) || emitter;
+                                cells.add(new Cell(p.immutable(), Kind.WINDOW, ok, !ok && !free));
                             } else {
                                 boolean ok = s.isSolidRender(level, p) || emitter;
                                 cells.add(new Cell(p.immutable(), Kind.CEILING, ok, !ok && !free));
@@ -118,6 +125,9 @@ public final class GaragePlan {
                             cells.add(new Cell(p.immutable(), Kind.CONTROLLER, s.is(ModBlocks.GARAGE_CONTROLLER.get()), false));
                         } else if (d == depth + 1 && Math.abs(l) <= (w >= 5 ? 1 : 0) && y <= Math.min(2, h - 2)) {
                             cells.add(new Cell(p.immutable(), Kind.DOOR, wall, !wall && !free));
+                        } else if (style.window(d, l, y, w, depth, h)) {
+                            // A solid wall block already there is fine too.
+                            cells.add(new Cell(p.immutable(), Kind.WINDOW, wall, !wall && !free));
                         } else {
                             cells.add(new Cell(p.immutable(), Kind.WALL, wall, !wall && !free));
                         }
@@ -128,17 +138,28 @@ public final class GaragePlan {
         return cells;
     }
 
+    /** See-through blocks that count as Garage wall or roof: glass, panes, Garage Windows. */
+    public static boolean glass(Level level, BlockPos p, BlockState s) {
+        return s.is(GarageBay.WALLS) && !s.isSolidRender(level, p);
+    }
+
     private static boolean isEmitter(BlockState s) {
         return s.is(ModBlocks.LASER_EMITTER.get()) || s.is(ModBlocks.STEEL_EMITTER.get());
     }
 
     // =================================================================== materials
     /** What still has to be placed, what's blocking, and what the player has to hand. */
-    public record Needs(int walls, int solid, int emitters, int blocked, int haveWalls, int haveSolid, int haveEmitters,
-                        boolean canBuild) {
+    public record Needs(int walls, int windows, int solid, int emitters, int blocked, int haveWalls, int haveWindows,
+                        int haveSolid, int haveEmitters, boolean canBuild) {
         public int total() {
-            return walls + solid + emitters;
+            return walls + windows + solid + emitters;
         }
+    }
+
+    public static boolean windowBlock(Item item, Level level) {
+        return item instanceof BlockItem bi && !(bi.getBlock() instanceof EntityBlock)
+                && bi.getBlock().defaultBlockState().is(GarageBay.WALLS)
+                && !bi.getBlock().defaultBlockState().isSolidRender(level, BlockPos.ZERO);
     }
 
     public static boolean wallBlock(Item item) {
@@ -167,7 +188,7 @@ public final class GaragePlan {
     }
 
     public static Needs needs(List<Cell> cells, Player player) {
-        int walls = 0, solid = 0, emitters = 0, blocked = 0;
+        int walls = 0, windows = 0, solid = 0, emitters = 0, blocked = 0;
         for (Cell c : cells) {
             if (c.wrong()) {
                 blocked++;
@@ -178,14 +199,17 @@ public final class GaragePlan {
             switch (c.kind()) {
                 case WALL, DOOR -> walls++;
                 case FLOOR, CEILING -> solid++;
+                case WINDOW -> windows++;
                 case EMITTER -> emitters++;
                 default -> {
                 }
             }
         }
-        int hw = 0, hs = 0, he = 0;
+        int hw = 0, hg = 0, hs = 0, he = 0;
         for (ItemStack s : stacks(player)) {
-            if (wallBlock(s.getItem())) {
+            if (windowBlock(s.getItem(), player.level())) {
+                hg += s.getCount();
+            } else if (wallBlock(s.getItem())) {
                 hw += s.getCount();
             }
             if (solidBlock(s.getItem(), player.level())) {
@@ -197,13 +221,13 @@ public final class GaragePlan {
         }
         boolean creative = player.getAbilities().instabuild;
         boolean placed = cells.stream().anyMatch(c -> c.kind() == Kind.CONTROLLER && c.done());
-        boolean enough = creative || allocate(player, walls, solid, emitters, true) != null;
-        return new Needs(walls, solid, emitters, blocked, hw, hs, he, placed && blocked == 0 && enough && walls + solid + emitters
-                + (int) cells.stream().filter(c -> c.kind() == Kind.CLEAR).count() > 0);
+        boolean enough = creative || allocate(player, walls, windows, solid, emitters, true) != null;
+        return new Needs(walls, windows, solid, emitters, blocked, hw, hg, hs, he, placed && blocked == 0 && enough
+                && walls + windows + solid + emitters + (int) cells.stream().filter(c -> c.kind() == Kind.CLEAR).count() > 0);
     }
 
     /** The blocks a build will use, in order, for walls, for floor and roof, and for emitters. */
-    public record Supply(List<BlockState> walls, List<BlockState> solid, List<BlockState> emitters) {
+    public record Supply(List<BlockState> walls, List<BlockState> windows, List<BlockState> solid, List<BlockState> emitters) {
     }
 
     /**
@@ -212,15 +236,24 @@ public final class GaragePlan {
      * takes the items.
      */
     @Nullable
-    public static Supply allocate(Player player, int walls, int solid, int emitters, boolean simulate) {
+    public static Supply allocate(Player player, int walls, int windows, int solid, int emitters, boolean simulate) {
         List<ItemStack> inv = stacks(player);
         int[] left = new int[inv.size()];
         for (int i = 0; i < inv.size(); i++) {
             left[i] = inv.get(i).getCount();
         }
-        List<BlockState> w = take(inv, left, walls, s -> wallBlock(s.getItem()));
-        if (w == null) {
+        List<BlockState> g = take(inv, left, windows, s -> windowBlock(s.getItem(), player.level()));
+        if (g == null) {
             return null;
+        }
+        // Walls: solid wall blocks first; glass only if that's all there is.
+        List<BlockState> w = takeUpTo(inv, left, walls, s -> wallBlock(s.getItem()) && !windowBlock(s.getItem(), player.level()));
+        if (w.size() < walls) {
+            List<BlockState> more = take(inv, left, walls - w.size(), s -> wallBlock(s.getItem()));
+            if (more == null) {
+                return null;
+            }
+            w.addAll(more);
         }
         List<BlockState> f = take(inv, left, solid, s -> solidBlock(s.getItem(), player.level()));
         if (f == null) {
@@ -244,22 +277,25 @@ public final class GaragePlan {
             }
             player.getInventory().setChanged();
         }
-        return new Supply(w, f, e);
+        return new Supply(w, g, f, e);
     }
 
-    /** A creative player's build: stone bricks, smooth stone, and steel emitters where the tier wants them. */
-    public static Supply creative(int walls, int solid, int emitters) {
-        List<BlockState> w = new ArrayList<>(), f = new ArrayList<>(), e = new ArrayList<>();
+    /** A creative player's build in the style's own blocks, glass windows, and steel emitters where the tier wants them. */
+    public static Supply creative(GarageStyle style, int walls, int windows, int solid, int emitters) {
+        List<BlockState> w = new ArrayList<>(), g = new ArrayList<>(), f = new ArrayList<>(), e = new ArrayList<>();
         for (int i = 0; i < walls; i++) {
-            w.add(Blocks.STONE_BRICKS.defaultBlockState());
+            w.add(style.creativeWall.defaultBlockState());
+        }
+        for (int i = 0; i < windows; i++) {
+            g.add(Blocks.GLASS.defaultBlockState());
         }
         for (int i = 0; i < solid; i++) {
-            f.add(Blocks.SMOOTH_STONE.defaultBlockState());
+            f.add(style.creativeSolid.defaultBlockState());
         }
         for (int i = 0; i < emitters; i++) {
             e.add((i % 2 == 0 ? ModBlocks.STEEL_EMITTER.get() : ModBlocks.LASER_EMITTER.get()).defaultBlockState());
         }
-        return new Supply(w, f, e);
+        return new Supply(w, g, f, e);
     }
 
     @Nullable

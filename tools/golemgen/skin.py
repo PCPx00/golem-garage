@@ -503,6 +503,7 @@ def generate(assets):
 
     import vehicles  # noqa: E402  (rig variants, wind turbine)
     vehicles.tiles(img, Tile, rivets, PANEL, RUST)
+    vehicles.style_tiles(img, Tile, rivets, PANEL, RUST)
 
     path = os.path.join(assets, "textures/entity/garage_skin.png")
     os.makedirs(os.path.dirname(path), exist_ok=True)

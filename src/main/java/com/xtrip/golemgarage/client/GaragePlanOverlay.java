@@ -49,6 +49,8 @@ public final class GaragePlanOverlay {
     /** Preview sizes for a controller in hand: width, depth, height. */
     private static final int[][] SIZES = {{3, 3, 4}, {5, 5, 4}, {7, 7, 5}, {9, 9, 6}};
     private static int size = 1;
+    /** The style last picked in a Garage Planner; new controllers start with it. */
+    static com.xtrip.golemgarage.block.GarageStyle previewStyle = com.xtrip.golemgarage.block.GarageStyle.WASTELAND;
 
     private static final List<GaragePlan.Cell> cells = new ArrayList<>();
     /** The plan the checklist describes: the preview, or the nearest placed plan. */
@@ -91,7 +93,8 @@ public final class GaragePlanOverlay {
         if (previewAt != null && ++previewAge < 60 && level.getBlockEntity(previewAt) instanceof GarageControllerBlockEntity fresh
                 && !fresh.configured()) {
             net.neoforged.neoforge.network.PacketDistributor.sendToServer(new com.xtrip.golemgarage.network.GaragePlanPayload(
-                    previewAt, com.xtrip.golemgarage.network.GaragePlanPayload.SET, dims[0], dims[1], dims[2], true));
+                    previewAt, com.xtrip.golemgarage.network.GaragePlanPayload.SET, dims[0], dims[1], dims[2], true,
+                    previewStyle.ordinal()));
             previewAt = null;
         }
 
@@ -132,7 +135,7 @@ public final class GaragePlanOverlay {
             BlockPos target = hit.getBlockPos();
             BlockState s = level.getBlockState(target);
             BlockPos c = s.canBeReplaced() ? target : target.relative(hit.getDirection());
-            List<GaragePlan.Cell> plan = GaragePlan.plan(level, c, player.getDirection(), dims[0], dims[1], dims[2]);
+            List<GaragePlan.Cell> plan = GaragePlan.plan(level, c, player.getDirection(), dims[0], dims[1], dims[2], previewStyle);
             cells.addAll(plan);
             focus.addAll(plan);
             previewAt = c.immutable();

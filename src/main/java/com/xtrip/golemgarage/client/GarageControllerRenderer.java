@@ -55,6 +55,7 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
         float time = level.getGameTime() + partial;
         if (garage.isFormed()) {
             renderFormed(garage, time, pose, buffers);
+            renderShowcase(garage, time, partial, pose, buffers);
         }
         BlockPos center = garage.padCenter();
         if (center == null || (!garage.isBusy() && !garage.isFormed())) {
@@ -245,6 +246,101 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
     private static final int FULL_BRIGHT = 0xF000F0;
 
     /** Floor markings, the neon sign outside, the status panel inside and, during a repair, warning lights. */
+    /**
+     * The showcase: trophy shelves down the side walls, each holding one of your golems in miniature under a warm
+     * spotlight, turning gently, with its name on the shelf edge.
+     */
+    private void renderShowcase(GarageControllerBlockEntity garage, float time, float partial, PoseStack pose,
+                                MultiBufferSource buffers) {
+        Level level = garage.getLevel();
+        BlockPos min = garage.getBayMin();
+        BlockPos max = garage.getBayMax();
+        if (level == null || min == null || max == null) {
+            return;
+        }
+        int cap = garage.showcaseSlots();
+        BlockPos origin = garage.getBlockPos();
+        Direction f = garage.getBlockState().getValue(com.xtrip.golemgarage.block.GarageControllerBlock.FACING);
+        boolean depthIsZ = f.getAxis() == Direction.Axis.Z;
+        float shelfY = min.getY() + Math.min(1.6f, (max.getY() - min.getY()) * 0.45f) - origin.getY();
+        float room = max.getY() + 1 - origin.getY() - shelfY - 0.2f;
+        int perWall = (cap + 1) / 2;
+        float a0 = depthIsZ ? min.getZ() : min.getX();
+        float len = (depthIsZ ? max.getZ() : max.getX()) + 1 - a0;
+        for (int i = 0; i < cap; i++) {
+            GolemEntity golem = garage.showcaseGolem(i);
+            if (golem == null) {
+                continue;
+            }
+            int side = i % 2;
+            int k = i / 2;
+            int onWall = side == 0 ? perWall : cap / 2;
+            float along = a0 + (k + 1) * len / (onWall + 1);
+            // Wall position across the room, and which way is "into the room".
+            float across = side == 0 ? (depthIsZ ? min.getX() : min.getZ()) + 0.34f
+                    : (depthIsZ ? max.getX() : max.getZ()) + 1 - 0.34f;
+            float inward = side == 0 ? 1 : -1;
+            float wx = (depthIsZ ? across : along) - origin.getX();
+            float wz = (depthIsZ ? along : across) - origin.getZ();
+            BlockPos at = BlockPos.containing(wx + origin.getX(), shelfY + origin.getY() + 0.5, wz + origin.getZ());
+            int light = LevelRenderer.getLightColor(level, at);
+            // The shelf and its brackets.
+            var vc = buffers.getBuffer(RenderType.entityCutoutNoCull(GarageSkin.TEX));
+            float sw = 0.42f, sd = 0.32f;
+            float bx0 = depthIsZ ? wx - sd : wx - sw, bx1 = depthIsZ ? wx + sd : wx + sw;
+            float bz0 = depthIsZ ? wz - sw : wz - sd, bz1 = depthIsZ ? wz + sw : wz + sd;
+            GarageSkin.box(vc, pose.last(), bx0, shelfY - 0.07f, bz0, bx1, shelfY, bz1, GarageSkin.RUST, GarageSkin.BEAM_PLANKS, light);
+            for (int b = -1; b <= 1; b += 2) {
+                float o = b * sw * 0.7f;
+                float cx = depthIsZ ? wx - inward * 0.18f : wx + o, cz = depthIsZ ? wz + o : wz - inward * 0.18f;
+                GarageSkin.box(vc, pose.last(), cx - 0.03f, shelfY - 0.4f, cz - 0.03f, cx + 0.03f, shelfY - 0.07f, cz + 0.03f,
+                        GarageSkin.SOOT, GarageSkin.SOOT, light);
+            }
+            // The golem, small enough to fit under the roof, swinging gently to and fro.
+            float scale = Math.min(0.45f, room / Math.max(1f, golem.getBbHeight()));
+            float face = depthIsZ ? (inward > 0 ? -90f : 90f) : (inward > 0 ? 0f : 180f);
+            float yaw = face + 25f * Mth.sin((time + i * 40) * 0.02f);
+            golem.tickCount = (int) level.getGameTime();
+            golem.setYRot(yaw);
+            golem.yRotO = yaw;
+            golem.yBodyRot = yaw;
+            golem.yBodyRotO = yaw;
+            golem.yHeadRot = yaw;
+            golem.yHeadRotO = yaw;
+            golem.setXRot(0);
+            pose.pushPose();
+            pose.translate(wx, shelfY, wz);
+            pose.scale(scale, scale, scale);
+            entities.render(golem, 0, 0, 0, yaw, partial, pose, buffers, trophyLight(light));
+            pose.popPose();
+            // Spotlight from above.
+            var glow = buffers.getBuffer(GlowRenderType.GLOW);
+            softGlow(glow, pose.last().pose(), new Vec3(wx, shelfY + golem.getBbHeight() * scale + 0.15, wz), 0.35f,
+                    new float[]{1f, 0.85f, 0.55f}, 0.35f);
+            softGlow(glow, pose.last().pose(), new Vec3(wx, shelfY + 0.02, wz), 0.5f, new float[]{1f, 0.8f, 0.5f}, 0.22f);
+            // Name plate on the shelf edge.
+            Component name = golem.hasCustomName() && golem.getCustomName() != null ? golem.getCustomName()
+                    : Component.translatable("entity.golemgarage.golem");
+            String rank = golem.rank() > 0 ? " " + "^".repeat(golem.rank()) : "";
+            String label = font.plainSubstrByWidth(name.getString(), 70) + rank;
+            pose.pushPose();
+            float ex = depthIsZ ? wx + inward * (sd + 0.005f) : wx, ez = depthIsZ ? wz : wz + inward * (sd + 0.005f);
+            pose.translate(ex, shelfY - 0.035f, ez);
+            pose.mulPose(com.mojang.math.Axis.YP.rotationDegrees(depthIsZ ? (inward > 0 ? 90f : -90f) : (inward > 0 ? 0f : 180f)));
+            pose.scale(0.0075f, -0.0075f, 0.0075f);
+            font.drawInBatch(label, -font.width(label) / 2f, -4, golem.rank() > 0 ? 0xFFFFC14A : 0xFFF0E6D0, false,
+                    pose.last().pose(), buffers, net.minecraft.client.gui.Font.DisplayMode.NORMAL, 0, 0xF000F0);
+            pose.popPose();
+        }
+    }
+
+    /** Statues get a little extra light so they read as lit trophies. */
+    private static int trophyLight(int light) {
+        int block = Math.max(12, (light >> 4) & 0xF);
+        int sky = (light >> 20) & 0xF;
+        return net.minecraft.client.renderer.LightTexture.pack(block, sky);
+    }
+
     private void renderFormed(GarageControllerBlockEntity garage, float time, PoseStack pose, MultiBufferSource buffers) {
         Level level = garage.getLevel();
         BlockPos origin = garage.getBlockPos();

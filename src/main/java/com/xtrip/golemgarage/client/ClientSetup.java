@@ -65,6 +65,7 @@ public final class ClientSetup {
     public static void registerScreens(net.neoforged.neoforge.client.event.RegisterMenuScreensEvent event) {
         event.register(com.xtrip.golemgarage.menu.ModMenus.CUB.get(), CubScreen::new);
         event.register(com.xtrip.golemgarage.power.PowerBlocks.BURNER_MENU.get(), BurnerScreen::new);
+        event.register(com.xtrip.golemgarage.menu.ModMenus.SHOWCASE.get(), ShowcaseScreen::new);
     }
 
     @SubscribeEvent

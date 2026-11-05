@@ -67,6 +67,20 @@ public class GarageControllerBlockEntity extends BlockEntity {
     // Planner: the room size the player chose, whether its outline shows in the world, and the auto-build queue.
     private int planW = 5, planD = 5, planH = 4;
     private boolean showPlan = true, configured;
+    private com.xtrip.golemgarage.block.GarageStyle style = com.xtrip.golemgarage.block.GarageStyle.WASTELAND;
+    /** Golems on show in the Garage: up to six, how many depends on the room size. */
+    private final net.minecraft.world.SimpleContainer showcase = new net.minecraft.world.SimpleContainer(SHOWCASE_MAX) {
+        @Override
+        public void setChanged() {
+            super.setChanged();
+            GarageControllerBlockEntity.this.setChanged();
+            showcaseChanged = true;
+        }
+    };
+    public static final int SHOWCASE_MAX = 6;
+    private boolean showcaseChanged;
+    private final GolemEntity[] showcaseGolems = new GolemEntity[SHOWCASE_MAX];
+    private final ItemStack[] showcaseShown = new ItemStack[SHOWCASE_MAX];
     private final List<BlockPos> buildPos = new ArrayList<>();
     private final List<BlockState> buildState = new ArrayList<>();
     private int buildTotal, buildDone;
@@ -133,6 +147,86 @@ public class GarageControllerBlockEntity extends BlockEntity {
         return buildTotal <= 0 ? -1 : buildDone / (float) buildTotal;
     }
 
+    public com.xtrip.golemgarage.block.GarageStyle style() {
+        return style;
+    }
+
+    public net.minecraft.world.SimpleContainer showcase() {
+        return showcase;
+    }
+
+    /**
+     * Showcase slots this Garage has room for: 1 in the smallest, 2 at 5 x 5, 4 at 7 x 7, 6 at 9 x 9 (about one per
+     * 13 blocks of floor). Uses the finished room's size, or the planned size before then.
+     */
+    public int showcaseSlots() {
+        int w, d;
+        if (formed && bayMin != null && bayMax != null) {
+            w = bayMax.getX() - bayMin.getX() + 1;
+            d = bayMax.getZ() - bayMin.getZ() + 1;
+        } else {
+            w = planW;
+            d = planD;
+        }
+        return Math.max(1, Math.min(SHOWCASE_MAX, Math.round(w * d / 13f)));
+    }
+
+    /** Client: a golem to draw for showcase slot i, kept until the item in that slot changes. */
+    @Nullable
+    public GolemEntity showcaseGolem(int i) {
+        ItemStack st = showcase.getItem(i);
+        if (st.isEmpty() || level == null) {
+            showcaseGolems[i] = null;
+            showcaseShown[i] = null;
+            return null;
+        }
+        if (showcaseGolems[i] == null || showcaseShown[i] == null || !ItemStack.isSameItemSameComponents(showcaseShown[i], st)) {
+            GolemEntity g = ModEntities.GOLEM.get().create(level);
+            if (g != null) {
+                CompoundTag data = GolemItem.data(st).copy();
+                data.remove("Broken");
+                g.importData(data);
+            }
+            showcaseGolems[i] = g;
+            showcaseShown[i] = st.copy();
+        }
+        return showcaseGolems[i];
+    }
+
+    /** Opens the showcase slots for a player. */
+    public void openShowcase(net.minecraft.server.level.ServerPlayer player) {
+        var data = new net.minecraft.world.inventory.ContainerData() {
+            @Override
+            public int get(int i) {
+                return showcaseSlots();
+            }
+
+            @Override
+            public void set(int i, int v) {
+            }
+
+            @Override
+            public int getCount() {
+                return 1;
+            }
+        };
+        player.openMenu(new net.minecraft.world.SimpleMenuProvider((id, inv, p) ->
+                        new com.xtrip.golemgarage.menu.ShowcaseMenu(id, inv, showcase, data, worldPosition),
+                Component.translatable("golemgarage.showcase.title")), buf -> buf.writeBlockPos(worldPosition));
+    }
+
+    public void dropShowcase() {
+        if (level != null && !level.isClientSide) {
+            net.minecraft.world.Containers.dropContents(level, worldPosition, showcase);
+        }
+    }
+
+    public void setStyle(com.xtrip.golemgarage.block.GarageStyle s) {
+        style = s;
+        setChanged();
+        sync();
+    }
+
     public void setPlan(int w, int d, int h, boolean show) {
         planW = com.xtrip.golemgarage.block.GaragePlan.clampWidth(w);
         planD = com.xtrip.golemgarage.block.GaragePlan.clampDepth(d);
@@ -146,7 +240,7 @@ public class GarageControllerBlockEntity extends BlockEntity {
     /** The plan for the chosen size, checked against the world. */
     public List<com.xtrip.golemgarage.block.GaragePlan.Cell> plan() {
         Direction f = getBlockState().getValue(com.xtrip.golemgarage.block.GarageControllerBlock.FACING);
-        return com.xtrip.golemgarage.block.GaragePlan.plan(level, worldPosition, f, planW, planD, planH);
+        return com.xtrip.golemgarage.block.GaragePlan.plan(level, worldPosition, f, planW, planD, planH, style);
     }
 
     /**
@@ -170,8 +264,9 @@ public class GarageControllerBlockEntity extends BlockEntity {
             return "golemgarage.planner.err.blocked";
         }
         var supply = player.getAbilities().instabuild
-                ? com.xtrip.golemgarage.block.GaragePlan.creative(needs.walls(), needs.solid(), needs.emitters())
-                : com.xtrip.golemgarage.block.GaragePlan.allocate(player, needs.walls(), needs.solid(), needs.emitters(), false);
+                ? com.xtrip.golemgarage.block.GaragePlan.creative(style, needs.walls(), needs.windows(), needs.solid(), needs.emitters())
+                : com.xtrip.golemgarage.block.GaragePlan.allocate(player, needs.walls(), needs.windows(), needs.solid(),
+                        needs.emitters(), false);
         if (supply == null) {
             return "golemgarage.planner.err.materials";
         }
@@ -181,12 +276,13 @@ public class GarageControllerBlockEntity extends BlockEntity {
         todo.sort(java.util.Comparator.<com.xtrip.golemgarage.block.GaragePlan.Cell>comparingInt(c -> switch (c.kind()) {
                     case CLEAR -> 0;
                     case FLOOR -> 1;
-                    case WALL, DOOR -> 2;
+                    case WALL, DOOR, WINDOW -> 2;
                     case CEILING -> 3;
                     default -> 4;
                 }).thenComparingInt(c -> c.pos().getY())
                 .thenComparingDouble(c -> c.pos().distSqr(worldPosition)));
         var walls = supply.walls().iterator();
+        var glass = supply.windows().iterator();
         var solid = supply.solid().iterator();
         var emit = supply.emitters().iterator();
         buildPos.clear();
@@ -196,6 +292,7 @@ public class GarageControllerBlockEntity extends BlockEntity {
                 case CLEAR -> Blocks.AIR.defaultBlockState();
                 case FLOOR, CEILING -> solid.next();
                 case WALL, DOOR -> walls.next();
+                case WINDOW -> glass.next();
                 default -> emit.next();
             };
             buildPos.add(c.pos());
@@ -263,6 +360,14 @@ public class GarageControllerBlockEntity extends BlockEntity {
             sync();
         } else if (sl.getGameTime() % 5 == 0) {
             setChanged();
+            sync();
+        }
+    }
+
+    /** Sends showcase changes to clients so the statues update. */
+    private void tickShowcase() {
+        if (showcaseChanged) {
+            showcaseChanged = false;
             sync();
         }
     }
@@ -465,6 +570,7 @@ public class GarageControllerBlockEntity extends BlockEntity {
             }
             garage.tickRepair(sl);
             garage.tickBuild(sl);
+            garage.tickShowcase();
         }
     }
 
@@ -1060,6 +1166,9 @@ public class GarageControllerBlockEntity extends BlockEntity {
         tag.putInt("PlanH", planH);
         tag.putBoolean("ShowPlan", showPlan);
         tag.putBoolean("Configured", configured);
+        tag.putString("Style", style.id());
+        tag.put("Showcase", net.minecraft.world.ContainerHelper.saveAllItems(new CompoundTag(),
+                showcase.getItems(), true, registries));
         tag.putInt("BuildTotal", buildTotal);
         tag.putInt("BuildDone", buildDone);
         if (!buildPos.isEmpty()) {
@@ -1111,6 +1220,18 @@ public class GarageControllerBlockEntity extends BlockEntity {
             planH = tag.getInt("PlanH");
             showPlan = tag.getBoolean("ShowPlan");
             configured = tag.getBoolean("Configured");
+        }
+        for (var st : com.xtrip.golemgarage.block.GarageStyle.values()) {
+            if (st.id().equals(tag.getString("Style"))) {
+                style = st;
+            }
+        }
+        if (tag.contains("Showcase")) {
+            showcase.getItems().clear();
+            for (int i = 0; i < SHOWCASE_MAX; i++) {
+                showcase.getItems().set(i, ItemStack.EMPTY);
+            }
+            net.minecraft.world.ContainerHelper.loadAllItems(tag.getCompound("Showcase"), showcase.getItems(), registries);
         }
         buildTotal = tag.getInt("BuildTotal");
         buildDone = tag.getInt("BuildDone");

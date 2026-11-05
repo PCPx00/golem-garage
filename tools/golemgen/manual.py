@@ -588,6 +588,17 @@ def garage_chapter(sizes):
             text(B("Auto Build") + " lights up when you carry everything and nothing is in the way. Beams shoot "
                  "out of the controller and the room builds itself: floor, walls course by course, roof, then the "
                  "emitters. It uses the blocks you carry most of. In creative it's free.", "Auto Build"),
+            text("Pick a " + B("style") + " in the Planner before you build:\n\n- " + B("Wasteland") + ": rusty iron, "
+                 "no windows.\n- " + B("Showroom") + ": big windows and a glass roof, so you can see in.\n- "
+                 + B("Bunker") + ": concrete and steel, slit windows.\n- " + B("Barn") + ": red boards, white trim.",
+                 "Styles"),
+            text("Each style plans its own windows (light blue in the plan) and needs glass, panes or Garage "
+                 "Windows for them. When the room transforms, it takes that style's look, and you can see through "
+                 "its windows.", "Windows"),
+            text(B("Showcase") + ": in the Planner, open the showcase and put golem items (golems you picked up) "
+                 "in its slots. They stand on trophy shelves down the side walls of the finished Garage, under a "
+                 "spotlight, with their name on the shelf.\n\nSlots: 1 in a 3 x 3 Garage, 2 at 5 x 5, 4 at 7 x 7 "
+                 "and 6 at 9 x 9.", "Showcase"),
             text(B("Sneak + right-click") + " the controller to check the room in chat.\n\nBreaking a wall pauses "
                  "a repair. Breaking the controller drops the golem out, and gives back any blocks an auto build "
                  "hadn't placed yet.", "Checking It"),

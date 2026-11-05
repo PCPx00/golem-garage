@@ -13,6 +13,9 @@ public final class ModMenus {
     public static final DeferredHolder<MenuType<?>, MenuType<CubMenu>> CUB =
             MENUS.register("cub", () -> IMenuTypeExtension.create(CubMenu::fromNetwork));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<ShowcaseMenu>> SHOWCASE =
+            MENUS.register("garage_showcase", () -> IMenuTypeExtension.create(ShowcaseMenu::fromNetwork));
+
     private ModMenus() {
     }
 }

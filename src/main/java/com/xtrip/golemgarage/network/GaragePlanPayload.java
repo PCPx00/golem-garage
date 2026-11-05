@@ -14,19 +14,25 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /** Client to server, from the Garage Planner: set the size and plan visibility, auto-build, or report on the room. */
-public record GaragePlanPayload(BlockPos pos, int action, int w, int d, int h, boolean show) implements CustomPacketPayload {
-    public static final int SET = 0, BUILD = 1, CHECK = 2;
+public record GaragePlanPayload(BlockPos pos, int action, int w, int d, int h, boolean show, int style)
+        implements CustomPacketPayload {
+    public static final int SET = 0, BUILD = 1, CHECK = 2, SHOWCASE = 3;
     public static final Type<GaragePlanPayload> TYPE =
             new Type<>(ResourceLocation.fromNamespaceAndPath(GolemGarage.MOD_ID, "garage_plan"));
 
-    public static final StreamCodec<ByteBuf, GaragePlanPayload> STREAM_CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC, GaragePlanPayload::pos,
-            ByteBufCodecs.VAR_INT, GaragePlanPayload::action,
-            ByteBufCodecs.VAR_INT, GaragePlanPayload::w,
-            ByteBufCodecs.VAR_INT, GaragePlanPayload::d,
-            ByteBufCodecs.VAR_INT, GaragePlanPayload::h,
-            ByteBufCodecs.BOOL, GaragePlanPayload::show,
-            GaragePlanPayload::new);
+    public static final StreamCodec<ByteBuf, GaragePlanPayload> STREAM_CODEC = StreamCodec.of(
+            (buf, p) -> {
+                BlockPos.STREAM_CODEC.encode(buf, p.pos());
+                ByteBufCodecs.VAR_INT.encode(buf, p.action());
+                ByteBufCodecs.VAR_INT.encode(buf, p.w());
+                ByteBufCodecs.VAR_INT.encode(buf, p.d());
+                ByteBufCodecs.VAR_INT.encode(buf, p.h());
+                ByteBufCodecs.BOOL.encode(buf, p.show());
+                ByteBufCodecs.VAR_INT.encode(buf, p.style());
+            },
+            buf -> new GaragePlanPayload(BlockPos.STREAM_CODEC.decode(buf), ByteBufCodecs.VAR_INT.decode(buf),
+                    ByteBufCodecs.VAR_INT.decode(buf), ByteBufCodecs.VAR_INT.decode(buf), ByteBufCodecs.VAR_INT.decode(buf),
+                    ByteBufCodecs.BOOL.decode(buf), ByteBufCodecs.VAR_INT.decode(buf)));
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -42,7 +48,11 @@ public record GaragePlanPayload(BlockPos pos, int action, int w, int d, int h, b
                 return;
             }
             switch (p.action()) {
-                case SET -> garage.setPlan(p.w(), p.d(), p.h(), p.show());
+                case SET -> {
+                    garage.setStyle(com.xtrip.golemgarage.block.GarageStyle.of(p.style()));
+                    garage.setPlan(p.w(), p.d(), p.h(), p.show());
+                }
+                case SHOWCASE -> garage.openShowcase(player);
                 case BUILD -> {
                     String err = garage.autoBuild(player);
                     player.displayClientMessage(err == null

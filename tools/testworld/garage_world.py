@@ -77,3 +77,6 @@ write("ride", [
     "execute as @e[tag=r] run data modify entity @s Owner set from entity @p UUID",
     'tellraw @p "ride placed"',
 ])
+
+# Four named golem items for the Garage showcase.
+write("trophies", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "trophies.txt")).read().splitlines())

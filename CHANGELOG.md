@@ -2,6 +2,24 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.24.0
+
+### Added
+- **Garage Showcase**: in the Garage Planner, open the showcase and put golem items in its slots. Each golem
+  stands on a trophy shelf down the side walls of the finished Garage, in miniature under a warm spotlight,
+  turning gently, with its name (and rank chevrons) on the shelf edge. Slots scale with the room: 1 in a
+  3 x 3 Garage, 2 at 5 x 5, 4 at 7 x 7 and 6 at 9 x 9. Locked slots show a padlock. Breaking the controller
+  drops the golems.
+- **Garage styles**, picked in the Planner before building:
+  - **Wasteland**: the classic rusty iron, no windows.
+  - **Showroom**: clean painted steel and a checkered floor, with big windows on every wall and a glass roof so
+    you can see in.
+  - **Bunker**: blast concrete, dark riveted steel and sandbags, with slit windows under the roof.
+  - **Barn**: red boards with white trim and plank floors, with two windows down each side.
+  Each style plans its own windows (light blue in the plan), the Planner counts the glass it needs, auto build
+  places it, and the transformed Garage takes that style's look. Creative builds use each style's own blocks.
+- New controllers start in the style you last picked.
+
 ## 0.23.0
 
 ### Added
