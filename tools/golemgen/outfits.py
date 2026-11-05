@@ -45,6 +45,11 @@ STYLES = {
     "cape_black": ("#1c1820", "silk"), "cape_red": ("#a3162e", "silk"), "bat_wing": ("#3a2f45", "membrane"),
     "feather_white": ("#f5f3ee", "feather"), "scarf": ("#3f7fd6", "scarf"), "pack_orange": ("#f08a2a", "canvas"),
     "pack_orange_dark": ("#c4661a", "canvas"), "wing_clear": ("#dff6ff", "clear"),
+    "pumpkin": ("#e8862a", "fabric"), "pumpkin_stem": ("#5a7a2a", "leafy"), "ghost": ("#f4f2ee", "silk"),
+    "candy_orange": ("#ff9a2a", "canvas"), "santa_red": ("#c8202c", "knit"), "snow_white": ("#f6f6f6", "fur"),
+    "sweater_green": ("#2f7a46", "knit"), "earmuff": ("#e4566a", "fur"), "straw": ("#e6c470", "canvas"),
+    "ribbon_blue": ("#3f9fe6", "silk"), "floaty": ("#ff5a8a", "glossy"), "floaty_white": ("#f6f6f0", "glossy"),
+    "heart_pink": ("#ff4f8f", "lenses"),
     "tux_black": ("#1e1d26", "silk"), "shirt_white": ("#f4f3ee", "fabric"), "bowtie_red": ("#c81e34", "silk"), "flame": ("#ffb238", "neon"),
 }
 
@@ -174,6 +179,52 @@ OUTFITS = [
          recipe=["minecraft:blue_wool", "minecraft:white_wool"],
          parts=[("body", P("scarf", [B((-3, -1, -2), (6, 1, 4), "scarf", 0.45),
                                      B((1, 0, -2.75), (2, 4, 1), "scarf")]))]),
+    # ---- Spooky (Halloween)
+    dict(id="pumpkin_head", name="Pumpkin Head", slot="HEAD", theme="spooky",
+         recipe=["minecraft:carved_pumpkin", "minecraft:torch"],
+         parts=[("head", P("pumpkin", [B((-5, -10.5, -5), (10, 10, 10), "pumpkin", 0.4, deco="carved"),
+                                       B((-0.5, -12.5, -0.5), (1, 2, 1), "pumpkin_stem")]))]),
+    dict(id="ghost_sheet", name="Ghost Sheet", slot="BODY", theme="spooky",
+         recipe=["minecraft:white_wool", "minecraft:white_wool", "minecraft:white_wool", "minecraft:black_dye"],
+         parts=[("body", P("sheet", [B((-3.5, -0.5, -2.5), (7, 6, 5), "ghost", 0.3, deco="hem_ghost")])),
+                ("right_arm", P("sleeve_r", [B((-1.5, 0, -1), (2, 4, 2), "ghost", 0.35)])),
+                ("left_arm", P("sleeve_l", [B((-0.5, 0, -1), (2, 4, 2), "ghost", 0.35)], mirror=True))]),
+    dict(id="candy_bag", name="Candy Bag", slot="ACCESSORY", theme="spooky",
+         recipe=["minecraft:orange_wool", "minecraft:sugar", "minecraft:string"],
+         parts=[("right_arm", P("bag", [B((-2, 4, -1.5), (3, 3, 3), "candy_orange", deco="carved")]))]),
+    # ---- Winter
+    dict(id="santa_hat", name="Santa Hat", slot="HEAD", theme="winter",
+         recipe=["minecraft:red_wool", "minecraft:red_wool", "minecraft:white_wool"],
+         parts=[("head", P("santa", [B((-5, -10.5, -5), (10, 2, 10), "snow_white", 0.2),
+                                     B((-4, -13, -4), (8, 3, 8), "santa_red")],
+                           children=[P("tip", [B((-1.5, -3, -1.5), (3, 3, 3), "santa_red"),
+                                               B((-1, -4.5, -1), (2, 2, 2), "snow_white")],
+                                       pivot=(0, -13, 0), rot=(0.4, 0, -0.3))]))]),
+    dict(id="winter_sweater", name="Winter Sweater", slot="BODY", theme="winter",
+         recipe=["minecraft:green_wool", "minecraft:green_wool", "minecraft:red_wool", "minecraft:white_wool"],
+         parts=[("body", P("sweater", [B((-3, 0, -2), (6, 5, 4), "sweater_green", 0.35, deco="snowflake")])),
+                ("right_arm", P("sleeve_r", [B((-1.5, 0, -1), (2, 4, 2), "sweater_green", 0.3)])),
+                ("left_arm", P("sleeve_l", [B((-0.5, 0, -1), (2, 4, 2), "sweater_green", 0.3)], mirror=True))]),
+    dict(id="earmuffs", name="Earmuffs", slot="ACCESSORY", theme="winter",
+         recipe=["minecraft:pink_wool", "minecraft:pink_wool", "minecraft:iron_nugget"],
+         parts=[("head", P("earmuffs", [B((-5, -10.25, -0.5), (10, 1, 1), "silver", 0.2),
+                                        B((-6.5, -6.5, -2), (2, 4, 4), "earmuff"),
+                                        B((4.5, -6.5, -2), (2, 4, 4), "earmuff")]))]),
+    # ---- Summer
+    dict(id="sun_hat", name="Sun Hat", slot="HEAD", theme="summer",
+         recipe=["minecraft:wheat", "minecraft:wheat", "minecraft:wheat", "minecraft:blue_dye"],
+         parts=[("head", P("sunhat", [B((-7.5, -9.75, -7.5), (15, 1, 15), "straw"),
+                                      B((-4.5, -12, -4.5), (9, 2, 9), "straw", 0.1),
+                                      B((-4.5, -10.75, -4.5), (9, 1, 9), "ribbon_blue", 0.15)]))]),
+    dict(id="swim_ring", name="Swim Ring", slot="BODY", theme="summer",
+         recipe=["minecraft:pink_dye", "minecraft:slime_ball", "minecraft:white_dye"],
+         parts=[("body", P("ring", [B((-4.5, 3, -3.5), (9, 2, 7), "floaty", 0.2, deco="ring_stripes")]))]),
+    dict(id="heart_shades", name="Heart Shades", slot="ACCESSORY", theme="summer",
+         recipe=["minecraft:pink_stained_glass_pane", "minecraft:pink_stained_glass_pane", "minecraft:stick"],
+         parts=[("head", P("hearts", [
+             B((-5, -6.5, -5), (10, 2, 1), "heart_pink", 0.1, deco="lenses"),
+             B((-5.5, -6.5, -4.5), (1, 1, 5), "black_plastic"),
+             B((4.5, -6.5, -4.5), (1, 1, 5), "black_plastic")]))]),
     # ---- Fancy
     dict(id="crown", name="Royal Crown", slot="HEAD", theme="fancy",
          recipe=["minecraft:gold_ingot", "minecraft:gold_ingot", "minecraft:gold_ingot", "minecraft:redstone"],
@@ -215,7 +266,8 @@ OUTFITS = [
                                        B((1, 4, 2.5), (1, 1, 1), "flame")]))]),
 ]
 
-THEMES = {"cool": "Cool", "goth": "Goth", "cute": "Cute", "fancy": "Fancy"}
+THEMES = {"cool": "Cool", "goth": "Goth", "cute": "Cute", "fancy": "Fancy", "spooky": "Spooky", "winter": "Winter",
+          "summer": "Summer"}
 
 
 # ------------------------------------------------------------------ packing and painting
@@ -374,6 +426,37 @@ def paint_face(c, rect, style, face, deco, rng):
         for xx in range(x0, x1):
             if (xx - x0) % 2 == 1:
                 c.set(xx, y1 - 1, (0, 0, 0), 0)
+    elif deco == "carved" and face == "front":
+        dark, glow = (40, 20, 6), (255, 200, 60)
+        ex = [x0 + w // 4, x0 + 3 * w // 4 - 1]
+        for e in ex:
+            c.set(e, y0 + h // 3, glow, 255)
+            c.set(e, y0 + h // 3 - 1, dark, 255)
+            c.set(e - 1, y0 + h // 3, dark, 255)
+            c.set(e + 1, y0 + h // 3, dark, 255)
+        for xx in range(x0 + 2, x1 - 2):
+            c.set(xx, y0 + 2 * h // 3, glow if (xx - x0) % 2 else dark, 255)
+    elif deco == "hem_ghost" and face in ("front", "left", "right", "back"):
+        for xx in range(x0, x1):
+            if (xx - x0) % 2 == 0:
+                c.set(xx, y1 - 1, (0, 0, 0), 0)
+        if face == "front":
+            c.set(x0 + 2, y0 + 1, (20, 20, 24), 255)
+            c.set(x1 - 3, y0 + 1, (20, 20, 24), 255)
+            c.set(x0 + w // 2, y0 + 3, (20, 20, 24), 255)
+    elif deco == "snowflake" and face == "front":
+        mx, my = x0 + w // 2, y0 + h // 2
+        for d in (-1, 0, 1):
+            c.set(mx + d, my, (240, 240, 240), 255)
+            c.set(mx, my + d, (240, 240, 240), 255)
+        for xx in range(x0, x1):
+            c.set(xx, y0, (200, 30, 40), 255)
+            c.set(xx, y1 - 1, (200, 30, 40), 255)
+    elif deco == "ring_stripes":
+        for xx in range(x0, x1):
+            if ((xx - x0) // 2) % 2 == 0:
+                for yy in range(y0, y1):
+                    c.set(xx, yy, (246, 246, 240), 255)
     elif deco == "feathers" and face in ("front", "back"):
         for yy in range(y0, y1):
             for xx in range(x0, x1):

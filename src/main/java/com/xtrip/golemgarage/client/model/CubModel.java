@@ -98,6 +98,44 @@ public class CubModel extends EntityModel<CubEntity> {
         float flap = cub.isExcited() ? Mth.sin(age * 1.2f) * 0.8f : Mth.sin(age * 0.08f) * 0.05f;
         rightArm.zRot = 0.15f + Math.abs(flap);
         leftArm.zRot = -0.15f - Math.abs(flap);
+
+        // Emotes: a happy spin, a wave, or dancing to a jukebox.
+        root.yRot = 0;
+        root.zRot = 0;
+        float partial = age - (int) age;
+        CubEntity.Emote e = cub.emote(partial);
+        float t = cub.emoteProgress(partial);
+        switch (e) {
+            case SPIN -> {
+                root.yRot = t * Mth.TWO_PI;
+                float h = -Mth.sin(t * Mth.PI) * 4f;
+                head.y += h;
+                body.y += h;
+                rightArm.y += h;
+                leftArm.y += h;
+                rightLeg.y += h;
+                leftLeg.y += h;
+                rightArm.zRot = 1.2f;
+                leftArm.zRot = -1.2f;
+            }
+            case WAVE -> {
+                rightArm.xRot = -2.7f;
+                rightArm.zRot = 0.3f + Mth.sin(age * 0.9f) * 0.45f;
+            }
+            case DANCE -> {
+                float b = -Math.abs(Mth.sin(age * 0.5f)) * 1.8f;
+                head.y += b;
+                body.y += b;
+                rightArm.y += b;
+                leftArm.y += b;
+                root.zRot = Mth.sin(age * 0.25f) * 0.18f;
+                rightArm.xRot = -2.4f + Mth.sin(age * 0.5f) * 0.6f;
+                leftArm.xRot = -2.4f - Mth.sin(age * 0.5f) * 0.6f;
+                head.zRot = Mth.sin(age * 0.25f + 1f) * 0.25f;
+            }
+            default -> {
+            }
+        }
     }
 
     @Override

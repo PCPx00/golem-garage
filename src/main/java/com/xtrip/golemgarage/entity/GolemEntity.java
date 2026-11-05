@@ -307,6 +307,40 @@ public class GolemEntity extends PathfinderMob {
         return entityData.get(DATA_FINISH);
     }
 
+    // =================================================================== cub passengers
+    public boolean hasShoulderRoom() {
+        return getPassengers().stream().filter(p -> p instanceof CubEntity).count() < 2 && !isRogue();
+    }
+
+    @Override
+    protected boolean canAddPassenger(Entity passenger) {
+        return passenger instanceof CubEntity && hasShoulderRoom();
+    }
+
+    /** Cubs ride; they never steer. */
+    @Nullable
+    @Override
+    public LivingEntity getControllingPassenger() {
+        return null;
+    }
+
+    /** Cubs sit on the shoulders: first on the right, then the left. */
+    @Override
+    protected Vec3 getPassengerAttachmentPoint(Entity passenger, net.minecraft.world.entity.EntityDimensions dims, float scale) {
+        int i = getPassengers().indexOf(passenger);
+        double side = i == 0 ? -0.62 : 0.62;
+        return new Vec3(side, getBbHeight() * 0.74, 0.05);
+    }
+
+    @Override
+    protected void positionRider(Entity passenger, MoveFunction move) {
+        super.positionRider(passenger, move);
+        if (passenger instanceof CubEntity cub) {
+            cub.setYBodyRot(yBodyRot);
+            cub.setYRot(yBodyRot);
+        }
+    }
+
     // =================================================================== veterancy
     private int combatXp;
 

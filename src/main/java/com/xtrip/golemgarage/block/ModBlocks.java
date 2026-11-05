@@ -60,6 +60,11 @@ public final class ModBlocks {
             () -> new FabricatorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
                     .strength(3.5f, 6.0f).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops()));
 
+    public static final DeferredBlock<CubBedBlock> CUB_BED = BLOCKS.register(
+            "cub_bed",
+            () -> new CubBedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL)
+                    .strength(0.4f).sound(SoundType.WOOL).noOcclusion()));
+
     private ModBlocks() {
     }
 }

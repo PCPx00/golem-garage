@@ -10428,6 +10428,26 @@
        "type": "text",
        "text": "Cubs have moods:\n\n- They blink and tilt their heads at you.\n- They §lsit§r when you crouch next to them.\n- Stand still for a while and they §ldoze off§r, little z's floating up.\n- Come back after being away and they §ljump around§r with hearts.",
        "title": "Personality"
+      },
+      {
+       "type": "text",
+       "text": "§lTreats§r: give a Cub a cookie, berries or a honey bottle and it does a happy spin. Treated Cubs reach 2 blocks further with their magnet for 5 minutes.\n\n§lWaving§r: look straight at a Cub and it may wave back.\n\n§lDancing§r: Cubs dance next to a jukebox that's playing.",
+       "title": "Treats and Tricks"
+      },
+      {
+       "type": "text",
+       "text": "§lShoulder rides§r: now and then a Cub climbs onto one of your golems nearby and rides on its shoulder (two Cubs per golem). Crouch near it to call it down."
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:cub_bed",
+       "text": "Three wool over three wooden slabs.",
+       "title": "Cub Bed"
+      },
+      {
+       "type": "text",
+       "text": "At night a Cub walks to a free §lCub Bed§r within 16 blocks and sleeps on it until morning.",
+       "title": "Bedtime"
       }
      ]
     },
@@ -10494,8 +10514,38 @@
        "title": "Fancy"
       },
       {
+       "type": "items",
+       "items": [
+        "golemgarage:outfit_pumpkin_head",
+        "golemgarage:outfit_ghost_sheet",
+        "golemgarage:outfit_candy_bag"
+       ],
+       "text": "A glowing pumpkin head, a ghost sheet and a candy bag.",
+       "title": "Spooky"
+      },
+      {
+       "type": "items",
+       "items": [
+        "golemgarage:outfit_santa_hat",
+        "golemgarage:outfit_winter_sweater",
+        "golemgarage:outfit_earmuffs"
+       ],
+       "text": "A Santa hat, a snowflake sweater and earmuffs.",
+       "title": "Winter"
+      },
+      {
+       "type": "items",
+       "items": [
+        "golemgarage:outfit_sun_hat",
+        "golemgarage:outfit_swim_ring",
+        "golemgarage:outfit_heart_shades"
+       ],
+       "text": "A straw sun hat, a swim ring and heart-shaped shades.",
+       "title": "Summer"
+      },
+      {
        "type": "text",
-       "text": "Wear §lthree pieces of one style§r for a matching set. A Cub in a full set shows it off with its own sparkles: notes for cool, witchy swirls for goth, hearts for cute and glimmers for fancy.\n\nOutfits go back to you if the Cub grows into a golem.",
+       "text": "Wear §lthree pieces of one style§r for a matching set. A Cub in a full set shows it off with its own sparkles: notes for cool, witchy swirls for goth, hearts for cute, glimmers for fancy, soul flames for spooky, snowflakes for winter and splashes for summer.\n\nOutfits go back to you if the Cub grows into a golem.",
        "title": "Matching Sets"
       },
       {
@@ -10611,6 +10661,60 @@
        "recipe": "golemgarage:outfit/scarf",
        "text": "",
        "title": "Cozy Scarf"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:outfit/pumpkin_head",
+       "text": "",
+       "title": "Pumpkin Head"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:outfit/ghost_sheet",
+       "text": "",
+       "title": "Ghost Sheet"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:outfit/candy_bag",
+       "text": "",
+       "title": "Candy Bag"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:outfit/santa_hat",
+       "text": "",
+       "title": "Santa Hat"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:outfit/winter_sweater",
+       "text": "",
+       "title": "Winter Sweater"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:outfit/earmuffs",
+       "text": "",
+       "title": "Earmuffs"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:outfit/sun_hat",
+       "text": "",
+       "title": "Sun Hat"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:outfit/swim_ring",
+       "text": "",
+       "title": "Swim Ring"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:outfit/heart_shades",
+       "text": "",
+       "title": "Heart Shades"
       },
       {
        "type": "crafting",
@@ -11615,6 +11719,7 @@
   "golemgarage:war_horn": "war_horn",
   "golemgarage:fabricator": "workshop",
   "golemgarage:golem_tablet": "workshop",
+  "golemgarage:cub_bed": "cub_personality",
   "minecraft:honeycomb": "copper_care",
   "minecraft:vine": "vines",
   "minecraft:redstone_block": "power_basics",
@@ -11669,6 +11774,15 @@
   "golemgarage:outfit_bee_costume": "cub_outfits",
   "golemgarage:outfit_angel_wings": "cub_outfits",
   "golemgarage:outfit_scarf": "cub_outfits",
+  "golemgarage:outfit_pumpkin_head": "cub_outfits",
+  "golemgarage:outfit_ghost_sheet": "cub_outfits",
+  "golemgarage:outfit_candy_bag": "cub_outfits",
+  "golemgarage:outfit_santa_hat": "cub_outfits",
+  "golemgarage:outfit_winter_sweater": "cub_outfits",
+  "golemgarage:outfit_earmuffs": "cub_outfits",
+  "golemgarage:outfit_sun_hat": "cub_outfits",
+  "golemgarage:outfit_swim_ring": "cub_outfits",
+  "golemgarage:outfit_heart_shades": "cub_outfits",
   "golemgarage:outfit_crown": "cub_outfits",
   "golemgarage:outfit_astronaut_helmet": "cub_outfits",
   "golemgarage:outfit_tuxedo": "cub_outfits",

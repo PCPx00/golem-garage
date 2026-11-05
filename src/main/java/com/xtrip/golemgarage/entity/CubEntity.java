@@ -41,6 +41,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -67,6 +69,11 @@ public class CubEntity extends PathfinderMob {
     private static final EntityDataAccessor<Byte> DATA_FLAGS =
             SynchedEntityData.defineId(CubEntity.class, EntityDataSerializers.BYTE);
     /** Worn outfit ids for head, body and accessory, joined with '|' ("" for none). */
+    /** The current emote (see Emote) and when it started, for the model. */
+    private static final EntityDataAccessor<Integer> DATA_EMOTE =
+            SynchedEntityData.defineId(CubEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> DATA_EMOTE_START =
+            SynchedEntityData.defineId(CubEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> DATA_OUTFIT =
             SynchedEntityData.defineId(CubEntity.class, EntityDataSerializers.STRING);
     private final SimpleContainer wardrobe = new SimpleContainer(com.xtrip.golemgarage.menu.CubMenu.WARDROBE);
@@ -160,6 +167,8 @@ public class CubEntity extends PathfinderMob {
         builder.define(DATA_COLOR, DyeColor.PINK.getId());
         builder.define(DATA_FLAGS, (byte) 0);
         builder.define(DATA_OUTFIT, "||");
+        builder.define(DATA_EMOTE, 0);
+        builder.define(DATA_EMOTE_START, 0);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -172,7 +181,9 @@ public class CubEntity extends PathfinderMob {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(0, new BedGoal(this));
         this.goalSelector.addGoal(1, new FollowOwnerGoal(this, 1.15, 3.0));
+        this.goalSelector.addGoal(2, new ShoulderGoal(this));
         this.goalSelector.addGoal(2, new WanderNearOwnerGoal(this));
         this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 6.0f));
         this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
@@ -271,8 +282,9 @@ public class CubEntity extends PathfinderMob {
             teleportTo(owner.getX(), owner.getY(), owner.getZ());
         }
 
-        // Sit when the owner crouches nearby.
+        // Sit when the owner crouches nearby (and hop off a golem's shoulder to do it).
         setFlag(FLAG_SITTING, owner != null && owner.isShiftKeyDown() && distanceToSqr(owner) < 36);
+        tickFun(owner);
 
         // Doze off when the owner has stood still nearby for a while.
         if (owner != null) {
@@ -313,7 +325,8 @@ public class CubEntity extends PathfinderMob {
         setFlag(FLAG_EXCITED, excitedTicks > 0);
 
         // Item magnet.
-        int magnetRange = com.xtrip.golemgarage.Config.get(com.xtrip.golemgarage.Config.CUB_MAGNET_RANGE::get, 3);
+        int magnetRange = com.xtrip.golemgarage.Config.get(com.xtrip.golemgarage.Config.CUB_MAGNET_RANGE::get, 3)
+                + (level().getGameTime() < treatUntil ? 2 : 0);
         if (magnet && magnetRange > 0 && tickCount % 10 == 0) {
             for (ItemEntity item : level().getEntitiesOfClass(ItemEntity.class, getBoundingBox().inflate(magnetRange),
                     e -> e.isAlive() && !e.hasPickUpDelay())) {
@@ -338,6 +351,9 @@ public class CubEntity extends PathfinderMob {
                     case "cool" -> ParticleTypes.NOTE;
                     case "goth" -> ParticleTypes.WITCH;
                     case "cute" -> ParticleTypes.HEART;
+                    case "spooky" -> ParticleTypes.SOUL_FIRE_FLAME;
+                    case "winter" -> ParticleTypes.SNOWFLAKE;
+                    case "summer" -> ParticleTypes.SPLASH;
                     default -> ParticleTypes.END_ROD;
                 };
                 sl.sendParticles(p, getX(), getY() + 1.3, getZ(), 1, 0.3, 0.2, 0.3, 0.0);
@@ -393,6 +409,14 @@ public class CubEntity extends PathfinderMob {
         if (part != null) {
             feed(player, part);
             consume(player, held);
+            return InteractionResult.SUCCESS;
+        }
+        if (held.is(Items.COOKIE) || held.is(Items.SWEET_BERRIES) || held.is(Items.GLOW_BERRIES) || held.is(Items.HONEY_BOTTLE)) {
+            consume(player, held);
+            emote(Emote.SPIN, 30);
+            hearts();
+            treatUntil = level().getGameTime() + 6000;
+            playSound(com.xtrip.golemgarage.ModSounds.CUB_HAPPY.get(), 0.8f, 1.2f);
             return InteractionResult.SUCCESS;
         }
         if (!held.isEmpty()) {
@@ -596,6 +620,184 @@ public class CubEntity extends PathfinderMob {
         return owner.position();
     }
 
+    // =================================================================== emotes, treats, shoulders and beds
+    public enum Emote { NONE, SPIN, WAVE, DANCE }
+
+    private long treatUntil;
+    private int rideTicks;
+    @Nullable
+    private BlockPos bed;
+
+    public void emote(Emote e, int ticks) {
+        entityData.set(DATA_EMOTE, e.ordinal() | (ticks << 4));
+        entityData.set(DATA_EMOTE_START, (int) level().getGameTime());
+    }
+
+    /** The emote playing now (client or server), and how far through it is, 0..1. */
+    public Emote emote(float partial) {
+        int v = entityData.get(DATA_EMOTE);
+        int len = v >> 4;
+        float t = level().getGameTime() + partial - entityData.get(DATA_EMOTE_START);
+        return len > 0 && t >= 0 && t < len ? Emote.values()[v & 15] : Emote.NONE;
+    }
+
+    public float emoteProgress(float partial) {
+        int v = entityData.get(DATA_EMOTE);
+        int len = Math.max(1, v >> 4);
+        return Mth.clamp((level().getGameTime() + partial - entityData.get(DATA_EMOTE_START)) / len, 0f, 1f);
+    }
+
+    public boolean inBed() {
+        return bed != null;
+    }
+
+    private void tickFun(@Nullable Player owner) {
+        long t = level().getGameTime();
+        // Dance next to a jukebox that's playing.
+        if (tickCount % 20 == 0 && emote(0) == Emote.NONE) {
+            for (BlockPos p : BlockPos.betweenClosed(blockPosition().offset(-3, -1, -3), blockPosition().offset(3, 1, 3))) {
+                var st = level().getBlockState(p);
+                if (st.is(net.minecraft.world.level.block.Blocks.JUKEBOX)
+                        && st.getValue(net.minecraft.world.level.block.JukeboxBlock.HAS_RECORD)) {
+                    emote(Emote.DANCE, 40);
+                    break;
+                }
+            }
+        }
+        // Wave back when the owner looks at it.
+        if (owner != null && tickCount % 10 == 0 && emote(0) == Emote.NONE && random.nextInt(25) == 0
+                && distanceToSqr(owner) < 64) {
+            Vec3 look = owner.getViewVector(1f);
+            Vec3 to = position().add(0, 0.6, 0).subtract(owner.getEyePosition()).normalize();
+            if (look.dot(to) > 0.97) {
+                emote(Emote.WAVE, 30);
+                playSound(com.xtrip.golemgarage.ModSounds.CUB_CHIRP.get(), 0.6f, 1.3f);
+            }
+        }
+        // Riding a golem's shoulder: hop down after a while, when told to sit, or if the golem breaks down.
+        if (getVehicle() instanceof GolemEntity g) {
+            rideTicks++;
+            if (rideTicks > 2400 || isSitting() || g.isBroken() || g.isBreakingDown()
+                    || owner != null && distanceToSqr(owner) > 40 * 40) {
+                stopRiding();
+                rideTicks = 0;
+            }
+        } else {
+            rideTicks = 0;
+        }
+        // Bedtime: stay put on the bed until morning.
+        if (bed != null) {
+            boolean night = level().getDayTime() % 24000 >= 12800 && level().getDayTime() % 24000 < 23200;
+            if (!night || !(level().getBlockState(bed).getBlock() instanceof com.xtrip.golemgarage.block.CubBedBlock)) {
+                bed = null;
+                setFlag(FLAG_SLEEPY, false);
+            } else {
+                getNavigation().stop();
+                setPos(bed.getX() + 0.5, bed.getY() + 0.3, bed.getZ() + 0.5);
+                setDeltaMovement(Vec3.ZERO);
+                setFlag(FLAG_SLEEPY, true);
+                if (t % 50 == 0 && level() instanceof ServerLevel sl) {
+                    sl.sendParticles(ModParticles.SLEEP_Z.get(), getX() + 0.15, getY() + 1.0, getZ(), 1, 0, 0, 0, 0);
+                }
+            }
+        }
+    }
+
+    /** At night a cub walks to a free Cub Bed nearby and sleeps until morning. */
+    static class BedGoal extends Goal {
+        private final CubEntity cub;
+        private BlockPos target;
+
+        BedGoal(CubEntity cub) {
+            this.cub = cub;
+            this.setFlags(EnumSet.of(Flag.MOVE));
+        }
+
+        private static boolean night(Level level) {
+            long d = level.getDayTime() % 24000;
+            return d >= 12800 && d < 23200;
+        }
+
+        @Override
+        public boolean canUse() {
+            if (cub.bed != null || cub.isPassenger() || !night(cub.level()) || cub.tickCount % 40 != 0) {
+                return false;
+            }
+            BlockPos best = null;
+            double bestD = Double.MAX_VALUE;
+            for (BlockPos p : BlockPos.betweenClosed(cub.blockPosition().offset(-16, -4, -16), cub.blockPosition().offset(16, 4, 16))) {
+                if (cub.level().getBlockState(p).getBlock() instanceof com.xtrip.golemgarage.block.CubBedBlock) {
+                    final BlockPos q = p.immutable();
+                    boolean taken = !cub.level().getEntitiesOfClass(CubEntity.class, new net.minecraft.world.phys.AABB(q).inflate(0.2),
+                            c -> c != cub && c.bed != null && c.bed.equals(q)).isEmpty();
+                    double d = p.distSqr(cub.blockPosition());
+                    if (!taken && d < bestD) {
+                        bestD = d;
+                        best = q;
+                    }
+                }
+            }
+            target = best;
+            return best != null;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return target != null && cub.bed == null && night(cub.level());
+        }
+
+        @Override
+        public void tick() {
+            if (cub.blockPosition().distSqr(target) <= 2) {
+                cub.bed = target;
+                cub.playSound(com.xtrip.golemgarage.ModSounds.CUB_SLEEP.get(), 0.6f, 1f);
+                return;
+            }
+            if (cub.getNavigation().isDone()) {
+                cub.getNavigation().moveTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5, 1.0);
+            }
+        }
+    }
+
+    /** Now and then an idle cub climbs onto a shoulder of one of its owner's golems nearby. */
+    static class ShoulderGoal extends Goal {
+        private final CubEntity cub;
+        private GolemEntity golem;
+
+        ShoulderGoal(CubEntity cub) {
+            this.cub = cub;
+            this.setFlags(EnumSet.of(Flag.MOVE));
+        }
+
+        @Override
+        public boolean canUse() {
+            if (cub.isPassenger() || cub.isSitting() || cub.inBed() || cub.getOwnerUuid() == null || cub.random.nextInt(500) != 0) {
+                return false;
+            }
+            golem = cub.level().getEntitiesOfClass(GolemEntity.class, cub.getBoundingBox().inflate(6),
+                    g -> cub.getOwnerUuid().equals(g.getOwnerUuid()) && !g.isBroken() && g.hasShoulderRoom()).stream()
+                    .findFirst().orElse(null);
+            return golem != null;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return golem != null && golem.isAlive() && !cub.isPassenger() && golem.hasShoulderRoom() && cub.distanceToSqr(golem) < 100;
+        }
+
+        @Override
+        public void tick() {
+            if (cub.distanceToSqr(golem) < 4) {
+                if (cub.startRiding(golem, true)) {
+                    cub.playSound(com.xtrip.golemgarage.ModSounds.CUB_HAPPY.get(), 0.6f, 1.3f);
+                }
+                golem = null;
+                return;
+            }
+            cub.getNavigation().moveTo(golem, 1.2);
+        }
+    }
+
     /** Follows the owner to its own spot nearby; catches up by teleport if left far behind. */
     static class FollowOwnerGoal extends Goal {
         private final CubEntity cub;
@@ -618,7 +820,7 @@ public class CubEntity extends PathfinderMob {
         @Override
         public boolean canUse() {
             owner = cub.getOwner();
-            return owner != null && !cub.isSitting() && farFromSpot();
+            return owner != null && !cub.isSitting() && !cub.isPassenger() && !cub.inBed() && farFromSpot();
         }
 
         @Override

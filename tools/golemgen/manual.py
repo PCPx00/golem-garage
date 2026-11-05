@@ -919,6 +919,15 @@ def cubs_chapter():
                  "crouch next to them.\n- Stand still for a while and they " + B("doze off") + ", little z's "
                  "floating up.\n- Come back after being away and they " + B("jump around") + " with hearts.",
                  "Personality"),
+            text(B("Treats") + ": give a Cub a cookie, berries or a honey bottle and it does a happy spin. Treated "
+                 "Cubs reach 2 blocks further with their magnet for 5 minutes.\n\n" + B("Waving") + ": look "
+                 "straight at a Cub and it may wave back.\n\n" + B("Dancing") + ": Cubs dance next to a jukebox "
+                 "that's playing.\n\n" + B("Shoulder rides") + ": now and then a Cub climbs onto one of your golems "
+                 "nearby and rides on its shoulder (two Cubs per golem). Crouch near it to call it down.",
+                 "Treats and Tricks"),
+            craft(MODID + ":cub_bed", "Three wool over three wooden slabs.", "Cub Bed"),
+            text("At night a Cub walks to a free " + B("Cub Bed") + " within 16 blocks and sleeps on it until "
+                 "morning.", "Bedtime"),
         ]),
         entry("cub_outfits", "Outfits", MODID + ":outfit_witch_hat", [
             text("Cubs can dress up. Craft an outfit piece and right-click a Cub with it, or open the Cub with an "
@@ -932,9 +941,15 @@ def cubs_chapter():
                   "Bunny ears, bows, frog hats, flower crowns, dresses, a bee costume, wings and a scarf.", "Cute"),
             items(["%s:outfit_%s" % (MODID, o["id"]) for o in OUTFITS if o["theme"] == "fancy"],
                   "A royal crown, a space helmet, a tuxedo, a monocle and a rocket jetpack.", "Fancy"),
+            items(["%s:outfit_%s" % (MODID, o["id"]) for o in OUTFITS if o["theme"] == "spooky"],
+                  "A glowing pumpkin head, a ghost sheet and a candy bag.", "Spooky"),
+            items(["%s:outfit_%s" % (MODID, o["id"]) for o in OUTFITS if o["theme"] == "winter"],
+                  "A Santa hat, a snowflake sweater and earmuffs.", "Winter"),
+            items(["%s:outfit_%s" % (MODID, o["id"]) for o in OUTFITS if o["theme"] == "summer"],
+                  "A straw sun hat, a swim ring and heart-shaped shades.", "Summer"),
             text("Wear " + B("three pieces of one style") + " for a matching set. A Cub in a full set shows it "
-                 "off with its own sparkles: notes for cool, witchy swirls for goth, hearts for cute and glimmers "
-                 "for fancy.\n\nOutfits go back to you if the Cub grows into a golem.", "Matching Sets"),
+                 "off with its own sparkles: notes for cool, witchy swirls for goth, hearts for cute, glimmers "
+                 "for fancy, soul flames for spooky, snowflakes for winter and splashes for summer.\n\nOutfits go back to you if the Cub grows into a golem.", "Matching Sets"),
         ] + [craft("%s:outfit/%s" % (MODID, o["id"]), "", o["name"]) for o in OUTFITS]),
         entry("cub_growing", "Growing Up", MODID + ":golem@stone", [
             text("Feed a Cub " + B("three golem parts") + ", each for a different slot. After the third it grows "
@@ -1129,7 +1144,7 @@ def build_index():
         MODID + ":golem_dock": "dock", MODID + ":rig": "rig", MODID + ":rig_ram": "rig", MODID + ":rig_turret": "rig",
         MODID + ":rig_plating": "rig", MODID + ":tyre": "rig", MODID + ":scrap": "rig",
         MODID + ":rule_card": "rule_cards", MODID + ":war_horn": "war_horn", MODID + ":fabricator": "workshop",
-        MODID + ":golem_tablet": "workshop", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
+        MODID + ":golem_tablet": "workshop", MODID + ":cub_bed": "cub_personality", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
         "minecraft:redstone_block": "power_basics",
     }
     for sh in S.SHAPES:

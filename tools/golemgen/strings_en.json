@@ -205,7 +205,7 @@
   "jei.golemgarage.info.manual": "The Golem Engineer's Manual explains everything in Golem Garage. You get one the first time you join a world, and you can craft more from a book and an iron ingot.",
   "jei.golemgarage.info.module": "Right-click a golem with a module to install it. A golem has 2 module sockets; take one out again from the Status tab of its panel.",
   "jei.golemgarage.info.module_casing": "The empty shell every upgrade module is built in.",
-  "jei.golemgarage.info.outfit": "Clothes for cubs. Right-click a cub to put it on, or open the cub's wardrobe. Wear three pieces of the same style (cool, goth, cute or fancy) for a matching set.",
+  "jei.golemgarage.info.outfit": "Clothes for cubs. Right-click a cub to put it on, or open the cub's wardrobe. Wear three pieces of the same style (cool, goth, cute, fancy, spooky, winter or summer) for a matching set.",
   "jei.golemgarage.info.part": "Right-click a golem with a part to fit it. The material decides its strength and traits. Repair a worn part on an anvil with its material, with a Repair Kit, or in a Garage.",
   "jei.golemgarage.info.repair_kit": "Right-click a golem with it (or let the golem use one with the \"repair itself\" rule) to restore a quarter of every part's durability.",
   "jei.golemgarage.info.signal_plate": "A golem using the \"send a redstone signal\" rule while standing on this plate powers it.",
@@ -540,5 +540,6 @@
   "golemgarage.status.tablet_unloaded": "Far away (not loaded)",
   "jei.golemgarage.info.fabricator": "Builds golem parts with a robot arm. Sneak + right-click to choose the part, then feed it one material by hand, hopper or golem (6 to 9 of it, depending on the part; no extra ingredients needed). Take the part with a right-click, or a hopper underneath.",
   "jei.golemgarage.info.golem_tablet": "Shows all your golems on a radar map and in a list, with their health and what they're doing. Recall, stop or restart any of them, or watch through a nearby golem's eyes (sneak to stop).",
-  "jei.golemgarage.info.spray_can": "Gives a golem a custom finish: flames, hazard stripes, rust, camo, chrome or tiger stripes. Each can does 16 golems. A water bucket washes it off."
+  "jei.golemgarage.info.spray_can": "Gives a golem a custom finish: flames, hazard stripes, rust, camo, chrome or tiger stripes. Each can does 16 golems. A water bucket washes it off.",
+  "jei.golemgarage.info.cub_bed": "A little bed for cubs. At night, a cub within 16 blocks walks over, curls up and sleeps on it until morning."
 }

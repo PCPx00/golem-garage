@@ -2,6 +2,21 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.20.0
+
+### Added
+- **Seasonal outfits:** three new Cub sets. **Spooky** (glowing pumpkin head, ghost sheet, candy bag), **Winter**
+  (Santa hat, snowflake sweater, earmuffs) and **Summer** (straw sun hat, swim ring, heart shades). A full set gives
+  off its own particles: soul flames, snowflakes or splashes.
+- **Shoulder rides:** idle Cubs now and then climb onto one of your golems and ride on its shoulder, two per golem.
+  Crouch near them to call them down.
+- **Treats:** give a Cub a cookie, berries or a honey bottle for a happy spin, hearts, and 2 extra blocks of magnet
+  reach for 5 minutes.
+- **Emotes:** Cubs wave when you look straight at them and dance next to a playing jukebox.
+- **Cub Bed:** craft one from wool and wooden slabs. At night Cubs walk to a free bed within 16 blocks and sleep
+  there until morning.
+- New manual pages for all of it.
+
 ## 0.19.0
 
 ### Added

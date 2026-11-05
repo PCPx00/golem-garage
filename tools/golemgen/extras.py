@@ -187,6 +187,7 @@ NAMES = {
     "war_horn": "War Horn",
     "golem_tablet": "Golem Tablet",
     "fabricator": "Parts Fabricator",
+    "cub_bed": "Cub Bed",
 }
 
 SPRAY = {
@@ -228,6 +229,9 @@ def spray_icon(cap, bands):
     return img
 
 RECIPES = {
+    "cub_bed": {"type": "minecraft:crafting_shaped", "category": "decorations", "pattern": ["WWW", "SSS"],
+                "key": {"W": {"tag": "minecraft:wool"}, "S": {"tag": "minecraft:wooden_slabs"}},
+                "result": {"id": "golemgarage:cub_bed", "count": 1}},
     "golem_tablet": {"type": "minecraft:crafting_shaped", "category": "tools", "pattern": ["III", "IGI", "IRI"],
                      "key": {"I": {"tag": "c:ingots/iron"}, "G": {"item": "minecraft:glass_pane"},
                              "R": {"item": "minecraft:redstone_block"}},
@@ -293,7 +297,7 @@ def generate(assets, data, lang):
         _json(os.path.join(assets, "models/item", iid + ".json"),
               {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (MODID, iid)}})
     for iid, name in NAMES.items():
-        lang[("block" if iid == "fabricator" else "item") + ".%s.%s" % (MODID, iid)] = name
+        lang[("block" if iid in ("fabricator", "cub_bed") else "item") + ".%s.%s" % (MODID, iid)] = name
     for fin, (name, cap, bands, dyes) in SPRAY.items():
         iid = "spray_can_" + fin
         spray_icon(cap, bands).save(os.path.join(assets, "textures/item", iid + ".png"))
