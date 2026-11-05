@@ -47,6 +47,7 @@ public final class Config {
     public static final ModConfigSpec.BooleanValue WORLDGEN;
     public static final ModConfigSpec.BooleanValue RAIDS;
     public static final ModConfigSpec.DoubleValue RAID_CHANCE;
+    public static final ModConfigSpec.BooleanValue DUST_STORMS;
     public static final ModConfigSpec.IntValue RAID_MIN_GOLEMS;
     public static final ModConfigSpec.IntValue TITAN_MIN_GOLEMS;
 
@@ -126,6 +127,8 @@ public final class Config {
         b.comment("The wasteland").push("wasteland");
         WORLDGEN = b.comment("Generate scrapyards and abandoned garages in new chunks.")
                 .define("generateWastelandFinds", true);
+        DUST_STORMS = b.comment("Dust storms sweep through deserts, badlands and savannas now and then.")
+                .define("dustStorms", true);
         RAIDS = b.comment("Raider convoys of rogue golems can attack players' bases at nightfall.")
                 .define("raids", true);
         RAID_CHANCE = b.comment("Chance each night that a player who qualifies is raided (0 to 1).")

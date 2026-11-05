@@ -266,3 +266,53 @@ def style_tiles(img, Tile, rivets, PANEL, RUST):
     fill(t, lambda x, y: jit(t, (74, 50, 32), 5) if 1 < y < 14 else (50, 34, 22))
     for x in range(0, 16, 5):
         t.set(x, 7, (40, 28, 18))
+
+
+def finish_tiles(img, Tile, rivets, PANEL, RUST):
+    """Rig paint jobs from the spray cans (62-67): flames, hazard, rust, camo, chrome, tiger."""
+    def jit(t, c, n=5):
+        return tuple(v + t.rng.randint(-n, n) for v in c)
+
+    t = Tile(img, 62, 501)  # flames licking up from the bottom on black
+    for y in range(16):
+        for x in range(16):
+            h = 6 + 3 * ((x * 7) % 5) / 4 + (2 if x % 4 == 0 else 0)
+            fy = 15 - y
+            if fy < h - 3:
+                c = (255, 220, 60)
+            elif fy < h - 1:
+                c = (250, 140, 30)
+            elif fy < h:
+                c = (210, 50, 30)
+            else:
+                c = jit(t, (26, 24, 26), 3)
+            t.set(x, y, c)
+    t = Tile(img, 63, 502)  # hazard stripes
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, (230, 180, 40) if ((x + y) // 4) % 2 == 0 else (30, 28, 30))
+    t = Tile(img, 64, 503)  # heavy rust
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, RUST[t.rng.randint(1, 4)])
+    t.streaks(4, RUST[0], 7)
+    t = Tile(img, 65, 504)  # green camo
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, jit(t, (96, 110, 60), 4))
+    for (cx, cy, r, col) in ((4, 4, 3.2, (60, 70, 36)), (12, 11, 3.6, (60, 70, 36)), (11, 3, 2.4, (140, 120, 80)),
+                             (3, 12, 2.8, (40, 44, 30))):
+        for y in range(16):
+            for x in range(16):
+                if (x - cx) ** 2 + ((y - cy) * 1.3) ** 2 < r * r:
+                    t.set(x, y, jit(t, col, 3))
+    t = Tile(img, 66, 505)  # polished chrome
+    for y in range(16):
+        for x in range(16):
+            v = 150 + int(80 * abs(((x + y * 0.5) % 16) - 8) / 8)
+            t.set(x, y, (v, v, min(255, v + 8)))
+    t = Tile(img, 67, 506)  # tiger stripes
+    for y in range(16):
+        for x in range(16):
+            stripe = (x + int(3 * __import__("math").sin(y * 0.6))) % 6 < 2
+            t.set(x, y, (20, 18, 16) if stripe else jit(t, (230, 130, 30), 6))

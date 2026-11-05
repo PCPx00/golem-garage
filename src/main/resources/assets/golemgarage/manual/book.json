@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.25.0, by xTrip",
+ "subtitle": "Version 0.26.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -9749,6 +9749,22 @@
         [
          "rest at its dock",
          "Walks onto its Golem Dock and rests, slowly recharging and healing."
+        ],
+        [
+         "fish",
+         "Fishes at water within sight, like a player with a rod."
+        ],
+        [
+         "collect honey",
+         "Empties full beehives: honey bottles if it carries glass bottles, honeycomb with shears."
+        ],
+        [
+         "use a furnace",
+         "Loads the nearest furnace, smoker or blast furnace, fuels it and takes out the results."
+        ],
+        [
+         "sell to villagers",
+         "Sells what it carries to villagers who want it, for emeralds."
         ]
        ],
        "title": "DO..."
@@ -11025,6 +11041,67 @@
      ]
     },
     {
+     "id": "road_trips",
+     "title": "Scavenging and Paint",
+     "icon": "minecraft:filled_map",
+     "pages": [
+      {
+       "type": "text",
+       "text": "§lScavenging trips§r: load golems into a rig, give it at least an eighth of a tank, get out and right-click it with a §lmap§r. It drives off into the wasteland and comes back about 4 minutes later (3 for an Interceptor) to the same spot, with a §lbarrel of salvage§r beside it.",
+       "title": "Road Trips"
+      },
+      {
+       "type": "text",
+       "text": "Every golem on the trip earns experience and comes back a little worn, and the rig a little dented. More crew means a bigger haul, and a Juggernaut brings back an extra crate. You get a message when they're home.",
+       "title": "The Haul"
+      },
+      {
+       "type": "text",
+       "text": "§lPaint jobs§r: spray cans work on rigs too. Flames, hazard stripes, rust, camo, chrome or tiger stripes cover the bodywork. A water bucket washes it back to factory paint, and the paint stays when you pack the rig up.",
+       "title": "Paint Jobs"
+      },
+      {
+       "type": "text",
+       "text": "§lDust storms§r: now and then on a clear day, a storm blows through deserts, badlands and savannas for a few minutes. Out in the open the sky turns to a tan haze, sand streams past, golem parts wear three times as fast as in sand, and the wind shoves rigs sideways. Get your golems indoors, or seal their parts with honeycomb.",
+       "title": "Dust Storms"
+      }
+     ]
+    },
+    {
+     "id": "arena",
+     "title": "Golem Arena",
+     "icon": "golemgarage:arena_bell",
+     "pages": [
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:arena_bell",
+       "text": "A copper block on a log, on three scrap.",
+       "title": "Arena Bell"
+      },
+      {
+       "type": "text",
+       "text": "Stand two golems inside the bell's ring (6 blocks, marked by golden dust) and §lring it§r. They spar while a bar shows each one's health. The first down to a quarter of its health yields: nobody breaks down.",
+       "title": "Sparring"
+      },
+      {
+       "type": "text",
+       "text": "The winner earns 40 experience and an §larena win§r, the loser still earns 15. A minute without a winner is a draw. Arena wins show when you look at a golem on a showcase shelf. Your own golems can spar each other.",
+       "title": "Glory"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:garage_blueprint",
+       "text": "Two paper, blue dye and a Garage Controller.",
+       "title": "Garage Blueprint"
+      },
+      {
+       "type": "text",
+       "text": "§lSneak + use§r it on a Garage Controller to copy its size and style. Then use it on the §lground§r: it puts down a controller from your inventory with that plan and starts the auto build if you carry the blocks. Use it on another controller to give it the same plan.",
+       "title": "Copying Garages"
+      }
+     ]
+    },
+    {
      "id": "finds",
      "title": "Scrapyards and Ruins",
      "icon": "minecraft:barrel",
@@ -11989,6 +12066,8 @@
   "golemgarage:rig_interceptor": "rig_variants",
   "golemgarage:rig_juggernaut": "rig_variants",
   "golemgarage:rig_skimmer": "rig_variants",
+  "golemgarage:arena_bell": "arena",
+  "golemgarage:garage_blueprint": "arena",
   "minecraft:honeycomb": "copper_care",
   "minecraft:vine": "vines",
   "minecraft:redstone_block": "power_basics",

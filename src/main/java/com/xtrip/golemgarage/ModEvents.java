@@ -64,6 +64,9 @@ public final class ModEvents {
     /** No friendly fire: your golems, rigs and turrets never hurt you, each other or your cubs. */
     @SubscribeEvent
     public static void onIncomingDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event) {
+        if (com.xtrip.golemgarage.world.Arena.onDamage(event)) {
+            return;
+        }
         java.util.UUID attacker = ownerOf(event.getSource().getEntity());
         if (attacker == null) {
             return;

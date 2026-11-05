@@ -1,0 +1,15 @@
+kill @e[type=golemgarage:golem]
+kill @e[type=villager]
+fill 30 -61 30 60 -55 50 air
+fill 30 -61 30 60 -61 50 grass_block
+fill 32 -61 32 36 -61 36 water
+fill 32 -62 32 36 -62 36 water
+summon golemgarage:golem 38 -60 34 {PersistenceRequired:1b,Tags:["j"],Parts:{head:{Shape:"sentry_head",Material:"iron"},torso:{Shape:"plated_chest",Material:"iron"},arms:{Shape:"golem_fists",Material:"iron"},legs:{Shape:"stub_legs",Material:"iron"},core:{Shape:"redstone_core",Material:"iron"}},Rules:[{T:"ALWAYS",P:0,A:"FISH",AP:0}]}
+setblock 44 -60 32 minecraft:beehive[honey_level=5,facing=south]
+summon golemgarage:golem 44 -60 36 {PersistenceRequired:1b,Tags:["j"],Parts:{head:{Shape:"sentry_head",Material:"iron"},torso:{Shape:"plated_chest",Material:"iron"},arms:{Shape:"golem_fists",Material:"iron"},legs:{Shape:"stub_legs",Material:"iron"},core:{Shape:"redstone_core",Material:"iron"}},Rules:[{T:"ALWAYS",P:0,A:"KEEP_BEES",AP:0}],Items:[{Slot:0b,id:"minecraft:glass_bottle",count:4}]}
+setblock 50 -60 32 minecraft:furnace[facing=south]
+summon golemgarage:golem 50 -60 36 {PersistenceRequired:1b,Tags:["j"],Parts:{head:{Shape:"sentry_head",Material:"iron"},torso:{Shape:"plated_chest",Material:"iron"},arms:{Shape:"golem_fists",Material:"iron"},legs:{Shape:"stub_legs",Material:"iron"},core:{Shape:"redstone_core",Material:"iron"}},Rules:[{T:"ALWAYS",P:0,A:"SMELT_AT_FURNACE",AP:0}],Items:[{Slot:0b,id:"minecraft:raw_iron",count:8},{Slot:1b,id:"minecraft:coal",count:8}]}
+summon villager 56 -60 34 {NoAI:1b,VillagerData:{profession:"minecraft:farmer",level:1,type:"minecraft:plains"},Offers:{Recipes:[{buy:{id:"minecraft:wheat",count:20},sell:{id:"minecraft:emerald",count:1},maxUses:12}]}}
+summon golemgarage:golem 56 -60 38 {PersistenceRequired:1b,Tags:["j"],Parts:{head:{Shape:"sentry_head",Material:"iron"},torso:{Shape:"plated_chest",Material:"iron"},arms:{Shape:"golem_fists",Material:"iron"},legs:{Shape:"stub_legs",Material:"iron"},core:{Shape:"redstone_core",Material:"iron"}},Rules:[{T:"ALWAYS",P:0,A:"TRADE",AP:0}],Items:[{Slot:0b,id:"minecraft:wheat",count:64}]}
+execute as @e[tag=j] run data modify entity @s Owner set from entity @p UUID
+tellraw @p "jobs placed"

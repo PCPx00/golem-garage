@@ -52,6 +52,8 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
     /** Ticks of nitro left (Interceptor) and of cannon flash (Juggernaut), for speed and the renderer. */
     private static final EntityDataAccessor<Integer> BOOST = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> FLASH = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.INT);
+    /** Spray-can paint job ("" for the factory paint). */
+    private static final EntityDataAccessor<String> FINISH = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.STRING);
     private int boostCooldown;
     private boolean wasOn;
     private int engineSoundAt;
@@ -97,6 +99,7 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         builder.define(VARIANT, (byte) 0);
         builder.define(BOOST, 0);
         builder.define(FLASH, 0);
+        builder.define(FINISH, "");
     }
 
     // =================================================================== state
@@ -134,6 +137,10 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         if (full || getHealth() > getMaxHealth()) {
             setHealth(getMaxHealth());
         }
+    }
+
+    public String finish() {
+        return entityData.get(FINISH);
     }
 
     public boolean boosting() {
@@ -681,6 +688,35 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
             }
             return InteractionResult.sidedSuccess(client);
         }
+        // A map sends a golem crew off scavenging.
+        if (held.is(Items.MAP) || held.is(Items.FILLED_MAP)) {
+            if (!client) {
+                String err = com.xtrip.golemgarage.world.Scavenging.depart(this, player);
+                if (err != null) {
+                    player.displayClientMessage(Component.translatable(err).withStyle(net.minecraft.ChatFormatting.RED), true);
+                }
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
+        // Spray paint, and a water bucket to wash it off.
+        if (held.getItem() instanceof com.xtrip.golemgarage.item.SprayCanItem can) {
+            if (!client && !can.finish().equals(finish())) {
+                entityData.set(FINISH, can.finish());
+                held.hurtAndBreak(1, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(hand));
+                playSound(SoundEvents.FIRE_EXTINGUISH, 0.6f, 1.6f);
+                if (level() instanceof ServerLevel sl) {
+                    sl.sendParticles(ParticleTypes.CLOUD, getX(), getY() + 0.8, getZ(), 20, 1.0, 0.5, 1.0, 0.02);
+                }
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
+        if (held.is(Items.WATER_BUCKET) && !finish().isEmpty()) {
+            if (!client) {
+                entityData.set(FINISH, "");
+                playSound(SoundEvents.BUCKET_EMPTY, 1f, 1f);
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
         // Fuel.
         int burn = held.getBurnTime(null);
         if (burn > 0 && getFuel() < MAX_FUEL - 100) {
@@ -816,6 +852,7 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         tag.putInt("Fuel", getFuel());
         tag.putByte("Upgrades", entityData.get(UPGRADES));
         tag.putString("Variant", variant().id());
+        tag.putString("Finish", finish());
         if (owner != null) {
             tag.putUUID("Owner", owner);
         }
@@ -834,6 +871,7 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
             setHealth(Math.min(hp, getMaxHealth()));
         }
         setFuel(tag.getInt("Fuel"));
+        entityData.set(FINISH, tag.getString("Finish"));
         byte up = tag.getByte("Upgrades");
         for (int u : new int[]{RAM, TURRET, PLATING}) {
             if ((up & u) != 0) {
@@ -850,6 +888,7 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         t.putInt("Fuel", getFuel());
         t.putByte("Upgrades", entityData.get(UPGRADES));
         t.putFloat("Health", getHealth());
+        t.putString("Finish", finish());
         stack.set(ModDataComponents.RIG_DATA.get(), net.minecraft.world.item.component.CustomData.of(t));
         return stack;
     }
@@ -866,6 +905,7 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         }
         CompoundTag t = data.copyTag();
         setFuel(t.getInt("Fuel"));
+        entityData.set(FINISH, t.getString("Finish"));
         byte up = t.getByte("Upgrades");
         for (int u : new int[]{RAM, TURRET, PLATING}) {
             if ((up & u) != 0) {

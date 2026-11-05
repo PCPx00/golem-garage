@@ -267,8 +267,8 @@ final class GarageSkin {
 
     private static void quad(VertexConsumer vc, PoseStack.Pose p, float ox, float oy, float oz, Vector3f r, Vector3f u,
                              float hr, float hu, Vector3f n, int tile, int light) {
-        float u0 = (tile % 8) * 16 / 128f, v0 = (tile / 8) * 16 / 128f;
-        float u1 = u0 + 16 / 128f, v1 = v0 + 16 / 128f;
+        float u0 = (tile % 8) * 16 / 128f, v0 = (tile / 8) * 16 / 256f;
+        float u1 = u0 + 16 / 128f, v1 = v0 + 16 / 256f;
         vert(vc, p, ox - r.x * hr - u.x * hu, oy - r.y * hr - u.y * hu, oz - r.z * hr - u.z * hu, u0, v1, n, light);
         vert(vc, p, ox + r.x * hr - u.x * hu, oy + r.y * hr - u.y * hu, oz + r.z * hr - u.z * hu, u1, v1, n, light);
         vert(vc, p, ox + r.x * hr + u.x * hu, oy + r.y * hr + u.y * hu, oz + r.z * hr + u.z * hu, u1, v0, n, light);

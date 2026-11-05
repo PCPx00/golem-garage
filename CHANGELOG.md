@@ -2,6 +2,28 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.26.0
+
+### Added
+- **Golem Arena**: place an **Arena Bell** and ring it with two golems within 6 blocks. They spar under two boss
+  bars until one drops to a quarter of its health. Nobody breaks down. The winner earns 40 experience and an
+  arena win (shown on its stats), and the loser still earns 15. A bout with no winner after a minute is a draw.
+- **Garage Blueprint**: sneak + use it on a Garage Controller to copy that Garage's size and style. Use it on
+  another controller to give it the same plan, or on the ground to place a controller from your inventory
+  and start building straight away.
+- **Scavenging trips**: use a map on a rig with golems aboard. It drives off into the wasteland and comes back
+  a couple of minutes later where it left, with a worn crew, some experience and a barrel of salvage. More
+  crew means a bigger haul; a Juggernaut brings back more and an Interceptor comes back sooner.
+- **Paintable rigs**: six spray cans (flames, hazard, rust, camo, chrome, tiger). A water bucket washes the
+  paint off.
+- **Dust storms**: some clear days, a storm blows through deserts, badlands and savannas. It brings tan fog
+  and blowing sand, pushes rigs around, and wears out golems three times as fast. Turn them off with the
+  `dustStorms` setting, or start one with `/gg storm <seconds>`.
+- **New golem jobs**: fish, collect honey from full hives, smelt at a furnace, and trade with villagers.
+
+### Fixed
+- Maps, spray cans and water buckets reach a rig even when a golem riding it is in the way.
+
 ## 0.25.0
 
 ### Added

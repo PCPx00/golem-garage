@@ -909,6 +909,15 @@ public class GolemEntity extends PathfinderMob {
         }
         boolean rain = level().isRainingAt(blockPosition().above(2));
         boolean sand = level().getBiome(blockPosition()).is(Tags.Biomes.IS_DESERT);
+        // A dust storm scours every unsealed part, three times as hard.
+        if (com.xtrip.golemgarage.world.DustStorms.at(level(), blockPosition())) {
+            for (Map.Entry<PartSlot, PartInstance> e : new ArrayList<>(parts.entrySet())) {
+                if (!stats.isSealed(e.getKey(), e.getValue())) {
+                    wearPart(e.getKey(), 3);
+                }
+            }
+            return;
+        }
         if (!rain && !sand) {
             return;
         }
@@ -916,6 +925,13 @@ public class GolemEntity extends PathfinderMob {
             if (!stats.isSealed(e.getKey(), e.getValue())) {
                 wearPart(e.getKey(), 1);
             }
+        }
+    }
+
+    /** Wears every part a little (scavenging trips). */
+    public void wearAll(int amount) {
+        for (PartSlot slot : new ArrayList<>(parts.keySet())) {
+            wearPart(slot, amount);
         }
     }
 
@@ -1185,6 +1201,9 @@ public class GolemEntity extends PathfinderMob {
     /** Players are fair game only as the server's playerDamage setting allows, and never the owner. */
     @Override
     public boolean canAttack(LivingEntity target) {
+        if (target instanceof GolemEntity g && com.xtrip.golemgarage.world.Arena.opponents(this, g)) {
+            return true;
+        }
         if (isRogue()) {
             return !(target instanceof GolemEntity g && g.isRogue()) && super.canAttack(target);
         }
@@ -1608,7 +1627,10 @@ public class GolemEntity extends PathfinderMob {
         boolean hit = target.hurt(src, dmg);
         if (hit) {
             double kb = getAttributeValue(Attributes.ATTACK_KNOCKBACK);
-            if (target instanceof LivingEntity living) {
+            boolean spar = target instanceof GolemEntity g && com.xtrip.golemgarage.world.Arena.opponents(this, g);
+            if (spar) {
+                ((LivingEntity) target).knockback(0.15, Mth.sin(getYRot() * Mth.DEG_TO_RAD), -Mth.cos(getYRot() * Mth.DEG_TO_RAD));
+            } else if (target instanceof LivingEntity living) {
                 living.knockback(0.4 + kb * 0.5, Mth.sin(getYRot() * Mth.DEG_TO_RAD), -Mth.cos(getYRot() * Mth.DEG_TO_RAD));
                 if (kb > 0) {
                     target.setDeltaMovement(target.getDeltaMovement().add(0, 0.25 + 0.1 * kb, 0));
@@ -1815,6 +1837,12 @@ public class GolemEntity extends PathfinderMob {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack held = player.getItemInHand(hand);
+        // A golem riding a rig covers most of it, so rig items (maps, spray paint, a water bucket) pass through to the rig.
+        if (getVehicle() instanceof RigEntity rig && (held.is(net.minecraft.world.item.Items.MAP)
+                || held.is(net.minecraft.world.item.Items.FILLED_MAP) || held.is(net.minecraft.world.item.Items.WATER_BUCKET)
+                || held.getItem() instanceof com.xtrip.golemgarage.item.SprayCanItem)) {
+            return rig.interact(player, hand);
+        }
         if (level().isClientSide) {
             if (!player.isShiftKeyDown() && held.isEmpty() && canEdit(player)) {
                 ClientHooks.openGolemScreen(this);
@@ -2256,6 +2284,7 @@ public class GolemEntity extends PathfinderMob {
         tag.putInt("Xp", getXp());
         tag.putString("Finish", getFinish());
         tag.putInt("Personality", getPersonality().ordinal());
+        tag.putInt("ArenaWins", getPersistentData().getInt("GGArenaWins"));
         tag.putInt("XpCombat", combatXp);
         CompoundTag l = new CompoundTag();
         links.forEach((m, p) -> l.putLong(m.name(), p.asLong()));
@@ -2299,6 +2328,9 @@ public class GolemEntity extends PathfinderMob {
         paused = tag.getBoolean("Paused");
         entityData.set(DATA_XP, tag.getInt("Xp"));
         entityData.set(DATA_FINISH, tag.getString("Finish"));
+        if (tag.contains("ArenaWins")) {
+            getPersistentData().putInt("GGArenaWins", tag.getInt("ArenaWins"));
+        }
         if (tag.contains("Personality")) {
             entityData.set(DATA_PERSONALITY, tag.getInt("Personality"));
         }

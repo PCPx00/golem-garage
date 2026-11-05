@@ -180,4 +180,39 @@ def rig_variants():
     ])
 
 
-EXTRA = [rig_variants, finds, cards, raids, veterans, horn, workshop]
+def road_trips():
+    return entry("road_trips", "Scavenging and Paint", "minecraft:filled_map", [
+        text(B("Scavenging trips") + ": load golems into a rig, give it at least an eighth of a tank, get out and "
+             "right-click it with a " + B("map") + ". It drives off into the wasteland and comes back about 4 "
+             "minutes later (3 for an Interceptor) to the same spot, with a " + B("barrel of salvage") + " beside "
+             "it.", "Road Trips"),
+        text("Every golem on the trip earns experience and comes back a little worn, and the rig a little "
+             "dented. More crew means a bigger haul, and a Juggernaut brings back an extra crate. You get a message "
+             "when they're home.", "The Haul"),
+        text(B("Paint jobs") + ": spray cans work on rigs too. Flames, hazard stripes, rust, camo, chrome or "
+             "tiger stripes cover the bodywork. A water bucket washes it back to factory paint, and the paint "
+             "stays when you pack the rig up.", "Paint Jobs"),
+        text(B("Dust storms") + ": now and then on a clear day, a storm blows through deserts, badlands and "
+             "savannas for a few minutes. Out in the open the sky turns to a tan haze, sand streams past, golem "
+             "parts wear three times as fast as in sand, and the wind shoves rigs sideways. Get your golems "
+             "indoors, or seal their parts with honeycomb.", "Dust Storms"),
+    ])
+
+
+def arena():
+    return entry("arena", "Golem Arena", MODID + ":arena_bell", [
+        craft(MODID + ":arena_bell", "A copper block on a log, on three scrap.", "Arena Bell"),
+        text("Stand two golems inside the bell's ring (6 blocks, marked by golden dust) and " + B("ring it")
+             + ". They spar while a bar shows each one's health. The first down to a quarter of its health "
+             "yields: nobody breaks down.", "Sparring"),
+        text("The winner earns 40 experience and an " + B("arena win") + ", the loser still earns 15. A minute "
+             "without a winner is a draw. Arena wins show when you look at a golem on a showcase shelf. Your own "
+             "golems can spar each other.", "Glory"),
+        craft(MODID + ":garage_blueprint", "Two paper, blue dye and a Garage Controller.", "Garage Blueprint"),
+        text(B("Sneak + use") + " it on a Garage Controller to copy its size and style. Then use it on the "
+             + B("ground") + ": it puts down a controller from your inventory with that plan and starts the auto "
+             "build if you carry the blocks. Use it on another controller to give it the same plan.", "Copying Garages"),
+    ])
+
+
+EXTRA = [rig_variants, road_trips, arena, finds, cards, raids, veterans, horn, workshop]

@@ -80,3 +80,12 @@ write("ride", [
 
 # Four named golem items for the Garage showcase.
 write("trophies", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "trophies.txt")).read().splitlines())
+
+# The 0.26 jobs: fishing, beekeeping, a furnace and a villager to trade with.
+write("jobs", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "jobs.txt")).read().splitlines())
+
+# Two owned golems around an Arena Bell.
+write("arena", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "arena.txt")).read().splitlines())
+
+# An Interceptor with a golem aboard, and a map to send it scavenging.
+write("trip", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "trip.txt")).read().splitlines())

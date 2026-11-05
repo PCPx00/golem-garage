@@ -20,6 +20,23 @@ PAL = {
 }
 
 ICONS = {
+    "garage_blueprint": [
+        "................",
+        "..kkkkkkkkkkkk..",
+        "..kBBBBBBBBBBk..",
+        "..kBuuuuuuuuBk..",
+        "..kBuSSSSSSuBk..",
+        "..kBuS.uu.SuBk..",
+        "..kBuS.uu.SuBk..",
+        "..kBuSSSSSSuBk..",
+        "..kBuS.SS.SuBk..",
+        "..kBuS.SS.SuBk..",
+        "..kBuSSyySSuBk..",
+        "..kBuuuuuuuuBk..",
+        "..kBuSSSSuuuBk..",
+        "..kBBBBBBBBBBk..",
+        "..kkkkkkkkkkkk..",
+        "................"],
     "scrap": [
         "................",
         "................",
@@ -192,6 +209,8 @@ NAMES = {
     "fabricator": "Parts Fabricator",
     "cub_bed": "Cub Bed",
     "garage_radio": "Garage Radio",
+    "garage_blueprint": "Garage Blueprint",
+    "arena_bell": "Arena Bell",
 }
 
 SPRAY = {
@@ -233,6 +252,14 @@ def spray_icon(cap, bands):
     return img
 
 RECIPES = {
+    "garage_blueprint": {"type": "minecraft:crafting_shapeless", "category": "misc",
+                         "ingredients": [{"item": "minecraft:paper"}, {"item": "minecraft:paper"}, {"tag": "c:dyes/blue"},
+                                         {"item": "golemgarage:garage_controller"}],
+                         "result": {"id": "golemgarage:garage_blueprint", "count": 1}},
+    "arena_bell": {"type": "minecraft:crafting_shaped", "category": "decorations", "pattern": [" G ", " L ", "SSS"],
+                   "key": {"G": {"tag": "c:storage_blocks/copper"}, "L": {"tag": "minecraft:logs"},
+                           "S": {"item": "golemgarage:scrap"}},
+                   "result": {"id": "golemgarage:arena_bell", "count": 1}},
     "rig_interceptor": {"type": "minecraft:crafting_shaped", "category": "transportation", "pattern": ["TST", "GFG", "T T"],
                         "key": {"T": {"item": "golemgarage:tyre"}, "S": {"item": "golemgarage:scrap"},
                                 "G": {"tag": "c:ingots/gold"}, "F": {"item": "minecraft:blast_furnace"}},
@@ -316,7 +343,7 @@ def generate(assets, data, lang):
         _json(os.path.join(assets, "models/item", iid + ".json"),
               {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (MODID, iid)}})
     for iid, name in NAMES.items():
-        lang[("block" if iid in ("fabricator", "cub_bed", "garage_radio") else "item") + ".%s.%s" % (MODID, iid)] = name
+        lang[("block" if iid in ("fabricator", "cub_bed", "garage_radio", "arena_bell") else "item") + ".%s.%s" % (MODID, iid)] = name
     for fin, (name, cap, bands, dyes) in SPRAY.items():
         iid = "spray_can_" + fin
         spray_icon(cap, bands).save(os.path.join(assets, "textures/item", iid + ".png"))

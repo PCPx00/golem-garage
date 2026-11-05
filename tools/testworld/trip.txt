@@ -1,0 +1,4 @@
+kill @e[type=golemgarage:rig]
+summon golemgarage:rig 10.5 -60 -10.5 {NeoForgeData:{GGParked:1b},Fuel:20000,Variant:"interceptor",Passengers:[{id:"golemgarage:golem",PersistenceRequired:1b,CustomName:'"Scout"',Tags:["t"],Parts:{head:{Shape:"sentry_head",Material:"iron"},torso:{Shape:"plated_chest",Material:"iron"},arms:{Shape:"golem_fists",Material:"iron"},legs:{Shape:"stub_legs",Material:"iron"},core:{Shape:"redstone_core",Material:"iron"}}}]}
+execute as @e[tag=t] run data modify entity @s Owner set from entity @p UUID
+item replace entity @p hotbar.4 with minecraft:map

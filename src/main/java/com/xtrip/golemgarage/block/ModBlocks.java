@@ -70,6 +70,10 @@ public final class ModBlocks {
             () -> new GarageRadioBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN)
                     .strength(1.5f, 6.0f).sound(SoundType.METAL).noOcclusion()));
 
+    public static final DeferredBlock<ArenaBellBlock> ARENA_BELL = BLOCKS.register("arena_bell",
+            () -> new ArenaBellBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(2f, 6f).sound(SoundType.ANVIL).noOcclusion()));
+
     private ModBlocks() {
     }
 }

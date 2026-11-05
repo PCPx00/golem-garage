@@ -90,7 +90,11 @@ public record GolemRule(Trigger trigger, int param, Action action, int actionPar
         EMIT_SIGNAL("emit redstone"),
         GIVE_TO_GOLEM("give items to a golem"),
         PATROL("patrol its area"),
-        GO_HOME("rest at its dock");
+        GO_HOME("rest at its dock"),
+        FISH("fish"),
+        KEEP_BEES("collect honey"),
+        SMELT_AT_FURNACE("use a furnace"),
+        TRADE("trade with villagers");
 
         public final String label;
         public final boolean hasParam;

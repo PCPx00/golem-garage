@@ -79,6 +79,10 @@ public final class ShowcaseLook {
                 : Component.translatable("entity.golemgarage.golem"));
         lines.add(Component.literal(I18n.get(Veterancy.rankKey(g.rank())) + " · " + g.getXp() + " xp · "
                 + I18n.get(g.getPersonality().key())));
+        int wins = g.getPersistentData().getInt("GGArenaWins");
+        if (wins > 0) {
+            lines.add(Component.translatable("golemgarage.arena.wins", wins));
+        }
         var parts = g.getEquipped();
         for (PartSlot slot : PartSlot.values()) {
             var p = parts.get(slot);

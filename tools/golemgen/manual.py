@@ -718,6 +718,10 @@ def behaviors_chapter():
         ("give to a golem", "Hands its items to the nearest of your golems with room, within 12 blocks."),
         ("patrol its area", "Walks between random spots inside its work area."),
         ("rest at its dock", "Walks onto its Golem Dock and rests, slowly recharging and healing."),
+        ("fish", "Fishes at water within sight, like a player with a rod."),
+        ("collect honey", "Empties full beehives: honey bottles if it carries glass bottles, honeycomb with shears."),
+        ("use a furnace", "Loads the nearest furnace, smoker or blast furnace, fuels it and takes out the results."),
+        ("sell to villagers", "Sells what it carries to villagers who want it, for emeralds."),
     ]
 
     def preset(eid, name, icon, rules, desc, setup, golem_snbt):
@@ -1220,7 +1224,8 @@ def build_index():
              MODID + ":burner_generator": "generators", MODID + ":battery": "generators",
              MODID + ":cub_charger": "generators",
              MODID + ":rig_interceptor": "rig_variants", MODID + ":rig_juggernaut": "rig_variants",
-             MODID + ":rig_skimmer": "rig_variants", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
+             MODID + ":rig_skimmer": "rig_variants", MODID + ":arena_bell": "arena",
+             MODID + ":garage_blueprint": "arena", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
         "minecraft:redstone_block": "power_basics",
     }
     for sh in S.SHAPES:

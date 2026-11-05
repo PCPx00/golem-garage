@@ -82,6 +82,9 @@ public final class ModItems {
             new Item.Properties().stacksTo(1)));
     public static final DeferredItem<BlockItem> CUB_BED = extra(ITEMS.registerSimpleBlockItem("cub_bed", ModBlocks.CUB_BED));
     public static final DeferredItem<BlockItem> GARAGE_RADIO = extra(ITEMS.registerSimpleBlockItem("garage_radio", ModBlocks.GARAGE_RADIO));
+    public static final DeferredItem<GarageBlueprintItem> GARAGE_BLUEPRINT = extra(ITEMS.registerItem("garage_blueprint",
+            GarageBlueprintItem::new));
+    public static final DeferredItem<BlockItem> ARENA_BELL = extra(ITEMS.registerSimpleBlockItem("arena_bell", ModBlocks.ARENA_BELL));
     /** The in-game guide book. */
     public static final DeferredItem<ManualItem> MANUAL = ITEMS.registerItem("manual", ManualItem::new);
 

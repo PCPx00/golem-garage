@@ -75,7 +75,8 @@ public class RuleEditor {
         ACTION_GROUPS.put("rule.golemgarage.group.fighting", List.of(Action.ATTACK_HOSTILE, Action.DEFEND_OWNER));
         ACTION_GROUPS.put("rule.golemgarage.group.items", List.of(Action.TAKE_FROM_A, Action.DEPOSIT_TO_B, Action.TAKE_FROM_NEAREST,
                 Action.DEPOSIT_TO_NEAREST, Action.PICK_UP_ITEMS, Action.GIVE_TO_GOLEM));
-        ACTION_GROUPS.put("rule.golemgarage.group.farming", List.of(Action.HARVEST_CROPS));
+        ACTION_GROUPS.put("rule.golemgarage.group.farming", List.of(Action.HARVEST_CROPS, Action.FISH, Action.KEEP_BEES));
+        ACTION_GROUPS.put("rule.golemgarage.group.trade", List.of(Action.SMELT_AT_FURNACE, Action.TRADE));
         ACTION_GROUPS.put("rule.golemgarage.group.upkeep", List.of(Action.RECHARGE, Action.REPAIR_SELF, Action.GO_TO_GARAGE,
                 Action.GO_HOME));
         ACTION_GROUPS.put("rule.golemgarage.group.redstone", List.of(Action.EMIT_SIGNAL));

@@ -50,16 +50,19 @@ public class BehaviorGoal extends Goal {
     private int repairCooldown;
     private BlockPos cachedPos;
     private final java.util.Map<BlockPos, Integer> unreachable = new java.util.HashMap<>();
+    private final ExtraJobs jobs;
 
     public BehaviorGoal(GolemEntity golem) {
         this.golem = golem;
+        this.jobs = new ExtraJobs(golem, (target, reach) -> approach(target, reach, golem.tickCount % CHECK == 0));
         // No flags: this goal steers by issuing navigation itself, and leaves the melee goal free to fight.
         this.setFlags(EnumSet.noneOf(Flag.class));
     }
 
     @Override
     public boolean canUse() {
-        return !golem.isBroken() && !golem.isBreakingDown() && !golem.isRogue();
+        return !golem.isBroken() && !golem.isBreakingDown() && !golem.isRogue()
+                && !com.xtrip.golemgarage.world.Arena.inDuel(golem);
     }
 
     @Override
@@ -357,6 +360,10 @@ public class BehaviorGoal extends Goal {
             case GIVE_TO_GOLEM -> giveToGolem(check);
             case PATROL -> patrol(check);
             case GO_HOME -> goHome(check);
+            case FISH -> jobs.fish();
+            case KEEP_BEES -> jobs.keepBees();
+            case SMELT_AT_FURNACE -> jobs.smeltAtFurnace();
+            case TRADE -> jobs.trade();
             case EMIT_SIGNAL -> {
                 golem.emitSignal();
                 golem.getNavigation().stop();

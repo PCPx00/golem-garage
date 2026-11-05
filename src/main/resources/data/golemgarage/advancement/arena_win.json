@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "id": "golemgarage:arena_bell"
+    },
+    "title": {
+      "translate": "advancement.golemgarage.arena_win"
+    },
+    "description": {
+      "translate": "advancement.golemgarage.arena_win.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "golemgarage:golem_event",
+      "conditions": {
+        "event": "arena_win"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "done"
+    ]
+  ],
+  "parent": "golemgarage:golem_kill"
+}

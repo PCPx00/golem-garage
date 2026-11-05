@@ -18,7 +18,7 @@ public final class GolemNetwork {
 
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("6");
+        PayloadRegistrar registrar = event.registrar("7");
         registrar.playToClient(MaterialsPayload.TYPE, MaterialsPayload.STREAM_CODEC, (payload, context) ->
                 context.enqueueWork(() -> {
                     // A singleplayer client shares the server's list already; only remote clients need this.
@@ -32,6 +32,8 @@ public final class GolemNetwork {
         registrar.playToServer(GolemActionPayload.TYPE, GolemActionPayload.STREAM_CODEC, GolemNetwork::handleAction);
         registrar.playToServer(PickUpPayload.TYPE, PickUpPayload.STREAM_CODEC, GolemNetwork::handlePickUp);
         registrar.playToServer(GaragePlanPayload.TYPE, GaragePlanPayload.STREAM_CODEC, GaragePlanPayload::handle);
+        registrar.playToClient(StormPayload.TYPE, StormPayload.STREAM_CODEC, (payload, context) ->
+                context.enqueueWork(() -> com.xtrip.golemgarage.client.ClientHooks.storm(payload.on())));
         registrar.playToServer(com.xtrip.golemgarage.tablet.TabletPayloads.Action.TYPE,
                 com.xtrip.golemgarage.tablet.TabletPayloads.Action.STREAM_CODEC, com.xtrip.golemgarage.tablet.TabletServer::handle);
         registrar.playToClient(com.xtrip.golemgarage.tablet.TabletPayloads.Data.TYPE,

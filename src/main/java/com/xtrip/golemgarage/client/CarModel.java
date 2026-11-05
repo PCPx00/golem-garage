@@ -36,8 +36,33 @@ public final class CarModel {
     private CarModel() {
     }
 
+    /** A spray-can paint job: the tile that replaces the body paint, or -1. Set around one render call. */
+    private static int paint = -1;
+
+    /** The skin tile for a spray-can finish id ("flames", ...), or -1. */
+    public static int finishTile(String finish) {
+        return switch (finish) {
+            case "flames" -> 62;
+            case "hazard" -> 63;
+            case "rust" -> 64;
+            case "camo" -> 65;
+            case "chrome" -> 66;
+            case "tiger" -> 67;
+            default -> -1;
+        };
+    }
+
+    private static int painted(int tile) {
+        if (paint < 0) {
+            return tile;
+        }
+        return tile == CAR_BODY || tile == RED || tile == STRIPE || tile == OLIVE || tile == ARMOUR || tile == TEAL ? paint : tile;
+    }
+
     private static void box(MultiBufferSource buffers, PoseStack pose, float x0, float y0, float z0, float x1, float y1,
                             float z1, int side, int top, int light) {
+        side = painted(side);
+        top = painted(top);
         GarageSkin.box(buffers.getBuffer(RenderType.entityCutoutNoCull(GarageSkin.TEX)), pose.last(),
                 x0, y0, z0, x1, y1, z1, side, top, light);
     }
@@ -51,6 +76,21 @@ public final class CarModel {
 
     public static void render(BlockRenderDispatcher blocks, PoseStack pose, MultiBufferSource buffers, int light,
                               float time, Options o) {
+        render(blocks, pose, buffers, light, time, o, -1);
+    }
+
+    public static void render(BlockRenderDispatcher blocks, PoseStack pose, MultiBufferSource buffers, int light,
+                              float time, Options o, int paintTile) {
+        paint = paintTile;
+        try {
+            renderModel(blocks, pose, buffers, light, time, o);
+        } finally {
+            paint = -1;
+        }
+    }
+
+    private static void renderModel(BlockRenderDispatcher blocks, PoseStack pose, MultiBufferSource buffers, int light,
+                                    float time, Options o) {
         switch (o.variant()) {
             case INTERCEPTOR -> interceptor(blocks, pose, buffers, light, time, o);
             case JUGGERNAUT -> juggernaut(blocks, pose, buffers, light, time, o);

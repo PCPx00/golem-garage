@@ -418,8 +418,24 @@ def generate(assets):
                 {"from": [2, 12, 7], "to": [14, 13, 9], "faces": {d: {"texture": "#handle"} for d in ("north", "south", "east", "west", "up", "down")}},
                 {"from": [12, 9, 10], "to": [12.5, 15, 10.5], "faces": {d: {"texture": "#handle"} for d in ("north", "south", "east", "west", "up")}},
             ]})
+    # Arena Bell: a gong hanging from a crossbar on a post, on a scrap base.
+    allf = ("north", "south", "east", "west", "up", "down")
+    _json(os.path.join(models, "block/arena_bell.json"), {
+        "parent": "minecraft:block/block",
+        "textures": {"particle": "minecraft:block/dark_oak_log", "post": "minecraft:block/dark_oak_log",
+                     "gong": "minecraft:block/copper_block", "base": "golemgarage:block/emitter_side",
+                     "rim": "minecraft:block/gold_block"},
+        "elements": [
+            {"from": [2, 0, 2], "to": [14, 2, 14], "faces": {d: {"texture": "#base"} for d in allf}},
+            {"from": [7, 2, 7], "to": [9, 16, 9], "faces": {d: {"texture": "#post"} for d in allf}},
+            {"from": [3, 14, 7], "to": [13, 15.5, 9], "faces": {d: {"texture": "#post"} for d in allf}},
+            {"from": [4, 6, 9], "to": [12, 14, 10], "faces": {d: {"texture": "#gong"} for d in allf}},
+            {"from": [6.5, 8.5, 10], "to": [9.5, 11.5, 10.5], "faces": {d: {"texture": "#rim"} for d in allf}},
+        ]})
+    _json(os.path.join(bs, "arena_bell.json") if False else os.path.join(assets, "blockstates/arena_bell.json"),
+          {"variants": {"": {"model": "golemgarage:block/arena_bell"}}})
     for b in ("garage_controller", "laser_emitter", "steel_emitter", "signal_plate", "golem_dock", "garage_window",
-              "fabricator", "cub_bed", "garage_radio"):
+              "fabricator", "cub_bed", "garage_radio", "arena_bell"):
         _json(os.path.join(models, "item/%s.json" % b), {"parent": "golemgarage:block/%s" % b})
 
     bs = os.path.join(assets, "blockstates")

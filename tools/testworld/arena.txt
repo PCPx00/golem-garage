@@ -1,0 +1,5 @@
+kill @e[type=golemgarage:golem]
+setblock 0 -60 20 golemgarage:arena_bell
+summon golemgarage:golem 0.5 -60 23.5 {PersistenceRequired:1b,CustomName:'"Brick"',Tags:["a"],Parts:{head:{Shape:"sentry_head",Material:"iron"},torso:{Shape:"plated_chest",Material:"iron"},arms:{Shape:"golem_fists",Material:"iron"},legs:{Shape:"stub_legs",Material:"iron"},core:{Shape:"redstone_core",Material:"iron"}},Rules:[{T:"ALWAYS",P:0,A:"WAIT",AP:5}]}
+summon golemgarage:golem 0.5 -60 17.5 {PersistenceRequired:1b,CustomName:'"Rivet"',Tags:["a"],Parts:{head:{Shape:"sentry_head",Material:"iron"},torso:{Shape:"plated_chest",Material:"iron"},arms:{Shape:"golem_fists",Material:"iron"},legs:{Shape:"stub_legs",Material:"iron"},core:{Shape:"redstone_core",Material:"iron"}},Rules:[{T:"ALWAYS",P:0,A:"WAIT",AP:5}]}
+execute as @e[tag=a] run data modify entity @s Owner set from entity @p UUID

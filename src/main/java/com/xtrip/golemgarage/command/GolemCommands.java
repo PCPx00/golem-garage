@@ -177,6 +177,19 @@ public final class GolemCommands {
                                 .executes(ctx -> raid(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), false))
                                 .then(Commands.literal("titan")
                                         .executes(ctx -> raid(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"), true)))))
+                .then(Commands.literal("storm").requires(s -> s.hasPermission(2))
+                        .then(Commands.literal("stop").executes(ctx -> {
+                            com.xtrip.golemgarage.world.DustStorms.stop(ctx.getSource().getServer().overworld());
+                            ctx.getSource().sendSuccess(() -> Component.translatable("golemgarage.storm.stopped"), true);
+                            return 1;
+                        }))
+                        .then(Commands.argument("seconds", com.mojang.brigadier.arguments.IntegerArgumentType.integer(10, 1200))
+                                .executes(ctx -> {
+                                    int sec = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "seconds");
+                                    com.xtrip.golemgarage.world.DustStorms.start(ctx.getSource().getServer().overworld(), sec);
+                                    ctx.getSource().sendSuccess(() -> Component.translatable("golemgarage.storm.started", sec), true);
+                                    return 1;
+                                })))
                 .then(Commands.literal("count").requires(s -> s.hasPermission(2))
                         .executes(ctx -> count(ctx.getSource())))
                 .then(Commands.literal("purge").requires(s -> s.hasPermission(2))
