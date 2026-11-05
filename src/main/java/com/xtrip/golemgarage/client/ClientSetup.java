@@ -38,6 +38,7 @@ public final class ClientSetup {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.GOLEM.get(), GolemRenderer::new);
         event.registerEntityRenderer(ModEntities.CUB.get(), CubRenderer::new);
+        event.registerEntityRenderer(ModEntities.RIG.get(), RigRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.GARAGE_CONTROLLER.get(), GarageControllerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.GARAGE_DOOR.get(), GarageDoorRenderer::new);
     }

@@ -283,6 +283,15 @@ public class GarageControllerBlockEntity extends BlockEntity {
     /** Re-checks the room, lights or dims its emitters, and tells players when it changes. */
     private void checkFormed(ServerLevel level) {
         GarageBay bay = GarageBay.find(level, worldPosition);
+        if (bay != null) {
+            // Rigs parked in a finished Garage get patched up.
+            net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(Vec3.atLowerCornerOf(bay.min()),
+                    Vec3.atLowerCornerOf(bay.max()).add(1, 1, 1));
+            for (com.xtrip.golemgarage.entity.RigEntity rig : level.getEntitiesOfClass(
+                    com.xtrip.golemgarage.entity.RigEntity.class, box)) {
+                rig.garageRepair(6f);
+            }
+        }
         boolean nowFormed = bay != null;
         BlockPos min = bay == null ? null : bay.min();
         BlockPos max = bay == null ? null : bay.max();

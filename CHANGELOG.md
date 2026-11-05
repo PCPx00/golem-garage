@@ -2,6 +2,21 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.15.0
+
+### Added
+- **Wasteland Rig:** a drivable wasteland car built from scrap, the same car that idles in the Garage.
+  - W/S drive, A/D steer. A second player rides shotgun, and a golem or cub rides on the back deck.
+  - Runs on any furnace fuel and only crawls when the tank is empty. The engine shakes the body, the wheels roll,
+    the stacks smoke and it kicks up dust at speed.
+  - Upgrades, fitted by right-clicking: **Spiked Ram** (hits mobs hard at speed), **Rig Plating** (armour) and
+    **Rig Turret** (fires at hostile mobs while a golem rides along).
+  - Use a Golem Linker on it to load or unload your golems and cubs.
+  - Repair it with iron, scrap or repair kits, or park it in a finished Garage.
+  - Sneak + right-click with an empty hand packs it into an item that keeps its fuel, damage and upgrades.
+- **Scrap** and **Tyres**, the rig's building materials.
+- A new **Wasteland** chapter in the manual.
+
 ## 0.14.0
 
 ### Added

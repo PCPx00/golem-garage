@@ -460,5 +460,14 @@
   "golemgarage.sign.repairing": "REPAIRING %s%%",
   "golemgarage.plan.kind.door": "Wall or Garage Door",
   "jei.golemgarage.info.garage_door": "A roller door for your Garage. Place several side by side and stacked to make one big door; they open and close together. It rolls up by itself when a golem or cub comes near, with a redstone signal, or when you right-click it (right-click again to let it close). It counts as Garage wall, so the room stays complete with the door open.",
-  "jei.golemgarage.info.garage_window": "Steel-framed glass for Garage walls and roofs, so you can watch the lasers at work. Any glass block or pane also works in a Garage wall or roof."
+  "jei.golemgarage.info.garage_window": "Steel-framed glass for Garage walls and roofs, so you can watch the lasers at work. Any glass block or pane also works in a Garage wall or roof.",
+  "entity.golemgarage.rig": "Wasteland Rig",
+  "golemgarage.rig.cant_pack": "Unload everyone first (only the owner can pack it up)",
+  "golemgarage.rig.unloaded": "Crew unloaded",
+  "golemgarage.rig.loaded": "%s crew on board",
+  "golemgarage.rig.no_room": "Not enough room for the rig here",
+  "golemgarage.rig.fuel": "Fuel: %s min",
+  "golemgarage.rig.tip": "Use on the ground to drive. Sneak + right-click empty-handed to pack it up.",
+  "jei.golemgarage.info.rig": "A drivable wasteland car. W and S drive, A and D steer, sneak gets out. Right-click it with coal or any furnace fuel to fill the tank (it crawls when empty). Iron, scrap and repair kits fix it, and parking it in a finished Garage patches it up. Fit a Spiked Ram (hits mobs hard at speed), Rig Plating (armour) and a Rig Turret (fires at hostile mobs while a golem rides along) by right-clicking it with them. Use a Golem Linker on it to load your nearby golems and cubs, or unload them. Sneak + right-click with an empty hand packs it back into an item.",
+  "jei.golemgarage.info.scrap": "Salvage. Craft it from iron and gravel, find it in scrapyards, or take it from raiders. Builds and repairs rigs."
 }

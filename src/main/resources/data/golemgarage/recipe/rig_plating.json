@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SIS",
+    "ISI",
+    "SIS"
+  ],
+  "key": {
+    "S": {
+      "item": "golemgarage:scrap"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig_plating",
+    "count": 1
+  }
+}

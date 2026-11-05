@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "transportation",
+  "pattern": [
+    "TST",
+    "IFI",
+    "TST"
+  ],
+  "key": {
+    "T": {
+      "item": "golemgarage:tyre"
+    },
+    "S": {
+      "item": "golemgarage:scrap"
+    },
+    "I": {
+      "tag": "c:storage_blocks/iron"
+    },
+    "F": {
+      "item": "minecraft:blast_furnace"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig",
+    "count": 1
+  }
+}

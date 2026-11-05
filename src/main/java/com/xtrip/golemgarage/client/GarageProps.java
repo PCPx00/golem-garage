@@ -61,90 +61,9 @@ final class GarageProps {
         pose.mulPose(Axis.YP.rotation((float) Math.atan2(-f.getStepZ(), f.getStepX())));
         pose.scale(s, s, s);
 
-        // Wheels stay put while the body shakes on its springs.
-        wheel(buffers, pose, 0.84f, 0.27f, 0.5f, 0.2f, light);
-        wheel(buffers, pose, 0.84f, 0.27f, -0.5f, 0.2f, light);
-        wheel(buffers, pose, -0.82f, 0.33f, 0.5f, 0.26f, light);
-        wheel(buffers, pose, -0.82f, 0.33f, -0.5f, 0.26f, light);
-
-        pose.pushPose();
-        pose.translate(0, 0.01f * Mth.sin(time * 2.7f) + 0.005f * Mth.sin(time * 5.3f), 0);
-        pose.mulPose(Axis.XP.rotationDegrees(0.5f * Mth.sin(time * 2.1f)));
-
-        box(buffers, pose, -1.25f, 0.24f, -0.46f, 1.25f, 0.42f, 0.46f, GarageSkin.RUST, GarageSkin.RUST, light);
-        box(buffers, pose, -1.18f, 0.4f, -0.5f, 1.12f, 0.72f, 0.5f, CAR_BODY, CAR_BODY, light);
-        box(buffers, pose, 0.24f, 0.72f, -0.46f, 1.12f, 0.79f, 0.46f, CAR_BODY, CAR_BODY, light);
-        box(buffers, pose, -0.72f, 0.72f, -0.43f, 0.22f, 1.1f, 0.43f, CAR_GLASS, CAR_BODY, light);
-        box(buffers, pose, -0.76f, 1.1f, -0.46f, 0.26f, 1.16f, 0.46f, CAR_BODY, CAR_BODY, light);
-        box(buffers, pose, -1.18f, 0.72f, -0.47f, -0.72f, 0.8f, 0.47f, GarageSkin.RUST, GarageSkin.RUST, light);
-        // Roll cage over the cabin.
-        for (float z : new float[]{-0.45f, 0.41f}) {
-            box(buffers, pose, -0.74f, 1.16f, z, 0.24f, 1.22f, z + 0.04f, GarageSkin.SOOT, GarageSkin.SOOT, light);
-        }
-        box(buffers, pose, 0.2f, 1.16f, -0.45f, 0.24f, 1.22f, 0.45f, GarageSkin.SOOT, GarageSkin.SOOT, light);
-        // Grille and a spiked ram on the front.
-        box(buffers, pose, 1.12f, 0.43f, -0.4f, 1.17f, 0.7f, 0.4f, GRILLE, CHROME, light);
-        box(buffers, pose, 1.17f, 0.3f, -0.56f, 1.28f, 0.45f, 0.56f, GarageSkin.RUST, GarageSkin.RUST, light);
-        for (float z : new float[]{-0.4f, 0f, 0.4f}) {
-            pose.pushPose();
-            pose.translate(1.27f, 0.375f, z);
-            pose.mulPose(Axis.ZP.rotationDegrees(-90));
-            pose.scale(0.4f, 0.5f, 0.4f);
-            pose.translate(-0.5, 0, -0.5);
-            blocks.renderSingleBlock(Blocks.POINTED_DRIPSTONE.defaultBlockState(), pose, buffers, light, OverlayTexture.NO_OVERLAY);
-            pose.popPose();
-        }
-        // The supercharger sticking out of the bonnet, its belt pulley spinning.
-        box(buffers, pose, 0.5f, 0.79f, -0.16f, 0.86f, 1.0f, 0.16f, CHROME, CHROME, light);
-        box(buffers, pose, 0.56f, 1.0f, -0.12f, 0.8f, 1.13f, 0.12f, GarageSkin.SOOT, GarageSkin.SOOT, light);
-        for (int k = 0; k < 2; k++) {
-            pose.pushPose();
-            pose.translate(0.88f, 0.89f, 0);
-            pose.mulPose(Axis.XP.rotationDegrees(time * 24f + k * 45f));
-            box(buffers, pose, -0.02f, -0.08f, -0.08f, 0.02f, 0.08f, 0.08f, GEAR, CHROME, light);
-            pose.popPose();
-        }
-        // Side pipes and twin stacks behind the cabin (their smoke comes from the controller's client tick).
-        for (int side = -1; side <= 1; side += 2) {
-            float z0 = side > 0 ? 0.5f : -0.6f;
-            box(buffers, pose, -0.34f, 0.3f, z0, 0.7f, 0.38f, z0 + 0.1f, CHROME, CHROME, light);
-            float sz = 0.36f * side;
-            box(buffers, pose, -0.68f, 0.72f, sz - 0.05f, -0.56f, 1.48f, sz + 0.05f, CHROME, GarageSkin.SOOT, light);
-        }
-        // Spare tyre and a jerry can on the back deck.
-        box(buffers, pose, -1.12f, 0.8f, -0.3f, -0.78f, 0.9f, 0.04f, GarageSkin.TYRE, GarageSkin.TYRE_TOP, light);
-        box(buffers, pose, -1.1f, 0.8f, 0.12f, -0.86f, 1.08f, 0.26f, GarageSkin.JERRY, GarageSkin.JERRY, light);
-        // Headlights, flickering with the engine.
-        box(buffers, pose, 1.11f, 0.56f, 0.24f, 1.16f, 0.66f, 0.38f, CHROME, CHROME, light);
-        box(buffers, pose, 1.11f, 0.56f, -0.38f, 1.16f, 0.66f, -0.24f, CHROME, CHROME, light);
-        float flick = 0.75f + 0.15f * Mth.sin(time * 1.7f) + 0.1f * Mth.sin(time * 4.9f);
-        VertexConsumer glow = buffers.getBuffer(GlowRenderType.GLOW);
-        for (float z : new float[]{0.31f, -0.31f}) {
-            GarageControllerRenderer.softGlow(glow, pose.last().pose(), new Vec3(1.18, 0.61, z), 0.35f,
-                    new float[]{1f, 0.9f, 0.6f}, 0.55f * flick);
-        }
-        // Backfire flashes from the side pipes.
-        if ((long) time % 140 < 3) {
-            for (int side = -1; side <= 1; side += 2) {
-                GarageControllerRenderer.softGlow(glow, pose.last().pose(), new Vec3(-0.38, 0.34, 0.56 * side), 0.3f,
-                        new float[]{1f, 0.5f, 0.1f}, 0.8f);
-            }
-        }
+        CarModel.render(blocks, pose, buffers, light, time, new CarModel.Options(true, false, false, 0f, 0f, true,
+                (long) time % 140 < 3));
         pose.popPose();
-        pose.popPose();
-    }
-
-    /** An eight-sided wheel: two square tyres turned 45 degrees to each other, around an axle along z. */
-    private static void wheel(MultiBufferSource buffers, PoseStack pose, float x, float r, float z, float width, int light) {
-        for (int k = 0; k < 2; k++) {
-            pose.pushPose();
-            pose.translate(x, r, z);
-            pose.mulPose(Axis.ZP.rotationDegrees(45 * k));
-            pose.mulPose(Axis.XP.rotationDegrees(90));
-            float rr = k == 0 ? r : r * 0.98f;
-            box(buffers, pose, -rr, -width / 2, -rr, rr, width / 2, rr, GarageSkin.TYRE, GarageSkin.TYRE_TOP, light);
-            pose.popPose();
-        }
     }
 
     // =================================================================== hoist trolley

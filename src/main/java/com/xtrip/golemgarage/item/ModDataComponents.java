@@ -28,6 +28,12 @@ public final class ModDataComponents {
             COMPONENTS.registerComponentType("color",
                     b -> b.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    /** A packed-up Wasteland Rig's fuel, health and upgrades. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<net.minecraft.world.item.component.CustomData>> RIG_DATA =
+            COMPONENTS.registerComponentType("rig_data",
+                    b -> b.persistent(net.minecraft.world.item.component.CustomData.CODEC)
+                            .networkSynchronized(net.minecraft.world.item.component.CustomData.STREAM_CODEC));
+
     private ModDataComponents() {
     }
 }

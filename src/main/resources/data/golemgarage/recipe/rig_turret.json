@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " C ",
+    "IDI",
+    "SSS"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:crossbow"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "D": {
+      "item": "minecraft:dispenser"
+    },
+    "S": {
+      "item": "golemgarage:scrap"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig_turret",
+    "count": 1
+  }
+}

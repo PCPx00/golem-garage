@@ -1123,7 +1123,8 @@ def build_index():
         MODID + ":garage_door": "garage_look", MODID + ":garage_window": "garage_look",
         MODID + ":golem_linker": "linker", MODID + ":signal_plate": "signal_plate", MODID + ":blueprint": "blueprints",
         MODID + ":steel_ingot": "mat_steel", MODID + ":module_casing": "modules_intro",
-        MODID + ":golem_dock": "dock", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
+        MODID + ":golem_dock": "dock", MODID + ":rig": "rig", MODID + ":rig_ram": "rig", MODID + ":rig_turret": "rig",
+        MODID + ":rig_plating": "rig", MODID + ":tyre": "rig", MODID + ":scrap": "rig", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
         "minecraft:redstone_block": "power_basics",
     }
     for sh in S.SHAPES:
@@ -1244,6 +1245,11 @@ def paginate_book(book):
             e["pages"] = pages
 
 
+def wasteland_chapter():
+    import wasteland_manual
+    return wasteland_manual.chapter()
+
+
 def generate(assets, version):
     sizes = manual_art.generate(assets)
     book = {
@@ -1251,7 +1257,8 @@ def generate(assets, version):
         "subtitle": "Version %s, by xTrip" % version,
         "categories": [getting_started(), anatomy()] + shape_entries() + [
             material_entries(), wear_chapter(), garage_chapter(sizes), power_chapter(), behaviors_chapter(),
-            modules_chapter(), tools_chapter(), cubs_chapter(), mods_chapter(), settings_chapter(), help_chapter()],
+            modules_chapter(), tools_chapter(), cubs_chapter(), wasteland_chapter(), mods_chapter(), settings_chapter(),
+            help_chapter()],
         "index": build_index(),
     }
     paginate_book(book)

@@ -14,6 +14,13 @@ import java.util.Map;
 
 public final class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(GolemGarage.MOD_ID);
+    /** Newer items, shown at the end of the main creative tab in this order. */
+    public static final java.util.List<DeferredItem<? extends Item>> EXTRAS = new java.util.ArrayList<>();
+
+    private static <T extends Item> DeferredItem<T> extra(DeferredItem<T> item) {
+        EXTRAS.add(item);
+        return item;
+    }
 
     public static final DeferredItem<BlockItem> GARAGE_CONTROLLER =
             ITEMS.registerSimpleBlockItem("garage_controller", ModBlocks.GARAGE_CONTROLLER);
@@ -37,6 +44,14 @@ public final class ModItems {
     public static final DeferredItem<Item> REPAIR_KIT = ITEMS.registerSimpleItem("repair_kit");
     public static final DeferredItem<BlueprintItem> BLUEPRINT = ITEMS.registerItem("blueprint", BlueprintItem::new);
     public static final DeferredItem<GolemLinkerItem> GOLEM_LINKER = ITEMS.registerItem("golem_linker", GolemLinkerItem::new);
+    /** Salvage from wrecks, raiders and scrapyards; builds and repairs rigs. */
+    public static final DeferredItem<Item> SCRAP = extra(ITEMS.registerSimpleItem("scrap"));
+    public static final DeferredItem<Item> TYRE = extra(ITEMS.registerSimpleItem("tyre"));
+    /** The Wasteland Rig, packed up. Use it on the ground to drive. */
+    public static final DeferredItem<RigItem> RIG = extra(ITEMS.registerItem("rig", RigItem::new, new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> RIG_RAM = extra(ITEMS.registerSimpleItem("rig_ram"));
+    public static final DeferredItem<Item> RIG_TURRET = extra(ITEMS.registerSimpleItem("rig_turret"));
+    public static final DeferredItem<Item> RIG_PLATING = extra(ITEMS.registerSimpleItem("rig_plating"));
     /** The in-game guide book. */
     public static final DeferredItem<ManualItem> MANUAL = ITEMS.registerItem("manual", ManualItem::new);
 

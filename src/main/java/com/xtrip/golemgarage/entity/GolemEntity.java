@@ -1113,6 +1113,11 @@ public class GolemEntity extends PathfinderMob {
         return ownerUuid == null ? null : level().getPlayerByUUID(ownerUuid);
     }
 
+    /** Rogue golems are wasteland raiders: no owner, hostile to players, golems and cubs. */
+    public boolean isRogue() {
+        return getTags().contains("golemgarage_rogue");
+    }
+
     public UUID getOwnerUuid() {
         return level().isClientSide ? this.entityData.get(DATA_OWNER).orElse(null) : ownerUuid;
     }

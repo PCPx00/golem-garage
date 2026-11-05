@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "ISI"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:pointed_dripstone"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "S": {
+      "item": "golemgarage:scrap"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig_ram",
+    "count": 1
+  }
+}

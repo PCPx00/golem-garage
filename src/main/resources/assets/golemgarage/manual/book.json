@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.14.0, by xTrip",
+ "subtitle": "Version 0.15.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -9971,6 +9971,67 @@
    ]
   },
   {
+   "id": "wasteland",
+   "title": "The Wasteland",
+   "icon": "golemgarage:rig",
+   "desc": "Rigs, scrap and everything out past the fence.",
+   "entries": [
+    {
+     "id": "rig",
+     "title": "Wasteland Rig",
+     "icon": "golemgarage:rig",
+     "pages": [
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig",
+       "text": "Four tyres, scrap, two iron blocks and a blast furnace. Use it on the ground to unpack it facing the way you look.",
+       "title": "Wasteland Rig"
+      },
+      {
+       "type": "text",
+       "text": "§lDriving§r: right-click to get in. W and S drive, A and D steer, sneak gets out. A second player can ride shotgun, and a golem or cub rides on the back deck.\n\n§lFuel§r: right-click it with coal, charcoal, logs or any furnace fuel. Without fuel it only crawls.",
+       "title": "Driving"
+      },
+      {
+       "type": "text",
+       "text": "§lRepairs§r: iron ingots, scrap or repair kits, or park it inside a finished Garage.\n\n§lCrew§r: use a Golem Linker on the rig to load your golems and cubs within 8 blocks, and again to unload them.\n\n§lPacking up§r: sneak + right-click with an empty hand. The item keeps its fuel, damage and upgrades.",
+       "title": "Looking After It"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig_ram",
+       "text": "Pointed dripstone, iron and scrap. Rams anything in front of the rig hard at speed. Fit it by right-clicking the rig.",
+       "title": "Spiked Ram"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig_turret",
+       "text": "A crossbow, a dispenser, iron and scrap. Fires at hostile mobs within 18 blocks while a golem rides along to work it.",
+       "title": "Rig Turret"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig_plating",
+       "text": "Scrap and iron. Much more armour.",
+       "title": "Rig Plating"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:tyre",
+       "text": "Dried kelp blocks round an iron nugget make 2.",
+       "title": "Tyre"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:scrap",
+       "text": "Iron and gravel make 3. Also found in scrapyards and taken from raiders.",
+       "title": "Scrap"
+      }
+     ]
+    }
+   ]
+  },
+  {
    "id": "mods",
    "title": "Optional Mods",
    "icon": "golemgarage:golem@allthemodium",
@@ -10615,6 +10676,12 @@
   "golemgarage:steel_ingot": "mat_steel",
   "golemgarage:module_casing": "modules_intro",
   "golemgarage:golem_dock": "dock",
+  "golemgarage:rig": "rig",
+  "golemgarage:rig_ram": "rig",
+  "golemgarage:rig_turret": "rig",
+  "golemgarage:rig_plating": "rig",
+  "golemgarage:tyre": "rig",
+  "golemgarage:scrap": "rig",
   "minecraft:honeycomb": "copper_care",
   "minecraft:vine": "vines",
   "minecraft:redstone_block": "power_basics",

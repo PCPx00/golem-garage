@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " K ",
+    "KNK",
+    " K "
+  ],
+  "key": {
+    "K": {
+      "item": "minecraft:dried_kelp_block"
+    },
+    "N": {
+      "tag": "c:nuggets/iron"
+    }
+  },
+  "result": {
+    "id": "golemgarage:tyre",
+    "count": 2
+  }
+}

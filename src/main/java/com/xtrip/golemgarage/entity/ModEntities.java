@@ -24,7 +24,15 @@ public final class ModEntities {
                     .sized(0.7f, 1.1f)
                     .build("cub"));
 
+    public static final DeferredHolder<EntityType<?>, EntityType<RigEntity>> RIG = ENTITIES.register(
+            "rig",
+            () -> EntityType.Builder.of(RigEntity::new, MobCategory.MISC)
+                    .sized(2.4f, 1.5f)
+                    .clientTrackingRange(10)
+                    .build("rig"));
+
     public static void onAttributes(EntityAttributeCreationEvent event) {
+        event.put(RIG.get(), RigEntity.createAttributes().build());
         event.put(GOLEM.get(), GolemEntity.createAttributes().build());
         event.put(CUB.get(), CubEntity.createAttributes().build());
     }

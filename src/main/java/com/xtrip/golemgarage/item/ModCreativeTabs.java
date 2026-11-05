@@ -64,6 +64,7 @@ public final class ModCreativeTabs {
                         out.accept(ModItems.BLUEPRINT.get());
                         out.accept(ModItems.REPAIR_KIT.get());
                         out.accept(ModItems.STEEL_INGOT.get());
+                        ModItems.EXTRAS.forEach(i -> out.accept(i.get()));
                     })
                     .build());
 
