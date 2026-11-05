@@ -276,6 +276,69 @@ def cub_sleep():
     return fade(norm(breath + hum, 0.25))
 
 
+def rig_engine(v):
+    """A rough V8 burble: low pulses at the firing rate, a growl on top, a little exhaust hiss."""
+    d = 0.9
+    t = t_of(d)
+    rate = (28, 34)[v]
+    pulses = np.maximum(0, np.sin(2 * np.pi * rate * t)) ** 3
+    growl = low(np.sign(np.sin(2 * np.pi * rate * 2 * t)) * 0.4 + noise(d) * 0.3, 420)
+    rumble = np.sin(2 * np.pi * rate / 2 * t) * 0.5
+    hiss = band(noise(d), 1500, 4000) * 0.06
+    x = (pulses * 0.8 + growl + rumble) * (0.85 + 0.15 * np.sin(2 * np.pi * 3 * t)) + hiss
+    return fade(norm(soft(x, 1400), 0.6), 0.04, 0.08)
+
+
+def rig_start():
+    d = 1.4
+    t = t_of(d)
+    crank = np.maximum(0, np.sin(2 * np.pi * 9 * t)) ** 4 * (t < 0.55)
+    catch = low(noise(d), 300) * np.clip((t - 0.55) * 4, 0, 1) * np.exp(-np.maximum(0, t - 0.7) * 2)
+    roar = sweep(40, 95, d) * np.clip((t - 0.55) * 3, 0, 1) * 0.6
+    return fade(norm(crank * 0.6 + catch + roar, 0.7))
+
+
+def rig_nitro():
+    d = 1.2
+    t = t_of(d)
+    whoosh = band(noise(d), 600, 5000) * np.exp(-t * 1.5) * np.clip(t * 20, 0, 1)
+    pop = thump(70, d, 0.12) * 0.9
+    rise = sweep(200, 900, d) * 0.15 * np.exp(-t * 2)
+    return fade(norm(whoosh + pop + rise, 0.8))
+
+
+def rig_cannon():
+    d = 1.6
+    t = t_of(d)
+    boom = thump(48, d, 0.35) * 1.2
+    crack = band(noise(d), 800, 6000) * np.exp(-t * 18)
+    tail = low(noise(d), 200) * np.exp(-t * 2.2) * 0.6
+    clank = metal(320, d, 0.3) * 0.15 * (t > 0.25)
+    return fade(norm(boom + crack + tail + clank, 0.9))
+
+
+def rig_fan():
+    d = 1.0
+    t = t_of(d)
+    blade = np.sin(2 * np.pi * 52 * t) * 0.4 + np.sin(2 * np.pi * 104 * t) * 0.2
+    air = band(noise(d), 300, 2500) * (0.6 + 0.4 * np.sin(2 * np.pi * 26 * t))
+    return fade(norm(blade + air * 0.7, 0.5), 0.05, 0.08)
+
+
+def rig_horn():
+    d = 0.7
+    t = t_of(d)
+    x = (np.sign(np.sin(2 * np.pi * 330 * t)) + np.sign(np.sin(2 * np.pi * 415 * t))) * 0.3
+    return fade(norm(soft(x, 2500) * np.clip(t * 30, 0, 1) * np.clip((d - t) * 12, 0, 1), 0.6))
+
+
+def battery_hum():
+    d = 1.2
+    t = t_of(d)
+    x = np.sin(2 * np.pi * 120 * t) * 0.5 + np.sin(2 * np.pi * 240 * t) * 0.2 + band(noise(d), 2000, 5000) * 0.03
+    return fade(norm(x, 0.25), 0.1, 0.2)
+
+
 # ------------------------------------------------------------------ output
 SOUNDS = {
     # event: ([(file, function)], subtitle)
@@ -296,6 +359,13 @@ SOUNDS = {
     "cub.chirp": ([("cub/chirp%d" % i, lambda i=i: cub_chirp(i)) for i in range(3)], "Cub chirps"),
     "cub.happy": ([("cub/happy", cub_happy)], "Cub trills happily"),
     "cub.sleep": ([("cub/sleep", cub_sleep)], "Cub snoozes"),
+    "rig.engine": ([("rig/engine%d" % i, lambda i=i: rig_engine(i)) for i in range(2)], "Engine rumbles"),
+    "rig.start": ([("rig/start", rig_start)], "Engine starts"),
+    "rig.nitro": ([("rig/nitro", rig_nitro)], "Nitro fires"),
+    "rig.cannon": ([("rig/cannon", rig_cannon)], "Cannon fires"),
+    "rig.fan": ([("rig/fan", rig_fan)], "Fan whirs"),
+    "rig.horn": ([("rig/horn", rig_horn)], "Rig honks"),
+    "battery.hum": ([("block/battery_hum", battery_hum)], None),
 }
 
 

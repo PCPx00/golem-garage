@@ -15,10 +15,19 @@ import paint
 from blocks import metal_panel
 
 MODID = "golemgarage"
-BLOCKS = ("solar_panel", "wind_turbine", "burner_generator")
-NAMES = {"solar_panel": "Solar Panel", "wind_turbine": "Wind Turbine", "burner_generator": "Scrap Burner"}
+BLOCKS = ("solar_panel", "wind_turbine", "burner_generator", "battery", "cub_charger")
+NAMES = {"solar_panel": "Solar Panel", "wind_turbine": "Wind Turbine", "burner_generator": "Scrap Burner",
+         "battery": "Scrap Battery", "cub_charger": "Cub Charger"}
 
 RECIPES = {
+    "battery": {"type": "minecraft:crafting_shaped", "category": "redstone", "pattern": ["SCS", "RBR", "SCS"],
+                "key": {"S": {"item": "golemgarage:scrap"}, "C": {"tag": "c:ingots/copper"},
+                        "R": {"tag": "c:dusts/redstone"}, "B": {"tag": "c:storage_blocks/redstone"}},
+                "result": {"id": "golemgarage:battery", "count": 1}},
+    "cub_charger": {"type": "minecraft:crafting_shaped", "category": "redstone", "pattern": [" W ", "CRC"],
+                    "key": {"W": {"tag": "minecraft:wool"}, "C": {"tag": "c:ingots/copper"},
+                            "R": {"tag": "c:dusts/redstone"}},
+                    "result": {"id": "golemgarage:cub_charger", "count": 1}},
     "solar_panel": {"type": "minecraft:crafting_shaped", "category": "redstone", "pattern": ["GGG", "LRL", "ISI"],
                     "key": {"G": {"tag": "c:glass_panes"}, "L": {"tag": "c:gems/lapis"},
                             "R": {"tag": "c:dusts/redstone"}, "I": {"tag": "c:ingots/iron"},
@@ -168,6 +177,73 @@ def chimney():
     return c.img
 
 
+def battery_side(level):
+    """A riveted case with a charge gauge: five bars, the lit ones green."""
+    c, pal = metal_panel("#3f4652", 111, rivets=True)
+    for y in range(3, 13):
+        for x in range(5, 11):
+            c.set(x, y, (14, 16, 20))
+    for k in range(5):
+        y0 = 11 - k * 2
+        lit = k < level
+        col = (90, 240, 120) if lit and level >= 3 else (240, 200, 60) if lit and level >= 2 else (240, 90, 60) if lit else (40, 46, 40)
+        for x in range(6, 10):
+            c.set(x, y0, col)
+    for x in range(16):
+        c.set(x, 0, (232, 186, 48) if (x // 2) % 2 == 0 else (34, 32, 36))
+        c.set(x, 15, (232, 186, 48) if (x // 2) % 2 == 0 else (34, 32, 36))
+    return c.img
+
+
+def battery_front():
+    c, pal = metal_panel("#3f4652", 112, rivets=True)
+    for y in range(4, 12):
+        for x in range(4, 12):
+            d = math.hypot(x - 7.5, y - 7.5)
+            if d < 3.8:
+                c.set(x, y, (196, 120, 40) if d > 2.6 else (30, 30, 34))
+    c.set(6, 7, (200, 200, 190)); c.set(9, 7, (200, 200, 190))
+    return c.img
+
+
+def battery_top():
+    c, pal = metal_panel("#3f4652", 113, rivets=True)
+    for (x0, col) in ((3, (200, 50, 40)), (10, (40, 40, 44))):
+        for y in range(5, 11):
+            for x in range(x0, x0 + 3):
+                c.set(x, y, col)
+    return c.img
+
+
+def charger_top(on):
+    c = paint.Canvas(16, 16)
+    for y in range(16):
+        for x in range(16):
+            d = math.hypot(x - 7.5, y - 7.5)
+            if d > 6.6:
+                col = (150, 96, 120)
+            elif d > 5.6:
+                col = (230, 170, 196)
+            else:
+                col = (60, 52, 64)
+                if abs(x - 7.5) < 1.2 or abs(y - 7.5) < 1.2:
+                    col = (120, 240, 255) if on else (80, 90, 100)
+                elif d < 2.2:
+                    col = (180, 250, 255) if on else (90, 96, 104)
+            c.set(x, y, col)
+    return c.img
+
+
+def charger_side():
+    c = paint.Canvas(16, 16)
+    for y in range(16):
+        for x in range(16):
+            c.set(x, y, (196, 120, 150) if (x // 2) % 2 else (182, 106, 138))
+    for x in range(16):
+        c.set(x, 12, (196, 120, 40)); c.set(x, 13, (150, 90, 30))
+    return c.img
+
+
 # ===================================================================== GUI
 def burner_gui():
     """176x174 panel: lava tank, flame, fuel and bucket slots, readout and energy gauge; lit flame sprite at 176,0."""
@@ -281,6 +357,13 @@ def generate(assets, data, lang):
     _save(burner_top(), os.path.join(tex, "burner_generator_top.png"))
     _save(chimney(), os.path.join(tex, "burner_generator_chimney.png"))
     _save(burner_gui(), os.path.join(assets, "textures/gui/burner_generator.png"))
+    for lvl in range(5):
+        _save(battery_side(lvl), os.path.join(tex, "battery_side_%d.png" % lvl))
+    _save(battery_front(), os.path.join(tex, "battery_front.png"))
+    _save(battery_top(), os.path.join(tex, "battery_top.png"))
+    _save(charger_top(False), os.path.join(tex, "cub_charger_top.png"))
+    _save(charger_top(True), os.path.join(tex, "cub_charger_top_on.png"))
+    _save(charger_side(), os.path.join(tex, "cub_charger_side.png"))
 
     models = os.path.join(assets, "models")
     allf = ("north", "south", "east", "west", "up", "down")
@@ -352,10 +435,41 @@ def generate(assets, data, lang):
         for f, r in (("north", 0), ("east", 90), ("south", 180), ("west", 270)) for on in (False, True)}})
     _json(os.path.join(models, "item/burner_generator.json"), {"parent": "golemgarage:block/burner_generator"})
 
+    # Battery: the plug on the front, the gauge on the sides.
+    for lvl in range(5):
+        _json(os.path.join(models, "block/battery_%d.json" % lvl), {
+            "parent": "minecraft:block/orientable_with_bottom",
+            "textures": {"front": "golemgarage:block/battery_front", "side": "golemgarage:block/battery_side_%d" % lvl,
+                         "top": "golemgarage:block/battery_top", "bottom": "golemgarage:block/battery_top"}})
+    rots = {"north": (0, 0), "east": (0, 90), "south": (0, 180), "west": (0, 270), "up": (270, 0), "down": (90, 0)}
+    _json(os.path.join(assets, "blockstates/battery.json"), {"variants": {
+        "facing=%s,charge=%d" % (f, lvl): dict({"model": "golemgarage:block/battery_%d" % lvl},
+                                               **({"x": r[0]} if r[0] else {}), **({"y": r[1]} if r[1] else {}))
+        for f, r in rots.items() for lvl in range(5)}})
+    _json(os.path.join(models, "item/battery.json"), {"parent": "golemgarage:block/battery_2"})
+    for on in (False, True):
+        _json(os.path.join(models, "block/cub_charger%s.json" % ("_on" if on else "")), {
+            "parent": "minecraft:block/block",
+            "textures": {"particle": "golemgarage:block/cub_charger_side", "side": "golemgarage:block/cub_charger_side",
+                         "top": "golemgarage:block/cub_charger_top" + ("_on" if on else "")},
+            "elements": [{"from": [1, 0, 1], "to": [15, 4, 15], "faces": {
+                "up": {"texture": "#top"}, "down": {"texture": "#side"},
+                "north": {"texture": "#side", "uv": [1, 10, 15, 14]}, "south": {"texture": "#side", "uv": [1, 10, 15, 14]},
+                "east": {"texture": "#side", "uv": [1, 10, 15, 14]}, "west": {"texture": "#side", "uv": [1, 10, 15, 14]}}}]})
+    _json(os.path.join(assets, "blockstates/cub_charger.json"), {"variants": {
+        "lit=false": {"model": "golemgarage:block/cub_charger"}, "lit=true": {"model": "golemgarage:block/cub_charger_on"}}})
+    _json(os.path.join(models, "item/cub_charger.json"), {"parent": "golemgarage:block/cub_charger_on"})
+    # The turbine's invisible mast: no model, just break particles.
+    _json(os.path.join(models, "block/turbine_mast.json"), {"textures": {"particle": "golemgarage:block/wind_turbine_side"}})
+    _json(os.path.join(assets, "blockstates/turbine_mast.json"), {"variants": {"": {"model": "golemgarage:block/turbine_mast"}}})
+    lang["block.%s.turbine_mast" % MODID] = "Wind Turbine"
+
     for b in BLOCKS:
         _json(os.path.join(data, MODID, "loot_table/blocks", b + ".json"), {
             "type": "minecraft:block",
-            "pools": [{"rolls": 1, "entries": [{"type": "minecraft:item", "name": "%s:%s" % (MODID, b)}],
+            "pools": [{"rolls": 1, "entries": [dict({"type": "minecraft:item", "name": "%s:%s" % (MODID, b)},
+                **({"functions": [{"function": "minecraft:copy_components", "source": "block_entity",
+                                   "include": ["minecraft:custom_data"]}]} if b == "battery" else {}))],
                        "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
         lang["block.%s.%s" % (MODID, b)] = NAMES[b]
     for rid, recipe in RECIPES.items():

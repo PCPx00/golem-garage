@@ -297,7 +297,7 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
                         GarageSkin.SOOT, GarageSkin.SOOT, light);
             }
             // The golem, small enough to fit under the roof, swinging gently to and fro.
-            float scale = Math.min(0.45f, room / Math.max(1f, golem.getBbHeight()));
+            float scale = Math.min(0.32f, room / Math.max(1f, golem.getBbHeight()));
             float face = depthIsZ ? (inward > 0 ? -90f : 90f) : (inward > 0 ? 0f : 180f);
             float yaw = face + 25f * Mth.sin((time + i * 40) * 0.02f);
             golem.tickCount = (int) level.getGameTime();
@@ -308,6 +308,9 @@ public class GarageControllerRenderer implements BlockEntityRenderer<GarageContr
             golem.yHeadRot = yaw;
             golem.yHeadRotO = yaw;
             golem.setXRot(0);
+            ShowcaseLook.add(new net.minecraft.world.phys.AABB(wx + origin.getX() - 0.35, shelfY + origin.getY(),
+                    wz + origin.getZ() - 0.35, wx + origin.getX() + 0.35, shelfY + origin.getY() + golem.getBbHeight() * scale + 0.1,
+                    wz + origin.getZ() + 0.35), golem);
             pose.pushPose();
             pose.translate(wx, shelfY, wz);
             pose.scale(scale, scale, scale);

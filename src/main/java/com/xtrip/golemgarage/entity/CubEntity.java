@@ -625,6 +625,18 @@ public class CubEntity extends PathfinderMob {
     public enum Emote { NONE, SPIN, WAVE, DANCE }
 
     private long treatUntil;
+
+    /** A powered Cub Charger tops this cub up: it heals and gets the treat bonus for a minute. */
+    public void charge() {
+        if (getHealth() < getMaxHealth()) {
+            heal(2f);
+        }
+        treatUntil = Math.max(treatUntil, level().getGameTime() + 1200);
+    }
+
+    public boolean charged() {
+        return level().getGameTime() < treatUntil;
+    }
     private int rideTicks;
     @Nullable
     private BlockPos bed;

@@ -2,6 +2,30 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.25.0
+
+### Added
+- **Power runs things now**:
+  - The **Garage** takes FE into its controller and repairs at **double speed** while powered (40 FE/t).
+  - The **Parts Fabricator** welds twice as fast with power (20 FE/t).
+  - **Scrap Battery**: stores 1,000,000 FE, takes power on every side and sends it out of its front plug at up to
+    4,000 FE/t. A five-bar gauge on its sides shows the charge, a comparator reads it, and it keeps its charge
+    when broken.
+  - **Cub Charger**: a powered pad that heals Cubs within 5 blocks and gives them the treat bonus.
+- **Golem drivers**: put a golem in a rig and get out. The golem drives and follows you a few car lengths back,
+  so several rigs make a convoy. Sneak + right-click the rig with an empty hand to park it or send it on again.
+  A golem gunner makes the Juggernaut's cannon reload much faster.
+- **Rig sounds**: an engine start, a V8 burble that rises with speed (deep for the Juggernaut, high for the
+  Interceptor), the Skimmer's fan, a nitro whoosh, a cannon boom and a horn.
+- **Showcase stats**: look at a golem on a showcase shelf to see its name, rank, experience, personality and
+  parts.
+
+### Changed
+- Showcase golems are smaller so they fit their shelves.
+
+### Fixed
+- The Wind Turbine's mast is solid: it needs three clear blocks above it, and breaking any part removes it all.
+
 ## 0.24.0
 
 ### Added

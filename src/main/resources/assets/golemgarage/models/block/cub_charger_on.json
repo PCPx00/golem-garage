@@ -1,0 +1,66 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "golemgarage:block/cub_charger_side",
+    "side": "golemgarage:block/cub_charger_side",
+    "top": "golemgarage:block/cub_charger_top_on"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        4,
+        15
+      ],
+      "faces": {
+        "up": {
+          "texture": "#top"
+        },
+        "down": {
+          "texture": "#side"
+        },
+        "north": {
+          "texture": "#side",
+          "uv": [
+            1,
+            10,
+            15,
+            14
+          ]
+        },
+        "south": {
+          "texture": "#side",
+          "uv": [
+            1,
+            10,
+            15,
+            14
+          ]
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            1,
+            10,
+            15,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            1,
+            10,
+            15,
+            14
+          ]
+        }
+      }
+    }
+  ]
+}

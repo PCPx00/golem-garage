@@ -678,5 +678,12 @@
   "golemgarage.showcase.unlocked": "%s of %s slots open",
   "golemgarage.showcase.hint": "Bigger Garages hold more.",
   "golemgarage.showcase.locked": "Locked",
-  "golemgarage.showcase.locked_tip": "Build a bigger Garage to open this slot."
+  "golemgarage.showcase.locked_tip": "Build a bigger Garage to open this slot.",
+  "golemgarage.battery.readout": "Battery: %s / %s FE (%s%%)",
+  "golemgarage.cub_charger.readout": "Cub Charger: %s / %s FE",
+  "golemgarage.rig.parked": "Parked: the golem driver stays here.",
+  "golemgarage.rig.following": "The golem driver follows you again.",
+  "jei.golemgarage.info.battery": "Stores 1,000,000 FE. It takes power on every side and sends it out of its front (the plug), at up to 4,000 FE/t. Keeps its charge when you break it. A comparator reads how full it is.",
+  "jei.golemgarage.info.cub_charger": "Feed it power and Cubs within 5 blocks heal and get the treat bonus (2 more blocks of magnet reach), for 200 FE a second.",
+  "golemgarage.garage.power": "Power: %s FE stored, repairs run at double speed."
 }

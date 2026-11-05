@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.24.0, by xTrip",
+ "subtitle": "Version 0.25.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -10371,6 +10371,11 @@
        "title": "Pipes"
       },
       {
+       "type": "text",
+       "text": "What uses power:\n\n- §lGolem Dock§r: charges golems 5x as fast.\n- §lGarage§r (feed the controller): repairs at double speed, 40 FE/t.\n- §lFabricator§r: welds twice as fast, 20 FE/t.\n- §lCub Charger§r: heals and boosts Cubs nearby.",
+       "title": "Using Power"
+      },
+      {
        "type": "crafting",
        "recipe": "golemgarage:solar_panel",
        "text": "Glass panes, lapis, redstone, iron and scrap.",
@@ -10391,6 +10396,28 @@
        "type": "text",
        "text": "A scrap windmill on a lattice mast. The higher you build it, the more it makes: about §l6 FE/t§r near sea level, up to §l70 FE/t§r high in the hills, half again in rain and double in a storm. Keep the three blocks above it and the space round the rotor clear; right-click to see how much wind is blocked. No wind in the Nether or the End.",
        "title": "Wind"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:battery",
+       "text": "Scrap, copper, redstone and a redstone block.",
+       "title": "Scrap Battery"
+      },
+      {
+       "type": "text",
+       "text": "Holds §l1,000,000 FE§r. It takes power on every side and sends it out of its §lfront§r (the round plug, which faces away from you when you place it). The gauge on its sides shows how full it is, a comparator reads it, and it keeps its charge when broken.",
+       "title": "Storing Power"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:cub_charger",
+       "text": "Wool over copper, redstone and copper.",
+       "title": "Cub Charger"
+      },
+      {
+       "type": "text",
+       "text": "A powered pad for Cubs: every second it spends 200 FE and every Cub within 5 blocks heals and gets the treat bonus (2 more blocks of magnet reach) for a minute.",
+       "title": "Charging Cubs"
       },
       {
        "type": "crafting",
@@ -10984,6 +11011,11 @@
        "type": "text",
        "text": "An airboat on a rubber skirt, pushed along by a big caged fan. It floats and keeps going over rivers, lakes and the sea at full speed, then runs straight up onto the bank. Golems and Cubs ride in front of the engine.",
        "title": "Land and Water"
+      },
+      {
+       "type": "text",
+       "text": "§lGolem drivers§r: load a golem with the Linker and get out. With no player aboard, the golem drives and follows you, keeping a few car lengths back, so several rigs make a convoy. Sneak + right-click the rig with an empty hand to park it, and again to send it after you. A golem gunner makes the Juggernaut's cannon reload much faster.",
+       "title": "Golem Drivers"
       },
       {
        "type": "text",
@@ -11952,6 +11984,8 @@
   "golemgarage:solar_panel": "generators",
   "golemgarage:wind_turbine": "generators",
   "golemgarage:burner_generator": "generators",
+  "golemgarage:battery": "generators",
+  "golemgarage:cub_charger": "generators",
   "golemgarage:rig_interceptor": "rig_variants",
   "golemgarage:rig_juggernaut": "rig_variants",
   "golemgarage:rig_skimmer": "rig_variants",

@@ -156,5 +156,47 @@
       "golemgarage:cub/sleep"
     ],
     "subtitle": "subtitles.golemgarage.cub.sleep"
+  },
+  "rig.engine": {
+    "sounds": [
+      "golemgarage:rig/engine0",
+      "golemgarage:rig/engine1"
+    ],
+    "subtitle": "subtitles.golemgarage.rig.engine"
+  },
+  "rig.start": {
+    "sounds": [
+      "golemgarage:rig/start"
+    ],
+    "subtitle": "subtitles.golemgarage.rig.start"
+  },
+  "rig.nitro": {
+    "sounds": [
+      "golemgarage:rig/nitro"
+    ],
+    "subtitle": "subtitles.golemgarage.rig.nitro"
+  },
+  "rig.cannon": {
+    "sounds": [
+      "golemgarage:rig/cannon"
+    ],
+    "subtitle": "subtitles.golemgarage.rig.cannon"
+  },
+  "rig.fan": {
+    "sounds": [
+      "golemgarage:rig/fan"
+    ],
+    "subtitle": "subtitles.golemgarage.rig.fan"
+  },
+  "rig.horn": {
+    "sounds": [
+      "golemgarage:rig/horn"
+    ],
+    "subtitle": "subtitles.golemgarage.rig.horn"
+  },
+  "battery.hum": {
+    "sounds": [
+      "golemgarage:block/battery_hum"
+    ]
   }
 }

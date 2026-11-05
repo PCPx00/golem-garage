@@ -39,6 +39,12 @@ public class FabricatorBlockEntity extends BlockEntity implements WorldlyContain
     private ItemStack output = ItemStack.EMPTY;
     private int shapeIndex;
     private int progress;
+    /** Powered, it welds twice as fast (20 FE/t). */
+    private final com.xtrip.golemgarage.power.PowerBuffer power = new com.xtrip.golemgarage.power.PowerBuffer(50_000, 1_000, this::setChanged);
+
+    public com.xtrip.golemgarage.power.PowerBuffer power() {
+        return power;
+    }
 
     public FabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FABRICATOR.get(), pos, state);
@@ -150,6 +156,9 @@ public class FabricatorBlockEntity extends BlockEntity implements WorldlyContain
             fab.changed();
         }
         fab.progress++;
+        if (fab.power.use(20)) {
+            fab.progress++;
+        }
         if (fab.progress % 12 == 0) {
             level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.15f, 1.6f + level.random.nextFloat() * 0.3f);
         }
@@ -273,6 +282,9 @@ public class FabricatorBlockEntity extends BlockEntity implements WorldlyContain
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        CompoundTag pw = new CompoundTag();
+        power.save(pw);
+        tag.put("Power", pw);
         if (!input.isEmpty()) {
             tag.put("Input", input.save(registries));
         }
@@ -286,6 +298,7 @@ public class FabricatorBlockEntity extends BlockEntity implements WorldlyContain
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        power.load(tag.getCompound("Power"));
         input = tag.contains("Input") ? ItemStack.parse(registries, tag.getCompound("Input")).orElse(ItemStack.EMPTY) : ItemStack.EMPTY;
         output = tag.contains("Output") ? ItemStack.parse(registries, tag.getCompound("Output")).orElse(ItemStack.EMPTY) : ItemStack.EMPTY;
         shapeIndex = tag.getInt("Shape");

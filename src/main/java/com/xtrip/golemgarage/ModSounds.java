@@ -27,6 +27,12 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> CUB_CHIRP = reg("cub.chirp");
     public static final DeferredHolder<SoundEvent, SoundEvent> CUB_HAPPY = reg("cub.happy");
     public static final DeferredHolder<SoundEvent, SoundEvent> CUB_SLEEP = reg("cub.sleep");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RIG_ENGINE = reg("rig.engine");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RIG_START = reg("rig.start");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RIG_NITRO = reg("rig.nitro");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RIG_CANNON = reg("rig.cannon");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RIG_FAN = reg("rig.fan");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RIG_HORN = reg("rig.horn");
 
     private static DeferredHolder<SoundEvent, SoundEvent> reg(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(

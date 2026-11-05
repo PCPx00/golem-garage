@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "golemgarage:block/cub_charger"
+    },
+    "lit=true": {
+      "model": "golemgarage:block/cub_charger_on"
+    }
+  }
+}

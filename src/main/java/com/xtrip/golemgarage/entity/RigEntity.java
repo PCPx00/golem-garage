@@ -53,6 +53,8 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
     private static final EntityDataAccessor<Integer> BOOST = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> FLASH = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.INT);
     private int boostCooldown;
+    private boolean wasOn;
+    private int engineSoundAt;
     private static final EntityDataAccessor<Byte> UPGRADES = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Float> TURRET_YAW = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.FLOAT);
 
@@ -158,7 +160,62 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
     }
 
     public boolean engineOn() {
-        return getFuel() > 0 && (getControllingPassenger() != null || isRogue() && !getPassengers().isEmpty());
+        return getFuel() > 0 && (getControllingPassenger() != null || isRogue() && !getPassengers().isEmpty() || golemDriving());
+    }
+
+    /** A golem drives when no player is aboard: it follows its owner, so a line of rigs makes a convoy. */
+    public boolean golemDriving() {
+        return !isRogue() && getControllingPassenger() == null && driver() != null;
+    }
+
+    @Nullable
+    private GolemEntity driver() {
+        for (Entity p : getPassengers()) {
+            if (p instanceof GolemEntity g && !g.isRogue() && !g.isBroken()) {
+                return g;
+            }
+        }
+        return null;
+    }
+
+    /** Parked: golem drivers stay put (sneak + use with an empty hand on a crewed rig toggles it). */
+    public boolean parked() {
+        return getPersistentData().getBoolean("GGParked");
+    }
+
+    private void tickConvoy() {
+        GolemEntity g = driver();
+        if (g == null || getFuel() <= 0 || parked() || g.getOwnerUuid() == null) {
+            if (getNavigation().isInProgress() && !isRogue()) {
+                getNavigation().stop();
+            }
+            return;
+        }
+        Player owner = level().getPlayerByUUID(g.getOwnerUuid());
+        if (owner == null || owner.level() != level() || distanceToSqr(owner) > 96 * 96) {
+            getNavigation().stop();
+            return;
+        }
+        // Follow the owner, or the rig the owner is driving, keeping a car length or two back.
+        Entity lead = owner.getVehicle() instanceof RigEntity r && r != this ? r : owner;
+        double d = distanceToSqr(lead);
+        if (d < 7 * 7) {
+            getNavigation().stop();
+            return;
+        }
+        if (tickCount % 10 == 0 || getNavigation().isDone()) {
+            Vec3 step = d > 20 * 20 ? com.xtrip.golemgarage.golem.RogueMarchGoal.hop(this, lead.blockPosition(), 14)
+                    : lead.position();
+            getNavigation().moveTo(step.x, step.y, step.z, d > 14 * 14 ? 1.35 : 1.1);
+        }
+        // Face where it's heading so the body turns like a car.
+        Vec3 v = getDeltaMovement();
+        if (v.horizontalDistanceSqr() > 0.002) {
+            float yaw = (float) (Mth.atan2(v.z, v.x) * 57.2958) - 90f;
+            setYRot(Mth.approachDegrees(getYRot(), yaw, 8f));
+            yBodyRot = getYRot();
+            yHeadRot = getYRot();
+        }
     }
 
     public boolean isRogue() {
@@ -344,6 +401,20 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         if (engineOn() && speed > 0.02) {
             setFuel(getFuel() - 1);
         }
+        // Engine note: a start-up cough, then a burble (or the Skimmer's fan) pitched up with speed.
+        boolean on = engineOn();
+        if (on && !wasOn) {
+            playSound(variant() == RigVariant.SKIMMER ? com.xtrip.golemgarage.ModSounds.RIG_FAN.get()
+                    : com.xtrip.golemgarage.ModSounds.RIG_START.get(), 1f, 1f);
+            engineSoundAt = tickCount + 26;
+        } else if (on && tickCount >= engineSoundAt) {
+            float pitch = (variant() == RigVariant.JUGGERNAUT ? 0.6f : variant() == RigVariant.INTERCEPTOR ? 1.0f : 0.8f)
+                    + (float) Math.min(0.6, speed * 1.2);
+            playSound(variant() == RigVariant.SKIMMER ? com.xtrip.golemgarage.ModSounds.RIG_FAN.get()
+                    : com.xtrip.golemgarage.ModSounds.RIG_ENGINE.get(), 0.7f, pitch);
+            engineSoundAt = tickCount + Math.max(10, Math.round(17 / pitch));
+        }
+        wasOn = on;
         if (entityData.get(BOOST) > 0) {
             entityData.set(BOOST, entityData.get(BOOST) - 1);
         }
@@ -355,6 +426,8 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         }
         if (isRogue()) {
             tickRogue();
+        } else {
+            tickConvoy();
         }
         if (speed > 0.2) {
             ram(speed);
@@ -445,6 +518,9 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
             }
         }
         playSound(SoundEvents.ANVIL_LAND, 0.4f, 0.6f);
+        if (random.nextInt(3) == 0) {
+            playSound(com.xtrip.golemgarage.ModSounds.RIG_HORN.get(), 1f, 0.9f);
+        }
         setDeltaMovement(getDeltaMovement().scale(0.5));
     }
 
@@ -503,7 +579,7 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         Vec3 aim = target.position().add(0, target.getBbHeight() / 2, 0).subtract(gun);
         entityData.set(TURRET_YAW, (float) (getYRot() + 90 - Math.toDegrees(Math.atan2(aim.z, aim.x))));
         entityData.set(FLASH, 6);
-        playSound(SoundEvents.GENERIC_EXPLODE.value(), 1.4f, 0.6f);
+        playSound(com.xtrip.golemgarage.ModSounds.RIG_CANNON.get(), 2f, 0.95f + random.nextFloat() * 0.1f);
         if (level() instanceof ServerLevel sl) {
             Vec3 muzzle = gun.add(aim.normalize().scale(2.2));
             sl.sendParticles(ParticleTypes.LARGE_SMOKE, muzzle.x, muzzle.y, muzzle.z, 6, 0.1, 0.1, 0.1, 0.02);
@@ -517,7 +593,8 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
                 e.push(push.x, 0.3, push.z);
             }
         }
-        turretCooldown = 50;
+        // A golem gunner aboard reloads much faster.
+        turretCooldown = getPassengers().stream().anyMatch(p -> p instanceof GolemEntity) ? 30 : 50;
     }
 
     /** Who the guns shoot at: hostile mobs, or for raiders' rigs, players and their golems. */
@@ -552,8 +629,7 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         entityData.set(BOOST, 20 + power / 3);
         boostCooldown = 80;
         setFuel(getFuel() - 300);
-        playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.2f, 0.7f);
-        playSound(SoundEvents.BLAZE_SHOOT, 0.8f, 0.6f);
+        playSound(com.xtrip.golemgarage.ModSounds.RIG_NITRO.get(), 1.4f, 1f);
     }
 
     @Override
@@ -646,6 +722,16 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         if (held.is(ModItems.GOLEM_LINKER.get())) {
             if (!client) {
                 loadCrew(player);
+            }
+            return InteractionResult.sidedSuccess(client);
+        }
+        // Sneak with an empty hand on a rig with a golem driver parks it, or sends it off again.
+        if (held.isEmpty() && player.isSecondaryUseActive() && driver() != null) {
+            if (!client) {
+                boolean p = !parked();
+                getPersistentData().putBoolean("GGParked", p);
+                player.displayClientMessage(Component.translatable(p ? "golemgarage.rig.parked" : "golemgarage.rig.following"), true);
+                playSound(p ? SoundEvents.IRON_TRAPDOOR_CLOSE : com.xtrip.golemgarage.ModSounds.RIG_HORN.get(), 1f, 1f);
             }
             return InteractionResult.sidedSuccess(client);
         }

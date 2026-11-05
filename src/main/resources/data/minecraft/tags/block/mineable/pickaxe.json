@@ -12,6 +12,8 @@
     "golemgarage:garage_radio",
     "golemgarage:solar_panel",
     "golemgarage:wind_turbine",
-    "golemgarage:burner_generator"
+    "golemgarage:burner_generator",
+    "golemgarage:battery",
+    "golemgarage:cub_charger"
   ]
 }

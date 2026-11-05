@@ -170,6 +170,10 @@ def rig_variants():
         text("An airboat on a rubber skirt, pushed along by a big caged fan. It floats and keeps going over "
              "rivers, lakes and the sea at full speed, then runs straight up onto the bank. Golems and Cubs "
              "ride in front of the engine.", "Land and Water"),
+        text(B("Golem drivers") + ": load a golem with the Linker and get out. With no player aboard, the golem "
+             "drives and follows you, keeping a few car lengths back, so several rigs make a convoy. Sneak + "
+             "right-click the rig with an empty hand to park it, and again to send it after you. A golem gunner "
+             "makes the Juggernaut's cannon reload much faster.", "Golem Drivers"),
         text("Every rig takes fuel, repairs, the Linker, the Spiked Ram and Rig Plating the same way. Raiders "
              "sometimes come in Interceptors, and a Titan's convoy brings a Juggernaut. Wrecks of any kind turn "
              "up in scrapyards.", "All Rigs"),

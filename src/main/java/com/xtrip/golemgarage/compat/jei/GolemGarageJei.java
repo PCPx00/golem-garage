@@ -96,6 +96,8 @@ public class GolemGarageJei implements IModPlugin {
         info(reg, com.xtrip.golemgarage.power.PowerBlocks.SOLAR_PANEL_ITEM.get(), "solar_panel");
         info(reg, com.xtrip.golemgarage.power.PowerBlocks.WIND_TURBINE_ITEM.get(), "wind_turbine");
         info(reg, com.xtrip.golemgarage.power.PowerBlocks.BURNER_ITEM.get(), "burner_generator");
+        info(reg, com.xtrip.golemgarage.power.PowerBlocks.BATTERY_ITEM.get(), "battery");
+        info(reg, com.xtrip.golemgarage.power.PowerBlocks.CUB_CHARGER_ITEM.get(), "cub_charger");
         info(reg, ModItems.RIG_INTERCEPTOR.get(), "rig_interceptor");
         info(reg, ModItems.RIG_JUGGERNAUT.get(), "rig_juggernaut");
         info(reg, ModItems.RIG_SKIMMER.get(), "rig_skimmer");

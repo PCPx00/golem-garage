@@ -67,6 +67,10 @@ public class GarageControllerBlockEntity extends BlockEntity {
     // Planner: the room size the player chose, whether its outline shows in the world, and the auto-build queue.
     private int planW = 5, planD = 5, planH = 4;
     private boolean showPlan = true, configured;
+    /** Power from cables or generators: while it lasts, repairs run at double speed (40 FE/t). */
+    private final com.xtrip.golemgarage.power.PowerBuffer power = new com.xtrip.golemgarage.power.PowerBuffer(200_000, 2_000, this::setChanged);
+    public static final int REPAIR_FE = 40;
+    private boolean powered;
     private com.xtrip.golemgarage.block.GarageStyle style = com.xtrip.golemgarage.block.GarageStyle.WASTELAND;
     /** Golems on show in the Garage: up to six, how many depends on the room size. */
     private final net.minecraft.world.SimpleContainer showcase = new net.minecraft.world.SimpleContainer(SHOWCASE_MAX) {
@@ -119,6 +123,15 @@ public class GarageControllerBlockEntity extends BlockEntity {
 
     public List<BlockPos> getEmitters() {
         return emitters;
+    }
+
+    public com.xtrip.golemgarage.power.PowerBuffer power() {
+        return power;
+    }
+
+    /** Client: whether the last repair tick ran on power. */
+    public boolean powered() {
+        return powered;
     }
 
     public int planW() {
@@ -954,6 +967,18 @@ public class GarageControllerBlockEntity extends BlockEntity {
             return;
         }
         progress++;
+        boolean nowPowered = power.use(REPAIR_FE);
+        if (nowPowered) {
+            progress++;
+            if (level.getGameTime() % 6 == 0 && bayCenter != null) {
+                level.sendParticles(ParticleTypes.ELECTRIC_SPARK, bayCenter.getX() + 0.5, bayCenter.getY() + 1.5,
+                        bayCenter.getZ() + 0.5, 3, 0.4, 0.6, 0.4, 0.1);
+            }
+        }
+        if (nowPowered != powered) {
+            powered = nowPowered;
+            sync();
+        }
         if (progress % 5 == 0 && bay.hasSteelEmitter(level)) {
             progress++;
         }
@@ -1090,6 +1115,10 @@ public class GarageControllerBlockEntity extends BlockEntity {
         } else if (bay != null) {
             msg.append(" ").append(Component.translatable("golemgarage.msg.garage_hint").withStyle(ChatFormatting.GRAY));
         }
+        if (power.getEnergyStored() >= REPAIR_FE) {
+            msg.append(" ").append(Component.translatable("golemgarage.garage.power",
+                    com.xtrip.golemgarage.block.GeneratorInfo.fe(power.getEnergyStored())).withStyle(ChatFormatting.AQUA));
+        }
         return msg;
     }
 
@@ -1167,6 +1196,10 @@ public class GarageControllerBlockEntity extends BlockEntity {
         tag.putBoolean("ShowPlan", showPlan);
         tag.putBoolean("Configured", configured);
         tag.putString("Style", style.id());
+        CompoundTag pw = new CompoundTag();
+        power.save(pw);
+        tag.put("Power", pw);
+        tag.putBoolean("Powered", powered);
         tag.put("Showcase", net.minecraft.world.ContainerHelper.saveAllItems(new CompoundTag(),
                 showcase.getItems(), true, registries));
         tag.putInt("BuildTotal", buildTotal);
@@ -1221,6 +1254,8 @@ public class GarageControllerBlockEntity extends BlockEntity {
             showPlan = tag.getBoolean("ShowPlan");
             configured = tag.getBoolean("Configured");
         }
+        power.load(tag.getCompound("Power"));
+        powered = tag.getBoolean("Powered");
         for (var st : com.xtrip.golemgarage.block.GarageStyle.values()) {
             if (st.id().equals(tag.getString("Style"))) {
                 style = st;

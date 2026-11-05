@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "front": "golemgarage:block/battery_front",
+    "side": "golemgarage:block/battery_side_0",
+    "top": "golemgarage:block/battery_top",
+    "bottom": "golemgarage:block/battery_top"
+  }
+}

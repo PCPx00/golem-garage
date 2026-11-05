@@ -909,6 +909,9 @@ def tools_chapter():
             text("Pipes and cables can pull from any side: " + B("Grim Pipe Industries") + " energy pipes, "
                  "Mekanism cables and the like.\n\nWith Grim pipes, click the pipe end at the generator with "
                  "the Reaper Wrench to set it to " + B("Input") + ".", "Pipes"),
+            text("What uses power:\n\n- " + B("Golem Dock") + ": charges golems 5x as fast.\n- " + B("Garage")
+                 + " (feed the controller): repairs at double speed, 40 FE/t.\n- " + B("Fabricator") + ": welds twice "
+                 "as fast, 20 FE/t.\n- " + B("Cub Charger") + ": heals and boosts Cubs nearby.", "Using Power"),
             craft(MODID + ":solar_panel", "Glass panes, lapis, redstone, iron and scrap.", "Solar Panel"),
             text("Up to " + B("40 FE/t") + " under open sky, following the sun: the most at noon, a trickle at "
                  "dawn and dusk, nothing at night. Rain cuts it to about a third. It stores 20,000 FE. Right-click "
@@ -918,6 +921,13 @@ def tools_chapter():
                  + B("6 FE/t") + " near sea level, up to " + B("70 FE/t") + " high in the hills, half again in "
                  "rain and double in a storm. Keep the three blocks above it and the space round the rotor "
                  "clear; right-click to see how much wind is blocked. No wind in the Nether or the End.", "Wind"),
+            craft(MODID + ":battery", "Scrap, copper, redstone and a redstone block.", "Scrap Battery"),
+            text("Holds " + B("1,000,000 FE") + ". It takes power on every side and sends it out of its " + B("front")
+                 + " (the round plug, which faces away from you when you place it). The gauge on its sides shows how "
+                 "full it is, a comparator reads it, and it keeps its charge when broken.", "Storing Power"),
+            craft(MODID + ":cub_charger", "Wool over copper, redstone and copper.", "Cub Charger"),
+            text("A powered pad for Cubs: every second it spends 200 FE and every Cub within 5 blocks heals and "
+                 "gets the treat bonus (2 more blocks of magnet reach) for a minute.", "Charging Cubs"),
             craft(MODID + ":burner_generator", "Scrap, copper, iron, redstone and a blast furnace.", "Scrap Burner"),
             text("Burns anything a furnace can for " + B("60 FE/t") + ", or lava for " + B("120 FE/t") + " (a "
                  "bucket lasts about 100 seconds). Right-click to open it: a fuel slot, a lava tank and an energy "
@@ -1207,7 +1217,8 @@ def build_index():
         MODID + ":rule_card": "rule_cards", MODID + ":war_horn": "war_horn", MODID + ":fabricator": "workshop",
         MODID + ":golem_tablet": "workshop", MODID + ":cub_bed": "cub_personality",
              MODID + ":solar_panel": "generators", MODID + ":wind_turbine": "generators",
-             MODID + ":burner_generator": "generators",
+             MODID + ":burner_generator": "generators", MODID + ":battery": "generators",
+             MODID + ":cub_charger": "generators",
              MODID + ":rig_interceptor": "rig_variants", MODID + ":rig_juggernaut": "rig_variants",
              MODID + ":rig_skimmer": "rig_variants", "minecraft:honeycomb": "copper_care", "minecraft:vine": "vines",
         "minecraft:redstone_block": "power_basics",

@@ -52,7 +52,33 @@ public class WindTurbineBlock extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        // It needs three clear blocks above for the mast.
+        for (int y = 1; y <= 3; y++) {
+            if (!ctx.getLevel().getBlockState(ctx.getClickedPos().above(y)).canBeReplaced()) {
+                return null;
+            }
+        }
         return defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    public void setPlacedBy(net.minecraft.world.level.Level level, BlockPos pos, BlockState state,
+                            @Nullable net.minecraft.world.entity.LivingEntity by, net.minecraft.world.item.ItemStack stack) {
+        for (int y = 1; y <= 3; y++) {
+            level.setBlock(pos.above(y), PowerBlocks.TURBINE_MAST.get().defaultBlockState(), 3);
+        }
+    }
+
+    @Override
+    protected void onRemove(BlockState state, net.minecraft.world.level.Level level, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.is(newState.getBlock())) {
+            for (int y = 1; y <= 3; y++) {
+                if (level.getBlockState(pos.above(y)).is(PowerBlocks.TURBINE_MAST.get())) {
+                    level.setBlock(pos.above(y), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+                }
+            }
+        }
+        super.onRemove(state, level, pos, newState, moved);
     }
 
     @Override

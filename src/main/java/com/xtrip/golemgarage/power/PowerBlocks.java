@@ -33,6 +33,25 @@ public final class PowerBlocks {
                     .strength(3.5f, 6f).sound(SoundType.METAL).requiresCorrectToolForDrops()
                     .lightLevel(s -> s.getValue(BurnerGeneratorBlock.LIT) ? 13 : 0)));
 
+    public static final DeferredBlock<com.xtrip.golemgarage.block.BatteryBlock> BATTERY = ModBlocks.BLOCKS.register("battery",
+            () -> new com.xtrip.golemgarage.block.BatteryBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY)
+                    .strength(3f, 6f).sound(SoundType.METAL).requiresCorrectToolForDrops()
+                    .lightLevel(s -> s.getValue(com.xtrip.golemgarage.block.BatteryBlock.LEVEL) * 2)));
+    public static final DeferredBlock<com.xtrip.golemgarage.block.CubChargerBlock> CUB_CHARGER = ModBlocks.BLOCKS.register("cub_charger",
+            () -> new com.xtrip.golemgarage.block.CubChargerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PINK)
+                    .strength(1.5f, 6f).sound(SoundType.METAL).noOcclusion()
+                    .lightLevel(s -> s.getValue(com.xtrip.golemgarage.block.CubChargerBlock.LIT) ? 9 : 0)));
+    public static final DeferredBlock<com.xtrip.golemgarage.block.TurbineMastBlock> TURBINE_MAST = ModBlocks.BLOCKS.register("turbine_mast",
+            () -> new com.xtrip.golemgarage.block.TurbineMastBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN)
+                    .strength(3f, 6f).sound(SoundType.METAL).noOcclusion().noLootTable()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BatteryBlockEntity>> BATTERY_BE =
+            ModBlockEntities.BLOCK_ENTITIES.register("battery",
+                    () -> BlockEntityType.Builder.of(BatteryBlockEntity::new, BATTERY.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CubChargerBlockEntity>> CUB_CHARGER_BE =
+            ModBlockEntities.BLOCK_ENTITIES.register("cub_charger",
+                    () -> BlockEntityType.Builder.of(CubChargerBlockEntity::new, CUB_CHARGER.get()).build(null));
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>> SOLAR_PANEL_BE =
             ModBlockEntities.BLOCK_ENTITIES.register("solar_panel",
                     () -> BlockEntityType.Builder.of(SolarPanelBlockEntity::new, SOLAR_PANEL.get()).build(null));
@@ -49,6 +68,8 @@ public final class PowerBlocks {
     public static final DeferredItem<BlockItem> SOLAR_PANEL_ITEM = ModItems.extraBlock("solar_panel", SOLAR_PANEL);
     public static final DeferredItem<BlockItem> WIND_TURBINE_ITEM = ModItems.extraBlock("wind_turbine", WIND_TURBINE);
     public static final DeferredItem<BlockItem> BURNER_ITEM = ModItems.extraBlock("burner_generator", BURNER);
+    public static final DeferredItem<BlockItem> BATTERY_ITEM = ModItems.extraBlock("battery", BATTERY);
+    public static final DeferredItem<BlockItem> CUB_CHARGER_ITEM = ModItems.extraBlock("cub_charger", CUB_CHARGER);
 
     private PowerBlocks() {
     }
@@ -64,5 +85,9 @@ public final class PowerBlocks {
         e.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, BURNER_BE.get(), (be, side) -> be.energy());
         e.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BURNER_BE.get(), (be, side) -> be.pipeItems());
         e.registerBlockEntity(Capabilities.FluidHandler.BLOCK, BURNER_BE.get(), (be, side) -> be.pipeFluid());
+        e.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, BATTERY_BE.get(), (be, side) -> be.side(side));
+        e.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, CUB_CHARGER_BE.get(), (be, side) -> be.power());
+        e.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.GARAGE_CONTROLLER.get(), (be, side) -> be.power());
+        e.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.FABRICATOR.get(), (be, side) -> be.power());
     }
 }
