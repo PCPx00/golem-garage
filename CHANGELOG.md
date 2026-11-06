@@ -2,6 +2,15 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.29.0
+
+### Changed
+- **Every hand-made item icon redone** as a small 3D model at 32x32, in the same 3/4 view, light and outline as
+  the part and golem icons: the steel ingot, scrap, tyre, repair kit, both blueprints, the rule card, Golem
+  Linker, manual, Golem Tablet, all eight modules (bigger, clearer symbols), the war horn (now copper, to match
+  its recipe), jerry can, both medals, solar panel, Cub Charger, the seven rig upgrades and gadgets, the garage
+  door and all six spray cans. The old 16x16 drawings are gone.
+
 ## 0.28.0
 
 ### Added

@@ -19,59 +19,13 @@ PAL = {
     "T": (70, 110, 130), "h": (230, 150, 160), "H": (250, 200, 210), "B": (40, 80, 150), "u": (80, 130, 210),
 }
 
-ICONS = {
-    "garage_blueprint": [
-        "................",
-        "..kkkkkkkkkkkk..",
-        "..kBBBBBBBBBBk..",
-        "..kBuuuuuuuuBk..",
-        "..kBuSSSSSSuBk..",
-        "..kBuS.uu.SuBk..",
-        "..kBuS.uu.SuBk..",
-        "..kBuSSSSSSuBk..",
-        "..kBuS.SS.SuBk..",
-        "..kBuS.SS.SuBk..",
-        "..kBuSSyySSuBk..",
-        "..kBuuuuuuuuBk..",
-        "..kBuSSSSuuuBk..",
-        "..kBBBBBBBBBBk..",
-        "..kkkkkkkkkkkk..",
-        "................"],
-    "scrap": [
-        "................",
-        "................",
-        "......gG........",
-        ".....gGsg..R....",
-        "....gGgRrgRo....",
-        "...dgRRrgGRo....",
-        "..dgRorRGgrr....",
-        "..dgrRRrgdg.gG..",
-        ".dgGgrRrRgdgGsg.",
-        ".dgsGgrRoRrgGgd.",
-        "..dggsGrRRrgddg.",
-        "...ddggdgrrgd...",
-        ".....dd.ddd.....",
-        "................",
-        "................",
-        "................"],
-    "tyre": [
-        "................",
-        ".....kkkkkk.....",
-        "...kkbdbdbdkk...",
-        "..kbdkkkkkkdbk..",
-        "..kdkk....kkdk..",
-        ".kbkk.gGGg.kkbk.",
-        ".kdk.gG..Gg.kdk.",
-        ".kbk.G....G.kbk.",
-        ".kdk.G....G.kdk.",
-        ".kbk.gG..Gg.kbk.",
-        ".kdkk.gGGg.kkdk.",
-        "..kbkk....kkbk..",
-        "..kdbkkkkkkbdk..",
-        "...kkdbdbdbkk...",
-        ".....kkkkkk.....",
-        "................"],
-    "rig": [
+# Item icons are 3D renders made by icons2.py; these ids just need a flat item model.
+ICON_IDS = ["garage_blueprint", "scrap", "tyre", "rig_ram", "rig_turret", "rig_plating", "rule_card", "war_horn",
+            "golem_tablet"]
+
+# The rig item renders as a 3D model; this small drawing is only its break particle.
+RIG_PARTICLE = [
+
         "................",
         "................",
         "................",
@@ -87,110 +41,7 @@ ICONS = {
         "kbgGbk...kbgGbk.",
         "kbGgbk...kbGgbk.",
         ".kkkk.....kkkk..",
-        "................"],
-    "rig_ram": [
-        "................",
-        "................",
-        "................",
-        "W...W...W...W...",
-        "sW..sW..sW..sW..",
-        "gsW.gsW.gsW.gsW.",
-        "rRRRRRRRRRRRRRr.",
-        "rRoRRoRRoRRoRRr.",
-        "rrrrrrrrrrrrrrr.",
-        "dgggggggggggggd.",
-        "dd...........dd.",
-        "................",
-        "................",
-        "................",
-        "................",
-        "................"],
-    "rig_turret": [
-        "................",
-        "................",
-        "................",
-        "................",
-        ".......kkkkkkkkk",
-        "......kgggggggk.",
-        "....kkkgkkkkkkkk",
-        "...kGGgk........",
-        "..kGggggk.......",
-        "..kgggggk.......",
-        "..kdgggdk.......",
-        "...kdddk........",
-        "..kRRRRRk.......",
-        ".kRrrrrrRk......",
-        ".kkkkkkkkk......",
-        "................"],
-    "rig_plating": [
-        "................",
-        "..kkkkkkkkkkkk..",
-        ".kRRRRoRRRRRRRk.",
-        ".kRsRRRRRRRRsRk.",
-        ".kRRRRRRrRRRRRk.",
-        ".kRRrRRRRRRoRRk.",
-        ".kRRRRRRRRRRRRk.",
-        ".kkkkkkkkkkkkkk.",
-        ".kRRRRRRRRRRRRk.",
-        ".kRsRRoRRRRRsRk.",
-        ".kRRRRRRRRrRRRk.",
-        ".kRRRRRRRRRRRRk.",
-        ".kRsRRRRRRRRsRk.",
-        "..kkkkkkkkkkkk..",
-        "................",
-        "................"],
-    "rule_card": [
-        "................",
-        "................",
-        "..pppppppppppp..",
-        "..pPPPPPPPPPPp..",
-        "..pPkPkPPkPkPp..",
-        "..pPPPPPPPPPPp..",
-        "..pPkPPkPkPPPp..",
-        "..pPPPPPPPPPPp..",
-        "..pPPkPkPPkPkp..",
-        "..pPPPPPPPPPPp..",
-        "..pPkPPPkPkPPp..",
-        "..pPPPPPPPPPPp..",
-        "..pPPPPPPPPeep..",
-        "..pppppppppppp..",
-        "................",
-        "................"],
-    "war_horn": [
-        "................",
-        "................",
-        "............oO..",
-        "...........oOY..",
-        "..........oOo...",
-        ".........oOo....",
-        "........oOo.....",
-        ".......nOo......",
-        "......nNo.......",
-        ".....nNn........",
-        "....nNn.........",
-        "...nNn..........",
-        "..oOo...........",
-        ".oOYOo..........",
-        "..ooo...........",
-        "................"],
-    "golem_tablet": [
-        "................",
-        "..kkkkkkkkkkkk..",
-        ".kgGGGGGGGGGGgk.",
-        ".kGttttttttttGk.",
-        ".kGtTTTTTTcTtGk.",
-        ".kGtTcTTTTTTtGk.",
-        ".kGtTTTTCTTTtGk.",
-        ".kGtTTTCWCTTtGk.",
-        ".kGtTTTTCTTTtGk.",
-        ".kGtTTcTTTTTtGk.",
-        ".kGtTTTTTTcTtGk.",
-        ".kGttttttttttGk.",
-        ".kGGGGGGsGGGGGk.",
-        ".kgGGGGGGGGGGgk.",
-        "..kkkkkkkkkkkk..",
-        "................"],
-}
+        "................"]
 
 # id -> English name
 NAMES = {
@@ -229,27 +80,6 @@ SPRAY = {
               ["minecraft:orange_dye", "minecraft:black_dye"]),
 }
 
-
-def spray_icon(cap, bands):
-    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    px = img.load()
-    for y in range(4, 15):
-        for x in range(5, 11):
-            edge = x in (5, 10) or y == 14
-            if edge:
-                px[x, y] = (40, 40, 44, 255)
-            else:
-                band = bands[min(2, (y - 5) // 3)]
-                shade = 1.15 if x == 6 else 0.85 if x == 9 else 1.0
-                px[x, y] = tuple(min(255, int(c * shade)) for c in band) + (255,)
-    for x in range(6, 10):
-        px[x, 3] = (150, 150, 156, 255)
-        px[x, 4] = (110, 110, 116, 255)
-    for x in range(7, 9):
-        px[x, 2] = cap + (255,)
-        px[x, 1] = cap + (255,)
-    px[9, 1] = (60, 60, 64, 255)
-    return img
 
 RECIPES = {
     "garage_blueprint": {"type": "minecraft:crafting_shapeless", "category": "misc",
@@ -336,17 +166,15 @@ def _json(path, obj):
 
 
 def generate(assets, data, lang):
-    for iid, grid in ICONS.items():
-        path = os.path.join(assets, "textures/item", iid + ".png")
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        draw(grid).save(path)
+    os.makedirs(os.path.join(assets, "textures/item"), exist_ok=True)
+    draw(RIG_PARTICLE).save(os.path.join(assets, "textures/item", "rig.png"))
+    for iid in ICON_IDS:
         _json(os.path.join(assets, "models/item", iid + ".json"),
               {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (MODID, iid)}})
     for iid, name in NAMES.items():
         lang[("block" if iid in ("fabricator", "cub_bed", "garage_radio", "arena_bell") else "item") + ".%s.%s" % (MODID, iid)] = name
     for fin, (name, cap, bands, dyes) in SPRAY.items():
         iid = "spray_can_" + fin
-        spray_icon(cap, bands).save(os.path.join(assets, "textures/item", iid + ".png"))
         _json(os.path.join(assets, "models/item", iid + ".json"),
               {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (MODID, iid)}})
         lang["item.%s.%s" % (MODID, iid)] = name

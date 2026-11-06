@@ -11,7 +11,6 @@ from PIL import Image
 
 import paint
 from blocks import metal_panel
-from extras import draw
 
 MODID = "golemgarage"
 ALLF = ("north", "south", "east", "west", "up", "down")
@@ -66,166 +65,9 @@ STRINGS = {
     "key.golemgarage.rig_rack": "Rig: open roof rack",
 }
 
-ICONS = {
-    "rig_harpoon": [
-        "................",
-        "............SS..",
-        "...........SSWS.",
-        "..........sSSS..",
-        ".........ss.S...",
-        "........ss......",
-        ".......ss.......",
-        "...gg.ss........",
-        "..gGGgs.........",
-        ".gGRRGg.........",
-        ".gRrrRg.........",
-        "..grrRg.........",
-        "..dggd..........",
-        ".dd.dd..........",
-        ".d...d..........",
-        "................"],
-    "rig_smoke": [
-        "................",
-        "...GG....ww.....",
-        "..GwwG..wWWw....",
-        "...GG.wWWwwW....",
-        ".......wwWw.....",
-        "....ss....ss....",
-        "...sSSs..sSSs...",
-        "...dggd..dggd...",
-        "...dggd..dggd...",
-        "...dRRd..dRRd...",
-        "...dggd..dggd...",
-        "...dggd..dggd...",
-        "...dggd..dggd...",
-        "...dkkd..dkkd...",
-        "................",
-        "................"],
-    "rig_spikes": [
-        "................",
-        "................",
-        "................",
-        "..S...S...S...S.",
-        ".sSs.sSs.sSs.sSs",
-        ".sGs.sGs.sGs.sGs",
-        "kddddddddddddddk",
-        "kgGgGgGgGgGgGgGk",
-        "kddddddddddddddk",
-        "................",
-        "..S...S...S...S.",
-        ".sSs.sSs.sSs.sSs",
-        ".sGs.sGs.sGs.sGs",
-        "kddddddddddddddk",
-        "kgGgGgGgGgGgGgGk",
-        "kddddddddddddddk"],
-    "rig_rack": [
-        "................",
-        "................",
-        "....NNNNN.......",
-        "....NnnnN.kkkk..",
-        "....NnNnN.kbbk..",
-        "....NnnnN.kbbk..",
-        "....NNNNN.kkkk..",
-        ".dddddddddddddd.",
-        ".d.d..d..d..d.d.",
-        ".dddddddddddddd.",
-        ".d............d.",
-        ".d............d.",
-        "................",
-        "................",
-        "................",
-        "................"],
-    "jerry_can": [
-        "................",
-        "....kkk.........",
-        "...kRRRk.kk.....",
-        "...kRkRkkGGk....",
-        "..kkkkkkkkkkk...",
-        "..kRRRRRRRRRk...",
-        "..kReRRRRRReRk..",
-        "..kRReRRRReRRk..",
-        "..kRRReRReRRRk..",
-        "..kRRRReeRRRRk..",
-        "..kRRReRReRRRk..",
-        "..kRReRRRReRRk..",
-        "..kReRRRRRReRk..",
-        "..kRRRRRRRRRRk..",
-        "...kkkkkkkkkk...",
-        "................"],
-    "legend_medal": [
-        "................",
-        ".....eEEEe......",
-        ".....eEEEe......",
-        "......eEe.......",
-        "......eEe.......",
-        ".....yYYYy......",
-        "....yYOOOYy.....",
-        "...yYOYYYOYy....",
-        "...yOYYkYYOy....",
-        "...yOYkYkYOy....",
-        "...yOYYkYYOy....",
-        "...yYOYYYOYy....",
-        "....yYOOOYy.....",
-        ".....yyyyy......",
-        "................",
-        "................"],
-    "arena_medal": [
-        "................",
-        ".....BuuuB......",
-        ".....BuuuB......",
-        "......BuB.......",
-        "......BuB.......",
-        ".....sSSSs......",
-        "....sSGGGSs.....",
-        "...sSGSSSGSs....",
-        "...sGSkSkSGs....",
-        "...sGSSkSSGs....",
-        "...sGSkSkSGs....",
-        "...sSGSSSGSs....",
-        "....sSGGGSs.....",
-        ".....sssss......",
-        "................",
-        "................"],
-}
-
-
-# Flat generators read badly as tiny 3D slabs in the inventory, so they get drawn icons.
-GEN_ICONS = {
-    "solar_panel": [
-        "................",
-        "................",
-        "..kkkkkkkkkkkk..",
-        ".kBuBuBkBuBuBk..",
-        ".kuBuBukuBuBuk..",
-        ".kBuCuBkBuBuBk..",
-        ".kkkkkkkkkkkkk..",
-        ".kBuBuBkBuCuBk..",
-        ".kuBuBukuBuBuk..",
-        ".kBuBuBkBuBuBk..",
-        "..kkkkkkkkkkkk..",
-        "......dggd......",
-        "......dGgd......",
-        "....ddgGGgdd....",
-        "...dggggggggd...",
-        "................"],
-    "cub_charger": [
-        "................",
-        "................",
-        "................",
-        "........Y.......",
-        ".......YY.......",
-        "......YYk.......",
-        ".....YYYYY......",
-        "........YY......",
-        "........Y.......",
-        "..hhhhhhhhhhhh..",
-        ".hHHHHHHHHHHHHh.",
-        ".hHhhhhhhhhhhHh.",
-        ".dgggggggggggggd",
-        ".dgGsGsGsGsGsgd.",
-        "..dddddddddddd..",
-        "................"],
-}
+# Item icons are 3D renders made by icons2.py; these ids just need a flat item model.
+ICON_IDS = ["rig_harpoon", "rig_smoke", "rig_spikes", "rig_rack", "jerry_can", "legend_medal", "arena_medal",
+            "solar_panel", "cub_charger"]
 
 RECIPES = {
     "tyre_stack": {"type": "minecraft:crafting_shapeless", "category": "decorations",
@@ -708,8 +550,7 @@ def generate(assets, data, lang):
     _json(os.path.join(models, "item/spike_strip.json"), {"parent": "golemgarage:block/spike_strip"})
 
     # Item icons.
-    for iid, grid in list(ICONS.items()) + list(GEN_ICONS.items()):
-        _save(draw(grid), os.path.join(assets, "textures/item", iid + ".png"))
+    for iid in ICON_IDS:
         _json(os.path.join(models, "item", iid + ".json"),
               {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (MODID, iid)}})
 

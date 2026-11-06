@@ -218,24 +218,6 @@ def door_texture():
     return img
 
 
-def door_icon():
-    pal = paint.ramp("#7d848c")
-    dark = paint.ramp("#4a4f57")
-    c = paint.Canvas(16, 16)
-    for x in range(1, 15):
-        c.set(x, 1, dark[2]); c.set(x, 2, dark[3])
-        for y in range(3, 14):
-            c.set(x, y, pal[(5, 4, 3)[(y - 3) % 3]] if (y - 3) % 3 != 2 else pal[1])
-        c.set(x, 14, (28, 28, 30))
-    for y in range(1, 15):
-        c.set(0, y, dark[1]); c.set(15, y, dark[1])
-    for x in range(1, 15):
-        if ((x + 1) // 2) % 2 == 0:
-            c.set(x, 2, (232, 186, 48))
-    c.set(7, 12, dark[0]); c.set(8, 12, dark[0])
-    return c.img
-
-
 def window():
     pal = paint.ramp("#6a7079")
     img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
@@ -345,7 +327,6 @@ def generate(assets):
     _save(dock_top(True), os.path.join(tex, "golem_dock_top_on.png"))
     _save(dock_side(), os.path.join(tex, "golem_dock_side.png"))
     _save(door_texture(), os.path.join(assets, "textures/entity/garage_door.png"))
-    _save(door_icon(), os.path.join(assets, "textures/item/garage_door.png"))
     _save(window(), os.path.join(tex, "garage_window.png"))
     _save(fabricator_side(), os.path.join(tex, "fabricator_side.png"))
     _save(cub_bed_top(), os.path.join(tex, "cub_bed_top.png"))
