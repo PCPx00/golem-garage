@@ -172,6 +172,31 @@ public class BurnerGeneratorBlockEntity extends GeneratorBlockEntity implements 
     }
 
     /** Pours a lava bucket in by hand. */
+    /**
+     * Fills a jerry can by up to {@code want} rig fuel: lava from the tank first (24 fuel per mB, so a bucket fills a
+     * can), then the items in the fuel slot (three times their burn time, as rigs burn them). Returns the fuel given.
+     */
+    public int fillCan(int want) {
+        int given = 0;
+        int mb = Math.min(tank.getFluidAmount(), (want + 23) / 24);
+        if (mb > 0) {
+            tank.drain(mb, IFluidHandler.FluidAction.EXECUTE);
+            given += mb * 24;
+        }
+        ItemStack fuel = items.getStackInSlot(FUEL);
+        while (given < want && !fuel.isEmpty() && !fuel.is(Items.LAVA_BUCKET)) {
+            int t = fuel.getBurnTime(RecipeType.SMELTING) * 3;
+            if (t <= 0) {
+                break;
+            }
+            items.extractItem(FUEL, 1, false);
+            given += t;
+            fuel = items.getStackInSlot(FUEL);
+        }
+        setChanged();
+        return Math.min(given, want);
+    }
+
     public boolean pourBucket() {
         if (TANK - tank.getFluidAmount() < 1000) {
             return false;

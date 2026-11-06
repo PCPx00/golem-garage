@@ -38,6 +38,9 @@ public final class CarModel {
 
     /** A spray-can paint job: the tile that replaces the body paint, or -1. Set around one render call. */
     private static int paint = -1;
+    /** Rig gadgets fitted (RigEntity upgrade bits) and whether the headlights are on. Set around one render call. */
+    private static int gadgets = 0;
+    private static boolean lights = true;
 
     /** The skin tile for a spray-can finish id ("flames", ...), or -1. */
     public static int finishTile(String finish) {
@@ -81,11 +84,20 @@ public final class CarModel {
 
     public static void render(BlockRenderDispatcher blocks, PoseStack pose, MultiBufferSource buffers, int light,
                               float time, Options o, int paintTile) {
+        render(blocks, pose, buffers, light, time, o, paintTile, 0, true);
+    }
+
+    public static void render(BlockRenderDispatcher blocks, PoseStack pose, MultiBufferSource buffers, int light,
+                              float time, Options o, int paintTile, int gadgetBits, boolean lightsOn) {
         paint = paintTile;
+        gadgets = gadgetBits;
+        lights = lightsOn;
         try {
             renderModel(blocks, pose, buffers, light, time, o);
         } finally {
             paint = -1;
+            gadgets = 0;
+            lights = true;
         }
     }
 
@@ -197,6 +209,7 @@ public final class CarModel {
                         new float[]{1f, 0.5f, 0.1f}, 0.8f);
             }
         }
+        gadgets(blocks, pose, buffers, light, time, o);
         pose.popPose();
     }
 
@@ -282,6 +295,7 @@ public final class CarModel {
                         new float[]{0.45f, 0.7f, 1f}, 0.7f * pulse);
             }
         }
+        gadgets(blocks, pose, buffers, light, time, o);
         pose.popPose();
     }
 
@@ -348,6 +362,7 @@ public final class CarModel {
             GarageControllerRenderer.softGlow(glow, pose.last().pose(), new Vec3(1.38, 0.65, z), 0.3f,
                     new float[]{1f, 0.9f, 0.6f}, 0.5f * flick);
         }
+        gadgets(blocks, pose, buffers, light, time, o);
         pose.popPose();
     }
 
@@ -413,11 +428,96 @@ public final class CarModel {
             GarageControllerRenderer.softGlow(glow, pose.last().pose(), new Vec3(1.26, 0.47, z), 0.3f,
                     new float[]{1f, 0.95f, 0.75f}, 0.55f * flick);
         }
+        gadgets(blocks, pose, buffers, light, time, o);
         pose.popPose();
+    }
+
+
+    // =================================================================== gadgets (0.27)
+    private static final int G_HARPOON = 8, G_SMOKE = 16, G_SPIKES = 32, G_RACK = 64;
+
+    /**
+     * The bolt-on gadgets and the headlight beams, placed per rig: the front bumper, the bonnet, the back and the
+     * roof (or deck) where a rack fits.
+     */
+    private static void gadgets(BlockRenderDispatcher blocks, PoseStack pose, MultiBufferSource buffers, int light,
+                                float time, Options o) {
+        float front, hood, rear, rackX0, rackX1, rackY, lampY, lampZ;
+        switch (o.variant()) {
+            case INTERCEPTOR -> {
+                front = 1.3f; hood = 0.62f; rear = -1.3f; rackX0 = -0.55f; rackX1 = 0.25f; rackY = 0.86f; lampY = 0.47f; lampZ = 0.41f;
+            }
+            case JUGGERNAUT -> {
+                front = 1.38f; hood = 0.8f; rear = -1.32f; rackX0 = -1.2f; rackX1 = -0.66f; rackY = 0.8f; lampY = 0.65f; lampZ = 0.36f;
+            }
+            case SKIMMER -> {
+                front = 1.28f; hood = 0.64f; rear = -1.36f; rackX0 = 0.72f; rackX1 = 1.2f; rackY = 0.64f; lampY = 0.47f; lampZ = 0.38f;
+            }
+            default -> {
+                front = 1.22f; hood = 0.79f; rear = -1.25f; rackX0 = -0.74f; rackX1 = 0.24f; rackY = 1.36f; lampY = 0.61f; lampZ = 0.31f;
+            }
+        }
+        if ((gadgets & G_HARPOON) != 0) {
+            // A harpoon launcher on the bonnet's right side, spear loaded.
+            float x = front - 0.5f, z = -0.26f;
+            box(buffers, pose, x - 0.12f, hood, z - 0.09f, x + 0.12f, hood + 0.08f, z + 0.09f, GarageSkin.SOOT, GarageSkin.RUST, light);
+            box(buffers, pose, x - 0.2f, hood + 0.08f, z - 0.05f, x + 0.3f, hood + 0.17f, z + 0.05f, GarageSkin.RUST, GarageSkin.SOOT, light);
+            box(buffers, pose, x + 0.3f, hood + 0.1f, z - 0.015f, x + 0.62f, hood + 0.14f, z + 0.015f, CHROME, CHROME, light);
+            box(buffers, pose, x + 0.62f, hood + 0.08f, z - 0.04f, x + 0.72f, hood + 0.16f, z + 0.04f, CHROME, GarageSkin.SOOT, light);
+            box(buffers, pose, x - 0.24f, hood + 0.07f, z - 0.08f, x - 0.18f, hood + 0.19f, z + 0.08f, GEAR, CHROME, light);
+        }
+        if ((gadgets & G_SMOKE) != 0) {
+            // Two smoke canisters strapped to the back.
+            for (float z : new float[]{-0.36f, -0.2f}) {
+                box(buffers, pose, rear - 0.12f, 0.36f, z - 0.065f, rear, 0.68f, z + 0.065f, GarageSkin.SOOT, CHROME, light);
+                box(buffers, pose, rear - 0.1f, 0.68f, z - 0.03f, rear - 0.02f, 0.74f, z + 0.03f, CHROME, CHROME, light);
+            }
+            box(buffers, pose, rear - 0.13f, 0.5f, -0.45f, rear - 0.11f, 0.54f, -0.11f, GarageSkin.RUST, GarageSkin.RUST, light);
+        }
+        if ((gadgets & G_SPIKES) != 0) {
+            // A rolled spike strip slung under the back bumper.
+            box(buffers, pose, rear - 0.16f, 0.16f, -0.42f, rear - 0.02f, 0.28f, 0.42f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+            for (int k = -3; k <= 3; k++) {
+                float z = k * 0.12f;
+                box(buffers, pose, rear - 0.2f, 0.2f, z - 0.015f, rear - 0.14f, 0.24f, z + 0.015f, CHROME, CHROME, light);
+            }
+        }
+        if ((gadgets & G_RACK) != 0) {
+            // A roof rack: rails, cross bars, a crate and a spare tyre strapped down.
+            float y = rackY;
+            for (float z : new float[]{-0.44f, 0.4f}) {
+                box(buffers, pose, rackX0, y, z, rackX1, y + 0.05f, z + 0.04f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+                box(buffers, pose, rackX0, y + 0.05f, z, rackX0 + 0.04f, y + 0.12f, z + 0.04f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+                box(buffers, pose, rackX1 - 0.04f, y + 0.05f, z, rackX1, y + 0.12f, z + 0.04f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+            }
+            float mid = (rackX0 + rackX1) / 2f;
+            for (float x : new float[]{rackX0 + 0.06f, mid, rackX1 - 0.1f}) {
+                box(buffers, pose, x, y + 0.02f, -0.44f, x + 0.04f, y + 0.06f, 0.44f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+            }
+            box(buffers, pose, rackX0 + 0.06f, y + 0.06f, -0.38f, mid - 0.02f, y + 0.3f, -0.02f, GarageSkin.PLANKS, GarageSkin.PLANKS, light);
+            // Load kept to the back half so the driver can still see out.
+            box(buffers, pose, rackX0 + 0.06f, y + 0.06f, 0.02f, mid - 0.02f, y + 0.16f, 0.36f, GarageSkin.TYRE, GarageSkin.TYRE_TOP, light);
+            box(buffers, pose, rackX0 + 0.04f, y + 0.3f, -0.22f, mid, y + 0.32f, -0.18f, GarageSkin.RUST, GarageSkin.RUST, light);
+        }
+        // Headlight beams: soft cones reaching ahead while the engine runs and the lights are on.
+        if (lights && o.engine()) {
+            VertexConsumer glow = buffers.getBuffer(GlowRenderType.GLOW);
+            float pulse = 0.9f + 0.1f * Mth.sin(time * 0.7f);
+            for (float z : new float[]{lampZ, -lampZ}) {
+                for (int k = 1; k <= 5; k++) {
+                    float d = k * 0.55f;
+                    GarageControllerRenderer.softGlow(glow, pose.last().pose(), new Vec3(front + d, lampY - k * 0.03f, z * (1 + k * 0.12f)),
+                            0.22f + k * 0.12f, new float[]{1f, 0.95f, 0.75f}, (0.28f - k * 0.045f) * pulse);
+                }
+            }
+        }
     }
 
     // =================================================================== shared parts
     private static float flicker(float time, Options o) {
+        if (!lights) {
+            return 0f;
+        }
         return o.engine() ? 0.75f + 0.15f * Mth.sin(time * 1.7f) + 0.1f * Mth.sin(time * 4.9f) : 0f;
     }
 

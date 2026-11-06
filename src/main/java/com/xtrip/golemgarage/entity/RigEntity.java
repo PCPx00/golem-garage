@@ -60,7 +60,14 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
     private static final EntityDataAccessor<Byte> UPGRADES = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Float> TURRET_YAW = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.FLOAT);
 
-    public static final int RAM = 1, TURRET = 2, PLATING = 4;
+    public static final int RAM = 1, TURRET = 2, PLATING = 4, HARPOON = 8, SMOKE = 16, SPIKES = 32, RACK = 64;
+    private static final int[] ALL_UPGRADES = {RAM, TURRET, PLATING, HARPOON, SMOKE, SPIKES, RACK};
+    /** Gadget actions sent by the driver's keys. */
+    public static final int ACT_HARPOON = 0, ACT_SMOKE = 1, ACT_SPIKES = 2, ACT_LIGHTS = 3, ACT_RACK = 4;
+    private static final EntityDataAccessor<Boolean> LIGHTS = SynchedEntityData.defineId(RigEntity.class, EntityDataSerializers.BOOLEAN);
+    /** The roof rack's nine slots. */
+    private final net.minecraft.world.SimpleContainer rack = new net.minecraft.world.SimpleContainer(9);
+    private int harpoonCooldown, smokeCooldown, spikeCooldown;
     /** Rigs that came with a raid: they drive themselves at the base and drop their crew. */
     public static final String ROGUE_TAG = "golemgarage_rogue_rig";
     public static final int MAX_FUEL = 20 * 60 * 20;
@@ -100,6 +107,20 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         builder.define(BOOST, 0);
         builder.define(FLASH, 0);
         builder.define(FINISH, "");
+        builder.define(LIGHTS, true);
+    }
+
+    public boolean lightsOn() {
+        return entityData.get(LIGHTS);
+    }
+
+    /** The fitted upgrades as bits (RAM, TURRET, ...), for the renderer. */
+    public int upgrades() {
+        return entityData.get(UPGRADES) & 0xFF;
+    }
+
+    public net.minecraft.world.SimpleContainer rack() {
+        return rack;
     }
 
     // =================================================================== state
@@ -431,6 +452,15 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         if (boostCooldown > 0) {
             boostCooldown--;
         }
+        if (harpoonCooldown > 0) {
+            harpoonCooldown--;
+        }
+        if (smokeCooldown > 0) {
+            smokeCooldown--;
+        }
+        if (spikeCooldown > 0) {
+            spikeCooldown--;
+        }
         if (isRogue()) {
             tickRogue();
         } else {
@@ -717,6 +747,20 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
             }
             return InteractionResult.sidedSuccess(client);
         }
+        // A jerry can pours in.
+        if (held.getItem() instanceof com.xtrip.golemgarage.deco.JerryCanItem) {
+            int have = com.xtrip.golemgarage.deco.JerryCanItem.fuel(held);
+            int room = MAX_FUEL - getFuel();
+            if (have > 0 && room > 0) {
+                if (!client) {
+                    int pour = Math.min(have, room);
+                    setFuel(getFuel() + pour);
+                    com.xtrip.golemgarage.deco.JerryCanItem.setFuel(held, have - pour);
+                    playSound(SoundEvents.BUCKET_EMPTY, 1f, 0.7f);
+                }
+                return InteractionResult.sidedSuccess(client);
+            }
+        }
         // Fuel.
         int burn = held.getBurnTime(null);
         if (burn > 0 && getFuel() < MAX_FUEL - 100) {
@@ -739,7 +783,11 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         }
         // Upgrades.
         int upgrade = held.is(ModItems.RIG_RAM.get()) ? RAM : held.is(ModItems.RIG_TURRET.get()) ? TURRET
-                : held.is(ModItems.RIG_PLATING.get()) ? PLATING : 0;
+                : held.is(ModItems.RIG_PLATING.get()) ? PLATING
+                : held.is(com.xtrip.golemgarage.deco.DecoBlocks.RIG_HARPOON.get()) ? HARPOON
+                : held.is(com.xtrip.golemgarage.deco.DecoBlocks.RIG_SMOKE.get()) ? SMOKE
+                : held.is(com.xtrip.golemgarage.deco.DecoBlocks.RIG_SPIKES.get()) ? SPIKES
+                : held.is(com.xtrip.golemgarage.deco.DecoBlocks.RIG_RACK.get()) ? RACK : 0;
         if (upgrade == TURRET && variant() == RigVariant.JUGGERNAUT) {
             if (!client) {
                 player.displayClientMessage(Component.translatable("golemgarage.rig.has_cannon"), true);
@@ -751,6 +799,9 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
                 fit(upgrade);
                 held.consume(1, player);
                 playSound(SoundEvents.SMITHING_TABLE_USE, 1f, 0.9f);
+                if (upgrade >= HARPOON) {
+                    player.displayClientMessage(Component.translatable("golemgarage.rig.gadget_fitted." + gadgetName(upgrade)), true);
+                }
             }
             return InteractionResult.sidedSuccess(client);
         }
@@ -833,6 +884,14 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         if (has(PLATING)) {
             spawnAtLocation(new ItemStack(ModItems.RIG_PLATING.get()));
         }
+        for (int u : new int[]{HARPOON, SMOKE, SPIKES, RACK}) {
+            if (has(u)) {
+                spawnAtLocation(new ItemStack(gadgetItem(u)));
+            }
+        }
+        for (int i = 0; i < rack.getContainerSize(); i++) {
+            spawnAtLocation(rack.removeItemNoUpdate(i));
+        }
         level.sendParticles(ParticleTypes.EXPLOSION, getX(), getY() + 0.8, getZ(), 3, 0.8, 0.4, 0.8, 0);
     }
 
@@ -853,6 +912,8 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         tag.putByte("Upgrades", entityData.get(UPGRADES));
         tag.putString("Variant", variant().id());
         tag.putString("Finish", finish());
+        tag.putBoolean("LightsOff", !lightsOn());
+        tag.put("Rack", rack.createTag(registryAccess()));
         if (owner != null) {
             tag.putUUID("Owner", owner);
         }
@@ -872,8 +933,10 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         }
         setFuel(tag.getInt("Fuel"));
         entityData.set(FINISH, tag.getString("Finish"));
+        entityData.set(LIGHTS, !tag.getBoolean("LightsOff"));
+        rack.fromTag(tag.getList("Rack", net.minecraft.nbt.Tag.TAG_COMPOUND), registryAccess());
         byte up = tag.getByte("Upgrades");
-        for (int u : new int[]{RAM, TURRET, PLATING}) {
+        for (int u : ALL_UPGRADES) {
             if ((up & u) != 0) {
                 fit(u);
             }
@@ -889,6 +952,9 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         t.putByte("Upgrades", entityData.get(UPGRADES));
         t.putFloat("Health", getHealth());
         t.putString("Finish", finish());
+        if (!rack.isEmpty()) {
+            t.put("Rack", rack.createTag(registryAccess()));
+        }
         stack.set(ModDataComponents.RIG_DATA.get(), net.minecraft.world.item.component.CustomData.of(t));
         return stack;
     }
@@ -906,14 +972,159 @@ public class RigEntity extends Mob implements net.minecraft.world.entity.PlayerR
         CompoundTag t = data.copyTag();
         setFuel(t.getInt("Fuel"));
         entityData.set(FINISH, t.getString("Finish"));
+        if (t.contains("Rack")) {
+            rack.fromTag(t.getList("Rack", net.minecraft.nbt.Tag.TAG_COMPOUND), registryAccess());
+        }
         byte up = t.getByte("Upgrades");
-        for (int u : new int[]{RAM, TURRET, PLATING}) {
+        for (int u : ALL_UPGRADES) {
             if ((up & u) != 0) {
                 fit(u);
             }
         }
         if (t.contains("Health")) {
             setHealth(Math.max(1, t.getFloat("Health")));
+        }
+    }
+
+    // =================================================================== gadgets
+    private static String gadgetName(int u) {
+        return switch (u) {
+            case HARPOON -> "harpoon";
+            case SMOKE -> "smoke";
+            case SPIKES -> "spikes";
+            default -> "rack";
+        };
+    }
+
+    private static net.minecraft.world.item.Item gadgetItem(int u) {
+        return switch (u) {
+            case HARPOON -> com.xtrip.golemgarage.deco.DecoBlocks.RIG_HARPOON.get();
+            case SMOKE -> com.xtrip.golemgarage.deco.DecoBlocks.RIG_SMOKE.get();
+            case SPIKES -> com.xtrip.golemgarage.deco.DecoBlocks.RIG_SPIKES.get();
+            default -> com.xtrip.golemgarage.deco.DecoBlocks.RIG_RACK.get();
+        };
+    }
+
+    /** A gadget key pressed by someone aboard. The driver works the gadgets and lights; anyone aboard can open the rack. */
+    public void gadget(int action, net.minecraft.server.level.ServerPlayer player) {
+        if (!hasPassenger(player) || isRogue()) {
+            return;
+        }
+        boolean driver = getControllingPassenger() == player;
+        int need = switch (action) {
+            case ACT_HARPOON -> HARPOON;
+            case ACT_SMOKE -> SMOKE;
+            case ACT_SPIKES -> SPIKES;
+            case ACT_RACK -> RACK;
+            default -> 0;
+        };
+        if (need != 0 && !has(need)) {
+            player.displayClientMessage(Component.translatable("golemgarage.rig.no_gadget." + gadgetName(need))
+                    .withStyle(net.minecraft.ChatFormatting.GRAY), true);
+            return;
+        }
+        if (action != ACT_RACK && !driver) {
+            return;
+        }
+        switch (action) {
+            case ACT_HARPOON -> fireHarpoon(player);
+            case ACT_SMOKE -> dropSmoke();
+            case ACT_SPIKES -> dropSpikes();
+            case ACT_LIGHTS -> {
+                entityData.set(LIGHTS, !lightsOn());
+                playSound(SoundEvents.LEVER_CLICK, 0.8f, lightsOn() ? 1.2f : 0.9f);
+            }
+            case ACT_RACK -> player.openMenu(new net.minecraft.world.SimpleMenuProvider((id, inv, p) ->
+                    new net.minecraft.world.inventory.ChestMenu(net.minecraft.world.inventory.MenuType.GENERIC_9x1, id, inv, rack, 1),
+                    Component.translatable("golemgarage.rig.rack")));
+            default -> {
+            }
+        }
+    }
+
+    /** The harpoon: fires where the driver looks and drags the first mob it hits back to the rig. */
+    private void fireHarpoon(Player player) {
+        if (harpoonCooldown > 0 || !(level() instanceof ServerLevel sl)) {
+            return;
+        }
+        harpoonCooldown = 50;
+        // Aim from the driver's eyes (so it goes where they look); the line is drawn from the launcher.
+        Vec3 gun = position().add(0, 1.0 * SCALE, 0).add(Vec3.directionFromRotation(0, getYRot()).scale(1.2 * SCALE));
+        Vec3 from = player.getEyePosition();
+        Vec3 dir = player.getLookAngle().normalize();
+        Vec3 to = from.add(dir.scale(26));
+        var blockHit = level().clip(new net.minecraft.world.level.ClipContext(from, to,
+                net.minecraft.world.level.ClipContext.Block.COLLIDER, net.minecraft.world.level.ClipContext.Fluid.NONE, this));
+        if (blockHit.getType() != net.minecraft.world.phys.HitResult.Type.MISS) {
+            to = blockHit.getLocation();
+        }
+        var hit = net.minecraft.world.entity.projectile.ProjectileUtil.getEntityHitResult(level(), this, from, to,
+                new AABB(from, to).inflate(1.0), e -> e instanceof LivingEntity le && le.isAlive() && !hasPassenger(e)
+                        && !friendly(le), 0.3f);
+        Vec3 end = hit != null ? hit.getLocation() : to;
+        double len = end.distanceTo(gun);
+        Vec3 line = end.subtract(gun).normalize();
+        for (double d = 0; d < len; d += 0.6) {
+            Vec3 p = gun.add(line.scale(d));
+            sl.sendParticles(ParticleTypes.CRIT, p.x, p.y, p.z, 1, 0, 0, 0, 0);
+        }
+        playSound(SoundEvents.CROSSBOW_SHOOT, 1.2f, 0.6f);
+        playSound(SoundEvents.CHAIN_PLACE, 1f, 0.8f);
+        if (hit != null && hit.getEntity() instanceof LivingEntity target) {
+            target.hurt(damageSources().mobAttack(this), 6f);
+            Vec3 pull = position().subtract(target.position());
+            double dist = pull.length();
+            Vec3 v = pull.normalize().scale(Math.min(2.2, 0.5 + dist * 0.12));
+            target.setDeltaMovement(v.x, 0.35 + Math.min(0.4, dist * 0.02), v.z);
+            target.hurtMarked = true;
+            playSound(SoundEvents.TRIDENT_HIT, 1f, 0.8f);
+        }
+    }
+
+    /** The smoke dispenser: a thick cloud behind the rig that blinds mobs and makes them lose you. */
+    private void dropSmoke() {
+        if (smokeCooldown > 0 || !(level() instanceof ServerLevel sl)) {
+            return;
+        }
+        smokeCooldown = 300;
+        Vec3 back = position().add(Vec3.directionFromRotation(0, getYRot()).scale(-2.5 * SCALE));
+        sl.sendParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, back.x, back.y + 0.6, back.z, 60, 2.0, 0.8, 2.0, 0.02);
+        sl.sendParticles(ParticleTypes.LARGE_SMOKE, back.x, back.y + 0.4, back.z, 80, 2.5, 0.6, 2.5, 0.04);
+        playSound(SoundEvents.FIRE_EXTINGUISH, 1.5f, 0.5f);
+        for (LivingEntity e : sl.getEntitiesOfClass(LivingEntity.class, new AABB(back, back).inflate(7, 3, 7), this::enemy)) {
+            e.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.BLINDNESS, 120));
+            e.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN, 120, 1));
+            if (e instanceof Mob m) {
+                m.setTarget(null);
+                m.getNavigation().stop();
+            }
+        }
+    }
+
+    /** Spike strips: a row of spikes across the road behind the rig. */
+    private void dropSpikes() {
+        if (spikeCooldown > 0) {
+            return;
+        }
+        spikeCooldown = 200;
+        Vec3 fwd = Vec3.directionFromRotation(0, getYRot());
+        Vec3 side = Vec3.directionFromRotation(0, getYRot() + 90);
+        Vec3 back = position().add(fwd.scale(-2.2 * SCALE));
+        int placed = 0;
+        for (int k = -1; k <= 1; k++) {
+            BlockPos p = BlockPos.containing(back.add(side.scale(k)));
+            for (int dy = 1; dy >= -2; dy--) {
+                BlockPos q = p.above(dy);
+                net.minecraft.world.level.block.state.BlockState st = com.xtrip.golemgarage.deco.DecoBlocks.SPIKE_STRIP.get().defaultBlockState();
+                if (level().getBlockState(q).canBeReplaced() && st.canSurvive(level(), q)) {
+                    level().setBlock(q, st, 3);
+                    placed++;
+                    break;
+                }
+            }
+        }
+        if (placed > 0) {
+            playSound(SoundEvents.CHAIN_FALL, 1.2f, 0.7f);
         }
     }
 

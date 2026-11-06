@@ -100,6 +100,19 @@ public class GolemGarageJei implements IModPlugin {
         info(reg, com.xtrip.golemgarage.power.PowerBlocks.CUB_CHARGER_ITEM.get(), "cub_charger");
         info(reg, ModItems.RIG_INTERCEPTOR.get(), "rig_interceptor");
         info(reg, ModItems.ARENA_BELL.get(), "arena_bell");
+        {
+            for (var g : List.of(com.xtrip.golemgarage.deco.DecoBlocks.RIG_HARPOON, com.xtrip.golemgarage.deco.DecoBlocks.RIG_SMOKE,
+                    com.xtrip.golemgarage.deco.DecoBlocks.RIG_SPIKES, com.xtrip.golemgarage.deco.DecoBlocks.RIG_RACK)) {
+                info(reg, g.get(), "rig_gadgets");
+            }
+            info(reg, com.xtrip.golemgarage.deco.DecoBlocks.JERRY_CAN.get(), "jerry_can");
+            info(reg, com.xtrip.golemgarage.deco.DecoBlocks.TITAN_HEAD_ITEM.get(), "titan_head");
+            info(reg, com.xtrip.golemgarage.deco.DecoBlocks.LEGEND_MEDAL.get(), "medals");
+            info(reg, com.xtrip.golemgarage.deco.DecoBlocks.ARENA_MEDAL.get(), "medals");
+            info(reg, com.xtrip.golemgarage.deco.DecoBlocks.TYRE_STACK_ITEM.get(), "tyre_stack");
+            com.xtrip.golemgarage.deco.DecoBlocks.OIL_DRUM_ITEMS.values().forEach(i -> info(reg, i.get(), "oil_drum"));
+            com.xtrip.golemgarage.deco.DecoBlocks.NEON_ITEMS.values().forEach(i -> info(reg, i.get(), "neon"));
+        }
         info(reg, ModItems.GARAGE_BLUEPRINT.get(), "garage_blueprint");
         info(reg, ModItems.RIG_JUGGERNAUT.get(), "rig_juggernaut");
         info(reg, ModItems.RIG_SKIMMER.get(), "rig_skimmer");

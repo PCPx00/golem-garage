@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IIF",
+    "SCS"
+  ],
+  "key": {
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "C": {
+      "item": "minecraft:crossbow"
+    },
+    "S": {
+      "item": "golemgarage:scrap"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig_harpoon",
+    "count": 1
+  }
+}

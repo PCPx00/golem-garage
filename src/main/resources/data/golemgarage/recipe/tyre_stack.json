@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "decorations",
+  "ingredients": [
+    {
+      "item": "golemgarage:tyre"
+    }
+  ],
+  "result": {
+    "id": "golemgarage:tyre_stack",
+    "count": 1
+  }
+}

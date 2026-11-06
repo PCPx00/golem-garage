@@ -1,6 +1,6 @@
 {
  "title": "Golem Engineer's Manual",
- "subtitle": "Version 0.26.0, by xTrip",
+ "subtitle": "Version 0.27.0, by xTrip",
  "categories": [
   {
    "id": "start",
@@ -11041,6 +11041,73 @@
      ]
     },
     {
+     "id": "rig_gadgets",
+     "title": "Rig Gadgets",
+     "icon": "golemgarage:rig_harpoon",
+     "pages": [
+      {
+       "type": "text",
+       "text": "Four bolt-on gadgets fit any rig: use one on the rig to fit it. They come off again if the rig is wrecked, and stay on when you pack it up. Work them with keys while you drive (change them in Controls).",
+       "title": "Gadgets"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig_harpoon",
+       "text": "Iron, flint, a crossbow and scrap.",
+       "title": "Harpoon"
+      },
+      {
+       "type": "text",
+       "text": "§lZ§r fires the harpoon where you look, up to 24 blocks. The first mob it hits is hurt and dragged back to the rig. It reloads in a couple of seconds.",
+       "title": "Harpoon"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig_smoke",
+       "text": "Two campfires, gunpowder and scrap.",
+       "title": "Smoke Dispenser"
+      },
+      {
+       "type": "text",
+       "text": "§lV§r drops a thick cloud behind the rig. Mobs caught in it are blinded, slowed and lose track of you. 15 seconds to refill.",
+       "title": "Smoke"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig_spikes",
+       "text": "Pointed dripstone, iron and scrap.",
+       "title": "Spike Dropper"
+      },
+      {
+       "type": "text",
+       "text": "§lB§r drops a row of spike strips across the road behind you. Mobs and raiders' rigs that cross them are slowed and hurt; you, your golems, Cubs and your own rigs roll over safely. The spikes rust away after 30 seconds.",
+       "title": "Spikes"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:rig_rack",
+       "text": "Iron bars, a chest, iron and scrap.",
+       "title": "Roof Rack"
+      },
+      {
+       "type": "text",
+       "text": "§lR§r opens nine slots of storage on the roof (anyone aboard can open it). The load stays when you pack the rig up and spills out if it's wrecked. §lH§r switches the headlights and their beams on or off.",
+       "title": "Rack and Lights"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:jerry_can",
+       "text": "A bucket, iron and scrap.",
+       "title": "Jerry Can"
+      },
+      {
+       "type": "text",
+       "text": "Use a jerry can on a §lScrap Burner§r to fill it from the lava tank (a bucket fills it) or from the fuel waiting in its slot. Use it on a rig to top up the tank: a full can fills a rig from empty.",
+       "title": "Fuel Run"
+      }
+     ]
+    },
+    {
      "id": "road_trips",
      "title": "Scavenging and Paint",
      "icon": "minecraft:filled_map",
@@ -11098,6 +11165,34 @@
        "type": "text",
        "text": "§lSneak + use§r it on a Garage Controller to copy its size and style. Then use it on the §lground§r: it puts down a controller from your inventory with that plan and starts the auto build if you carry the blocks. Use it on another controller to give it the same plan.",
        "title": "Copying Garages"
+      }
+     ]
+    },
+    {
+     "id": "garage_decor",
+     "title": "Decorations and Trophies",
+     "icon": "golemgarage:neon_garage",
+     "pages": [
+      {
+       "type": "text",
+       "text": "Dress up the yard. §lTyre stacks§r grow one tyre at a time: use a tyre on one, or an empty hand to take one off. §lOil drums§r come in red, blue and rust; light one with flint and steel for a burn barrel, and put it out with a shovel or water.",
+       "title": "Junkyard"
+      },
+      {
+       "type": "crafting",
+       "recipe": "golemgarage:workbench",
+       "text": "A crafting table under iron, on scrap.",
+       "title": "Garage Workbench"
+      },
+      {
+       "type": "text",
+       "text": "The §lGarage Workbench§r works as a crafting table. The §lChain Hoist§r hangs from a ceiling over your repair bay, and §lneon signs§r (Open, Garage, Scrap) hang flat on a wall. Right-click a sign to switch it on or off.",
+       "title": "Workshop"
+      },
+      {
+       "type": "text",
+       "text": "§lTrophies§r: a Junk Titan drops its §lhead§r for your wall. A golem that reaches Legend earns a §lLegend Medal§r, and every fifth arena win earns an §lArena Medal§r, engraved with the golem's name. Medals go to the owner, or drop beside the golem.",
+       "title": "Trophies"
       }
      ]
     },

@@ -28,12 +28,26 @@ public final class ModKeys {
     public static final String CATEGORY = "key.categories.golemgarage";
     public static final KeyMapping PICK_UP = new KeyMapping("key.golemgarage.pick_up", KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, CATEGORY);
+    /** Rig gadgets, only while riding a rig: harpoon, smoke, spike strips, headlights and the roof rack. */
+    public static final KeyMapping RIG_HARPOON = rigKey("harpoon", GLFW.GLFW_KEY_Z);
+    public static final KeyMapping RIG_SMOKE = rigKey("smoke", GLFW.GLFW_KEY_V);
+    public static final KeyMapping RIG_SPIKES = rigKey("spikes", GLFW.GLFW_KEY_B);
+    public static final KeyMapping RIG_LIGHTS = rigKey("lights", GLFW.GLFW_KEY_H);
+    public static final KeyMapping RIG_RACK = rigKey("rack", GLFW.GLFW_KEY_R);
+    private static final KeyMapping[] RIG_KEYS = {RIG_HARPOON, RIG_SMOKE, RIG_SPIKES, RIG_LIGHTS, RIG_RACK};
+
+    private static KeyMapping rigKey(String name, int key) {
+        return new KeyMapping("key.golemgarage.rig_" + name, KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, key, CATEGORY);
+    }
 
     @EventBusSubscriber(modid = GolemGarage.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
     public static final class Registration {
         @SubscribeEvent
         public static void register(RegisterKeyMappingsEvent event) {
             event.register(PICK_UP);
+            for (KeyMapping k : RIG_KEYS) {
+                event.register(k);
+            }
         }
     }
 
@@ -62,6 +76,14 @@ public final class ModKeys {
         @SubscribeEvent
         public static void onTick(ClientTickEvent.Post event) {
             Minecraft mc = Minecraft.getInstance();
+            for (int i = 0; i < RIG_KEYS.length; i++) {
+                while (RIG_KEYS[i].consumeClick()) {
+                    if (mc.player != null && mc.screen == null
+                            && mc.player.getVehicle() instanceof com.xtrip.golemgarage.entity.RigEntity) {
+                        PacketDistributor.sendToServer(new com.xtrip.golemgarage.network.RigActionPayload(i));
+                    }
+                }
+            }
             while (PICK_UP.consumeClick()) {
                 if (mc.player == null || mc.screen != null) {
                     continue;

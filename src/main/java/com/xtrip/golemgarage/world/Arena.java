@@ -154,6 +154,11 @@ public final class Arena {
             level.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, winner.getX(), winner.getY() + 2, winner.getZ(), 40, 0.5, 0.8, 0.5, 0.3);
             level.playSound(null, d.bell, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
             com.xtrip.golemgarage.advancement.ModTriggers.award(winner.getOwner(), "arena_win");
+            int wins = winner.getPersistentData().getInt("GGArenaWins");
+            if (wins % 5 == 0) {
+                com.xtrip.golemgarage.deco.MedalItem.award(com.xtrip.golemgarage.deco.DecoBlocks.ARENA_MEDAL.get(), winner,
+                        winner.getOwner(), Component.translatable("golemgarage.medal.arena_line", wins));
+            }
         }
         for (ServerPlayer p : level.players()) {
             if (p.distanceToSqr(d.bell.getCenter()) < 48 * 48) {

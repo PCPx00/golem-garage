@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "DDD",
+    "SIS"
+  ],
+  "key": {
+    "D": {
+      "item": "minecraft:pointed_dripstone"
+    },
+    "S": {
+      "item": "golemgarage:scrap"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig_spikes",
+    "count": 1
+  }
+}

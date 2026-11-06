@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "decorations",
+  "pattern": [
+    "SDS",
+    "S S",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "golemgarage:scrap"
+    },
+    "D": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "result": {
+    "id": "golemgarage:oil_drum_rust",
+    "count": 2
+  }
+}

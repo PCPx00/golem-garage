@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "golemgarage:block/workbench"
+    },
+    "facing=east": {
+      "model": "golemgarage:block/workbench",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "golemgarage:block/workbench",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "golemgarage:block/workbench",
+      "y": 270
+    }
+  }
+}

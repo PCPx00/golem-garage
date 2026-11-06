@@ -1,0 +1,240 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "golemgarage:block/oil_drum_red",
+    "side": "golemgarage:block/oil_drum_red",
+    "top": "golemgarage:block/oil_drum_red_top_lit",
+    "fire": "minecraft:block/fire_0"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side",
+          "uv": [
+            2,
+            0,
+            14,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#side",
+          "uv": [
+            2,
+            0,
+            14,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            2,
+            0,
+            14,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            2,
+            0,
+            14,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#top",
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ]
+        },
+        "down": {
+          "texture": "#top",
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1.6,
+        4,
+        1.6
+      ],
+      "to": [
+        14.4,
+        5,
+        14.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side",
+          "uv": [
+            0,
+            4,
+            16,
+            5
+          ]
+        },
+        "south": {
+          "texture": "#side",
+          "uv": [
+            0,
+            4,
+            16,
+            5
+          ]
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            0,
+            4,
+            16,
+            5
+          ]
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            0,
+            4,
+            16,
+            5
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1.6,
+        11,
+        1.6
+      ],
+      "to": [
+        14.4,
+        12,
+        14.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#side",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        13,
+        8
+      ],
+      "to": [
+        14,
+        27,
+        8
+      ],
+      "shade": false,
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      },
+      "faces": {
+        "north": {
+          "texture": "#fire"
+        },
+        "south": {
+          "texture": "#fire"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        13,
+        8
+      ],
+      "to": [
+        14,
+        27,
+        8
+      ],
+      "shade": false,
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": -45
+      },
+      "faces": {
+        "north": {
+          "texture": "#fire"
+        },
+        "south": {
+          "texture": "#fire"
+        }
+      }
+    }
+  ]
+}

@@ -215,4 +215,45 @@ def arena():
     ])
 
 
-EXTRA = [rig_variants, road_trips, arena, finds, cards, raids, veterans, horn, workshop]
+def gadgets():
+    return entry("rig_gadgets", "Rig Gadgets", MODID + ":rig_harpoon", [
+        text("Four bolt-on gadgets fit any rig: use one on the rig to fit it. They come off again if the rig is "
+             "wrecked, and stay on when you pack it up. Work them with keys while you drive (change them in "
+             "Controls).", "Gadgets"),
+        craft(MODID + ":rig_harpoon", "Iron, flint, a crossbow and scrap.", "Harpoon"),
+        text(B("Z") + " fires the harpoon where you look, up to 24 blocks. The first mob it hits is hurt and "
+             "dragged back to the rig. It reloads in a couple of seconds.", "Harpoon"),
+        craft(MODID + ":rig_smoke", "Two campfires, gunpowder and scrap.", "Smoke Dispenser"),
+        text(B("V") + " drops a thick cloud behind the rig. Mobs caught in it are blinded, slowed and lose track "
+             "of you. 15 seconds to refill.", "Smoke"),
+        craft(MODID + ":rig_spikes", "Pointed dripstone, iron and scrap.", "Spike Dropper"),
+        text(B("B") + " drops a row of spike strips across the road behind you. Mobs and raiders' rigs that "
+             "cross them are slowed and hurt; you, your golems, Cubs and your own rigs roll over safely. The "
+             "spikes rust away after 30 seconds.", "Spikes"),
+        craft(MODID + ":rig_rack", "Iron bars, a chest, iron and scrap.", "Roof Rack"),
+        text(B("R") + " opens nine slots of storage on the roof (anyone aboard can open it). The load stays when "
+             "you pack the rig up and spills out if it's wrecked. " + B("H") + " switches the headlights and "
+             "their beams on or off.", "Rack and Lights"),
+        craft(MODID + ":jerry_can", "A bucket, iron and scrap.", "Jerry Can"),
+        text("Use a jerry can on a " + B("Scrap Burner") + " to fill it from the lava tank (a bucket fills it) or "
+             "from the fuel waiting in its slot. Use it on a rig to top up the tank: a full can fills a rig from "
+             "empty.", "Fuel Run"),
+    ])
+
+
+def decor():
+    return entry("garage_decor", "Decorations and Trophies", MODID + ":neon_garage", [
+        text("Dress up the yard. " + B("Tyre stacks") + " grow one tyre at a time: use a tyre on one, or an empty "
+             "hand to take one off. " + B("Oil drums") + " come in red, blue and rust; light one with flint and "
+             "steel for a burn barrel, and put it out with a shovel or water.", "Junkyard"),
+        craft(MODID + ":workbench", "A crafting table under iron, on scrap.", "Garage Workbench"),
+        text("The " + B("Garage Workbench") + " works as a crafting table. The " + B("Chain Hoist") + " hangs "
+             "from a ceiling over your repair bay, and " + B("neon signs") + " (Open, Garage, Scrap) hang flat on "
+             "a wall. Right-click a sign to switch it on or off.", "Workshop"),
+        text(B("Trophies") + ": a Junk Titan drops its " + B("head") + " for your wall. A golem that reaches "
+             "Legend earns a " + B("Legend Medal") + ", and every fifth arena win earns an " + B("Arena Medal")
+             + ", engraved with the golem's name. Medals go to the owner, or drop beside the golem.", "Trophies"),
+    ])
+
+
+EXTRA = [rig_variants, gadgets, road_trips, arena, decor, finds, cards, raids, veterans, horn, workshop]

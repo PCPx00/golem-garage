@@ -2,6 +2,25 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.27.0
+
+### Added
+- **Rig gadgets**, fitted by using them on a rig and worked with keys while you drive (change them in Controls):
+  - **Harpoon** (Z): fires where you look, up to 24 blocks, and drags the first mob it hits back to the rig.
+  - **Smoke Dispenser** (V): a thick cloud behind the rig that blinds and slows mobs and makes them lose you.
+  - **Spike Dropper** (B): a row of spike strips across the road behind you. Mobs and raiders' rigs that cross
+    them are slowed and hurt; you, your golems, Cubs and your own rigs roll over safely. They rust away after
+    30 seconds.
+  - **Roof Rack** (R): nine slots of storage that anyone aboard can open. The load stays when you pack the rig up.
+  - **Headlights** (H): switch the lights and their new beams on or off.
+- **Jerry Can**: fill it at a Scrap Burner from the lava tank or the fuel slot, then pour it into a rig. A full
+  can fills a rig from empty.
+- **Garage decorations**: tyre stacks (add or take tyres one at a time), oil drums in red, blue and rust (light
+  one for a burn barrel), the Garage Workbench (a crafting table), a Chain Hoist, and glowing neon signs (Open,
+  Garage, Scrap) that switch on and off.
+- **Trophies**: Junk Titans drop their head for your wall. A golem that reaches Legend earns a **Legend Medal**,
+  and every fifth arena win earns an **Arena Medal**, both engraved with the golem's name.
+
 ## 0.26.0
 
 ### Added

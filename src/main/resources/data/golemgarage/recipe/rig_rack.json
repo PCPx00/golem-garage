@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IBI",
+    "SCS"
+  ],
+  "key": {
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "S": {
+      "item": "golemgarage:scrap"
+    },
+    "C": {
+      "tag": "c:chests/wooden"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig_rack",
+    "count": 1
+  }
+}

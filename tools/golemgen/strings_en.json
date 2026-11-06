@@ -733,5 +733,12 @@
   "golemgarage.blueprint.tip": "Use on the ground to put down a controller with this plan and build it, or on a controller to apply it.",
   "golemgarage.blueprint.tip_empty": "Sneak + use on a Garage Controller to copy its size and style.",
   "jei.golemgarage.info.arena_bell": "Ring it with two golems standing inside its ring (6 blocks) and they spar. The first to drop to a quarter of its health yields. Nobody breaks down, and both earn experience: 40 for the winner, 15 for the loser.",
-  "jei.golemgarage.info.garage_blueprint": "Copy a Garage's size and style with sneak + use on its controller, then use it on the ground to put down a controller with the same plan and build it from your inventory."
+  "jei.golemgarage.info.garage_blueprint": "Copy a Garage's size and style with sneak + use on its controller, then use it on the ground to put down a controller with the same plan and build it from your inventory.",
+  "jei.golemgarage.info.rig_gadgets": "Use it on a rig to fit it. Drive with Z (harpoon), V (smoke), B (spikes), R (roof rack) and H (headlights). Keys can be changed in Controls.",
+  "jei.golemgarage.info.jerry_can": "Fill it at a Scrap Burner from the lava tank or the fuel slot, then use it on a rig. A full can fills a rig from empty.",
+  "jei.golemgarage.info.titan_head": "Dropped by a Junk Titan. A trophy for the garage wall.",
+  "jei.golemgarage.info.medals": "A Legend Medal comes when a golem reaches Legend; an Arena Medal comes with every fifth arena win.",
+  "jei.golemgarage.info.tyre_stack": "Use a tyre on it to stack another (up to four), or an empty hand to take one off.",
+  "jei.golemgarage.info.oil_drum": "Light it with flint and steel for a burn barrel. A shovel or water puts it out.",
+  "jei.golemgarage.info.neon": "Hangs flat on a wall and glows. Right-click to switch it on or off."
 }

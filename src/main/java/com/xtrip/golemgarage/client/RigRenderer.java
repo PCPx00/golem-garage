@@ -33,7 +33,7 @@ public class RigRenderer extends EntityRenderer<RigEntity> {
         CarModel.render(Minecraft.getInstance().getBlockRenderer(), pose, buffers, light, time,
                 new CarModel.Options(rig.variant(), rig.has(RigEntity.RAM), rig.has(RigEntity.TURRET),
                         rig.has(RigEntity.PLATING), wheels, rig.turretYaw(), rig.engineOn(), false, rig.boosting(),
-                        rig.flash(partial)), CarModel.finishTile(rig.finish()));
+                        rig.flash(partial)), CarModel.finishTile(rig.finish()), rig.upgrades(), rig.lightsOn());
         pose.popPose();
         super.render(rig, yaw, partial, pose, buffers, light);
     }

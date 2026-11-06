@@ -89,3 +89,6 @@ write("arena", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ar
 
 # An Interceptor with a golem aboard, and a map to send it scavenging.
 write("trip", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "trip.txt")).read().splitlines())
+
+# 0.27 decorations, a burner and a rig with every gadget.
+write("deco", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "deco.txt")).read().splitlines())

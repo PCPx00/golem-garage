@@ -303,6 +303,7 @@ public class GolemEntity extends PathfinderMob {
             spawnAtLocation(new ItemStack(random.nextBoolean() ? com.xtrip.golemgarage.item.ModItems.RIG_TURRET.get()
                     : com.xtrip.golemgarage.item.ModItems.RIG_RAM.get()));
             spawnAtLocation(new ItemStack(Items.DIAMOND, 2 + random.nextInt(3)));
+            spawnAtLocation(new ItemStack(com.xtrip.golemgarage.deco.DecoBlocks.TITAN_HEAD_ITEM.get()));
             level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, getX(), getY() + 1, getZ(), 1, 0, 0, 0, 0);
         }
     }
@@ -392,6 +393,10 @@ public class GolemEntity extends PathfinderMob {
                 if (after >= 4) {
                     com.xtrip.golemgarage.advancement.ModTriggers.award(owner, "legend");
                 }
+            }
+            if (after >= 4) {
+                com.xtrip.golemgarage.deco.MedalItem.award(com.xtrip.golemgarage.deco.DecoBlocks.LEGEND_MEDAL.get(), this, owner,
+                        Component.translatable("golemgarage.medal.legend_line"));
             }
         }
     }

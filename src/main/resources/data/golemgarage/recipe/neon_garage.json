@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "decorations",
+  "pattern": [
+    "GDG",
+    "GLG",
+    "SRS"
+  ],
+  "key": {
+    "G": {
+      "tag": "c:glass_panes"
+    },
+    "D": {
+      "item": "minecraft:orange_dye"
+    },
+    "L": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "S": {
+      "item": "golemgarage:scrap"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "result": {
+    "id": "golemgarage:neon_garage",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "tyres=1": {
+      "model": "golemgarage:block/tyre_stack_1"
+    },
+    "tyres=2": {
+      "model": "golemgarage:block/tyre_stack_2"
+    },
+    "tyres=3": {
+      "model": "golemgarage:block/tyre_stack_3"
+    },
+    "tyres=4": {
+      "model": "golemgarage:block/tyre_stack_4"
+    }
+  }
+}

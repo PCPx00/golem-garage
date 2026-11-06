@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "decorations",
+  "pattern": [
+    " C ",
+    "SIS",
+    " H "
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:chain"
+    },
+    "S": {
+      "item": "golemgarage:scrap"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "H": {
+      "item": "minecraft:tripwire_hook"
+    }
+  },
+  "result": {
+    "id": "golemgarage:chain_hoist",
+    "count": 1
+  }
+}

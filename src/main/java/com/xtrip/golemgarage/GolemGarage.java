@@ -21,6 +21,7 @@ public class GolemGarage {
     public GolemGarage(IEventBus modEventBus, ModContainer modContainer) {
         ModDataComponents.COMPONENTS.register(modEventBus);
         com.xtrip.golemgarage.power.PowerBlocks.init();
+        com.xtrip.golemgarage.deco.DecoBlocks.init();
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModCreativeTabs.TABS.register(modEventBus);

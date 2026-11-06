@@ -22,6 +22,11 @@ public final class ModItems {
         return item;
     }
 
+    /** Adds an item registered elsewhere to the end of the creative tab. */
+    public static <T extends Item> DeferredItem<T> addExtra(DeferredItem<T> item) {
+        return extra(item);
+    }
+
     /** A block item for one of the newer blocks, added to the end of the creative tab. */
     public static DeferredItem<BlockItem> extraBlock(String name, net.neoforged.neoforge.registries.DeferredBlock<?> block) {
         return extra(ITEMS.registerSimpleBlockItem(name, block));

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S S",
+    "CGC",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "golemgarage:scrap"
+    },
+    "C": {
+      "item": "minecraft:campfire"
+    },
+    "G": {
+      "item": "minecraft:gunpowder"
+    }
+  },
+  "result": {
+    "id": "golemgarage:rig_smoke",
+    "count": 1
+  }
+}

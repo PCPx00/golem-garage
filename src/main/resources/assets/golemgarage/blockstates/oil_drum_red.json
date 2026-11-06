@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "golemgarage:block/oil_drum_red"
+    },
+    "lit=true": {
+      "model": "golemgarage:block/oil_drum_red_lit"
+    }
+  }
+}

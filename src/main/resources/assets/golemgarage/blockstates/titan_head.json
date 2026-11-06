@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "golemgarage:block/titan_head"
+    },
+    "facing=east": {
+      "model": "golemgarage:block/titan_head",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "golemgarage:block/titan_head",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "golemgarage:block/titan_head",
+      "y": 270
+    }
+  }
+}

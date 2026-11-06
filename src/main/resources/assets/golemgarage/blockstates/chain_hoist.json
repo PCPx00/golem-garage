@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "golemgarage:block/chain_hoist"
+    },
+    "facing=east": {
+      "model": "golemgarage:block/chain_hoist",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "golemgarage:block/chain_hoist",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "golemgarage:block/chain_hoist",
+      "y": 270
+    }
+  }
+}

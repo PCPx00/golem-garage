@@ -1,0 +1,68 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "golemgarage:tyre",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 1,
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "golemgarage:tyre_stack",
+                  "properties": {
+                    "tyres": "1"
+                  }
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": 2,
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "golemgarage:tyre_stack",
+                  "properties": {
+                    "tyres": "2"
+                  }
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": 3,
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "golemgarage:tyre_stack",
+                  "properties": {
+                    "tyres": "3"
+                  }
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": 4,
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "golemgarage:tyre_stack",
+                  "properties": {
+                    "tyres": "4"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "golemgarage:block/neon_scrap_board",
+    "board": "golemgarage:block/neon_scrap_board",
+    "tubes": "golemgarage:block/neon_scrap_tubes",
+    "back": "golemgarage:block/emitter_side"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        3,
+        14.5
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#board",
+          "uv": [
+            0,
+            3,
+            16,
+            13
+          ]
+        },
+        "south": {
+          "texture": "#back"
+        },
+        "east": {
+          "texture": "#back"
+        },
+        "west": {
+          "texture": "#back"
+        },
+        "up": {
+          "texture": "#back"
+        },
+        "down": {
+          "texture": "#back"
+        }
+      }
+    }
+  ]
+}

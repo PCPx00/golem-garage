@@ -78,6 +78,23 @@ public class BurnerGeneratorBlock extends BaseEntityBlock {
             }
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
+        // A jerry can fills up from the tank or the fuel slot.
+        if (stack.getItem() instanceof com.xtrip.golemgarage.deco.JerryCanItem
+                && level.getBlockEntity(pos) instanceof BurnerGeneratorBlockEntity burner) {
+            if (!level.isClientSide) {
+                int have = com.xtrip.golemgarage.deco.JerryCanItem.fuel(stack);
+                int got = burner.fillCan(com.xtrip.golemgarage.deco.JerryCanItem.CAPACITY - have);
+                if (got > 0) {
+                    com.xtrip.golemgarage.deco.JerryCanItem.setFuel(stack, have + got);
+                    level.playSound(null, pos, SoundEvents.BUCKET_FILL_LAVA, SoundSource.BLOCKS, 1f, 1.2f);
+                } else {
+                    player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+                            have >= com.xtrip.golemgarage.deco.JerryCanItem.CAPACITY ? "golemgarage.jerry_can.full"
+                                    : "golemgarage.jerry_can.no_fuel"), true);
+                }
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 

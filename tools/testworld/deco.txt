@@ -1,0 +1,22 @@
+fill 18 -60 18 40 -50 40 air
+fill 18 -61 18 40 -61 40 grass_block
+setblock 20 -60 20 golemgarage:tyre_stack[tyres=4]
+setblock 21 -60 20 golemgarage:tyre_stack[tyres=2]
+setblock 22 -60 20 golemgarage:oil_drum_red
+setblock 23 -60 20 golemgarage:oil_drum_blue[lit=true]
+setblock 24 -60 20 golemgarage:oil_drum_rust
+setblock 26 -60 20 golemgarage:workbench[facing=south]
+setblock 28 -60 20 golemgarage:titan_head[facing=south]
+fill 19 -60 18 30 -57 18 minecraft:bricks
+fill 19 -56 18 30 -56 21 minecraft:smooth_stone_slab[type=top]
+setblock 20 -58 19 golemgarage:neon_open[facing=south]
+setblock 23 -58 19 golemgarage:neon_garage[facing=south]
+setblock 26 -58 19 golemgarage:neon_scrap[facing=south]
+setblock 30 -57 21 golemgarage:chain_hoist[facing=south]
+setblock 31 -60 21 golemgarage:spike_strip
+setblock 33 -60 21 golemgarage:burner_generator
+kill @e[type=golemgarage:rig]
+summon golemgarage:rig 25.5 -60 26.5 {Rotation:[90f,0f],Fuel:20000,Upgrades:120b,Finish:"hazard"}
+item replace entity @p hotbar.5 with golemgarage:jerry_can
+item replace entity @p hotbar.6 with minecraft:lava_bucket
+time set 18000
