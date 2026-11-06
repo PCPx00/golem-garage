@@ -1,3 +1,6 @@
 {
-  "parent": "golemgarage:block/cub_charger_on"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "golemgarage:item/cub_charger"
+  }
 }

@@ -217,6 +217,12 @@ public class GolemModel extends EntityModel<GolemEntity> {
         leftArm.zRot = -0.3f * slump;
     }
 
+    /** Moves the pose to the torso (for things worn on it, like a rank cape). */
+    public void toBody(PoseStack pose) {
+        root.translateAndRotate(pose);
+        body.translateAndRotate(pose);
+    }
+
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int light, int overlay, int color) {
         root.render(poseStack, buffer, light, overlay, color);

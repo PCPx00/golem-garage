@@ -1078,5 +1078,10 @@
   "jei.golemgarage.info.medals": "A Legend Medal comes when a golem reaches Legend; an Arena Medal comes with every fifth arena win.",
   "jei.golemgarage.info.tyre_stack": "Use a tyre on it to stack another (up to four), or an empty hand to take one off.",
   "jei.golemgarage.info.oil_drum": "Light it with flint and steel for a burn barrel. A shovel or water puts it out.",
-  "jei.golemgarage.info.neon": "Hangs flat on a wall and glows. Right-click to switch it on or off."
+  "jei.golemgarage.info.neon": "Hangs flat on a wall and glows. Right-click to switch it on or off.",
+  "jei.golemgarage.fabricator": "Parts Fabricator",
+  "jei.golemgarage.fabricator.note": "Sneak + right-click picks the shape.",
+  "jei.golemgarage.scrap_burner": "Scrap Burner",
+  "jei.golemgarage.scrap_burner.total": "%s FE",
+  "jei.golemgarage.scrap_burner.rate": "%s FE/t, %ss"
 }

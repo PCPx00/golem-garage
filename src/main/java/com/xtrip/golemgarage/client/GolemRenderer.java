@@ -7,6 +7,7 @@ import com.xtrip.golemgarage.golem.PartInstance;
 import com.xtrip.golemgarage.golem.PartSlot;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -36,6 +37,7 @@ public class GolemRenderer extends MobRenderer<GolemEntity, GolemModel> {
     private static final ResourceLocation STATUS = ResourceLocation.fromNamespaceAndPath("golemgarage",
             "textures/gui/status_icons.png");
     private static final ResourceLocation[] CRACKS = {tex("cracks_1"), tex("cracks_2"), tex("cracks_3")};
+    private static final ResourceLocation[] CAPES = {tex("cape_veteran"), tex("cape_elite"), tex("cape_legend")};
 
     public GolemRenderer(EntityRendererProvider.Context context) {
         super(context, new GolemModel(context.bakeLayer(GolemModel.LAYER)), 0.9f);
@@ -218,6 +220,43 @@ public class GolemRenderer extends MobRenderer<GolemEntity, GolemModel> {
                     (int) (FastColor.ARGB32.green(rgb) * bright),
                     (int) (FastColor.ARGB32.blue(rgb) * bright));
             model.renderToBuffer(pose, buffers.getBuffer(RenderType.eyes(GLOW)), 0xF000F0, overlay, glow);
+            renderCape(pose, buffers, light, golem, amount, age);
+        }
+
+        /**
+         * Rank capes: a short olive cape at Veteran, a long red one at Elite, and a purple one with gold trim and a
+         * glowing crest at Legend. They flap out behind when the golem moves.
+         */
+        private void renderCape(PoseStack pose, MultiBufferSource buffers, int light, GolemEntity golem, float amount, float age) {
+            int rank = golem.rank();
+            if (rank < 2 || golem.isRogue() || golem.isBroken()) {
+                return;
+            }
+            ResourceLocation tex = CAPES[Math.min(rank, 4) - 2];
+            float len = rank == 2 ? 14f : 25f;
+            float half = rank == 2 ? 7f : 9f;
+            pose.pushPose();
+            getParentModel().toBody(pose);
+            pose.translate(0, -3.5f / 16f, 7.8f / 16f);
+            float flap = 0.08f + Math.min(1f, amount) * 0.7f + Mth.sin(age * 0.15f) * 0.04f * (0.3f + amount);
+            pose.mulPose(com.mojang.math.Axis.XP.rotation(flap));
+            var vc = buffers.getBuffer(RenderType.entityCutoutNoCull(tex));
+            PoseStack.Pose last = pose.last();
+            float x0 = -half / 16f, x1 = half / 16f, y1 = len / 16f;
+            float v1 = len / 26f;
+            int overlay = OverlayTexture.NO_OVERLAY;
+            // Outer face (seen from behind), then the lining.
+            capeVertex(vc, last, x1, 0, 0, 1, 0, light, overlay, 1);
+            capeVertex(vc, last, x0, 0, 0, 0, 0, light, overlay, 1);
+            capeVertex(vc, last, x0, y1, 0, 0, v1, light, overlay, 1);
+            capeVertex(vc, last, x1, y1, 0, 1, v1, light, overlay, 1);
+            pose.popPose();
+        }
+
+        private static void capeVertex(com.mojang.blaze3d.vertex.VertexConsumer vc, PoseStack.Pose last, float x, float y, float z,
+                                       float u, float v, int light, int overlay, float nz) {
+            vc.addVertex(last, x, y, z).setColor(255, 255, 255, 255).setUv(u, v).setOverlay(overlay).setLight(light)
+                    .setNormal(last, 0, 0, nz);
         }
     }
 }

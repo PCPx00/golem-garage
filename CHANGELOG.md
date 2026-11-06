@@ -2,6 +2,25 @@
 
 Golem Garage for Minecraft 1.21.1 (NeoForge). By xTrip.
 
+## 0.28.0
+
+### Added
+- **Rank capes**: Veteran golems wear a short olive cape, Elite a long red one with a chevron, and Legends a
+  purple cape with gold trim and a crest. Capes flap out behind when the golem moves.
+- **Visible wear**: worn parts now show dents, and badly worn parts show bare-metal scrapes, on top of the cracks.
+- **Garage style props**: the Showroom's car sits on a two-post lift that slowly raises it, with a red tool
+  cabinet and pegboard in a corner; the Barn gets stacked crates and swinging lanterns from the rafters; the
+  Bunker gets two searchlights sweeping the yard from its roof.
+- **JEI pages** for the Parts Fabricator (every shape in every material, with the cost) and the Scrap Burner
+  (every fuel, its total FE, rate and burn time, plus lava).
+- **Translations**: Spanish, German and Simplified Chinese for every name, message and screen. (The manual's
+  pages are still in English.)
+- Drawn inventory icons for the Solar Panel and Cub Charger.
+
+### Tested
+- A dedicated server with two players: both see each other's golems, capes and rigs; rig gadget keys (harpoon,
+  spikes, headlights) work from a remote client; dust storms reach both clients.
+
 ## 0.27.0
 
 ### Added

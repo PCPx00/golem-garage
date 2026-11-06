@@ -1,3 +1,6 @@
 {
-  "parent": "golemgarage:block/solar_panel"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "golemgarage:item/solar_panel"
+  }
 }

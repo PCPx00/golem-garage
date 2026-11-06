@@ -377,6 +377,13 @@ def main():
     with open(lang_path, "w") as fh:
         json.dump(lang, fh, indent=2)
         fh.write("\n")
+    # Translations (tools/golemgen/lang): every key English has; missing ones fall back to English in game.
+    for fn_ in sorted(os.listdir(os.path.join(HERE, "lang"))):
+        with open(os.path.join(HERE, "lang", fn_)) as fh:
+            tr = json.load(fh)
+        with open(os.path.join(ASSETS, "lang", fn_), "w") as fh:
+            json.dump({k: tr[k] for k in lang if k in tr}, fh, indent=2, ensure_ascii=False)
+            fh.write("\n")
     import guide  # noqa: E402
     version = "?"
     with open(os.path.join(ROOT, "gradle.properties")) as fh:

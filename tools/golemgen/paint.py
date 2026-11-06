@@ -442,6 +442,22 @@ def crack_face(c, rect, level, rng):
                 dx, dy = rng.choice([(1, 1), (-1, 1), (1, 0), (0, 1)])
             x += dx
             y += dy
+    # Dents (a dark pocket with a lit lower rim) from the second level, bare-metal scrapes at the third.
+    if level >= 2:
+        for _ in range(int(area / {2: 110, 3: 55}[level] + rng.random())):
+            if w < 5 or h < 5:
+                break
+            x, y = x0 + _ri(rng, 1, w - 3), y0 + _ri(rng, 1, h - 3)
+            c.set(x, y, (52, 46, 44), 255)
+            c.set(x + 1, y, (60, 54, 50), 255)
+            c.set(x, y + 1, (70, 64, 60), 255)
+            c.set(x + 1, y + 1, (150, 144, 136), 255)
+    if level >= 3:
+        for _ in range(int(area / 90 + rng.random())):
+            x, y = x0 + _ri(rng, 0, w - 1), y0 + _ri(rng, 0, h - 1)
+            for k in range(_ri(rng, 2, 4)):
+                if x0 <= x + k < x1:
+                    c.set(x + k, y, (176, 172, 166), 255)
 
 
 VINE = ramp("#4d8a2e")

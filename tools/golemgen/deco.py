@@ -188,6 +188,45 @@ ICONS = {
         "................"],
 }
 
+
+# Flat generators read badly as tiny 3D slabs in the inventory, so they get drawn icons.
+GEN_ICONS = {
+    "solar_panel": [
+        "................",
+        "................",
+        "..kkkkkkkkkkkk..",
+        ".kBuBuBkBuBuBk..",
+        ".kuBuBukuBuBuk..",
+        ".kBuCuBkBuBuBk..",
+        ".kkkkkkkkkkkkk..",
+        ".kBuBuBkBuCuBk..",
+        ".kuBuBukuBuBuk..",
+        ".kBuBuBkBuBuBk..",
+        "..kkkkkkkkkkkk..",
+        "......dggd......",
+        "......dGgd......",
+        "....ddgGGgdd....",
+        "...dggggggggd...",
+        "................"],
+    "cub_charger": [
+        "................",
+        "................",
+        "................",
+        "........Y.......",
+        ".......YY.......",
+        "......YYk.......",
+        ".....YYYYY......",
+        "........YY......",
+        "........Y.......",
+        "..hhhhhhhhhhhh..",
+        ".hHHHHHHHHHHHHh.",
+        ".hHhhhhhhhhhhHh.",
+        ".dgggggggggggggd",
+        ".dgGsGsGsGsGsgd.",
+        "..dddddddddddd..",
+        "................"],
+}
+
 RECIPES = {
     "tyre_stack": {"type": "minecraft:crafting_shapeless", "category": "decorations",
                    "ingredients": [{"item": "golemgarage:tyre"}],
@@ -452,6 +491,38 @@ def spike_plate():
     return c.img
 
 
+def cape(base, trim, emblem):
+    """16x26 rank cape: cloth with folds, a trim, a ragged hem and an emblem."""
+    pal = paint.ramp(base)
+    tr = paint.hex_rgb(trim)
+    c = paint.Canvas(16, 26)
+    for y in range(26):
+        for x in range(16):
+            fold = (x // 3) % 2
+            v = pal[3 + fold] if y > 0 else pal[1]
+            if x in (0, 15) or y == 1:
+                v = tr
+            c.set(x, y, v)
+    # A ragged hem at the bottom of the long capes, and at row 13 for the short one (it only shows the top part).
+    for hem in ((13,) if emblem is None else (25,)):
+        for x in range(0, 16, 3):
+            c.set(x, hem, (0, 0, 0), 0)
+            c.set(x + 1, hem, tr)
+        for x in range(16):
+            if c.get(x, hem)[3]:
+                c.set(x, hem - 1, tr)
+    if emblem == "chevron":
+        for i in range(4):
+            c.set(7 - i, 5 + i, tr); c.set(8 + i, 5 + i, tr)
+            c.set(7 - i, 8 + i, tr); c.set(8 + i, 8 + i, tr)
+    elif emblem == "crest":
+        for (x, y) in ((7, 4), (8, 4), (6, 5), (9, 5), (5, 6), (10, 6), (5, 7), (10, 7), (6, 8), (9, 8), (7, 9), (8, 9),
+                       (7, 6), (8, 6), (7, 7), (8, 7)):
+            c.set(x, y, tr)
+        c.set(7, 6, (255, 240, 160)); c.set(8, 7, (255, 240, 160))
+    return c.img
+
+
 # ------------------------------------------------------------------ models
 def el(frm, to, tex, faces=ALLF, uv=None, **extra):
     f = {}
@@ -487,6 +558,10 @@ def generate(assets, data, lang):
     _save(titan_skin(), os.path.join(tex, "titan_skin.png"))
     _save(titan_eye(), os.path.join(tex, "titan_eye.png"))
     _save(spike_plate(), os.path.join(tex, "spike_strip.png"))
+    golem = os.path.join(assets, "textures/entity/golem")
+    _save(cape("#5e6b34", "#3a4220", None), os.path.join(golem, "cape_veteran.png"))
+    _save(cape("#9c2420", "#2a1410", "chevron"), os.path.join(golem, "cape_elite.png"))
+    _save(cape("#5a2a8c", "#f0c040", "crest"), os.path.join(golem, "cape_legend.png"))
 
     # Tyre stack: one model per height.
     for n in range(1, 5):
@@ -633,7 +708,7 @@ def generate(assets, data, lang):
     _json(os.path.join(models, "item/spike_strip.json"), {"parent": "golemgarage:block/spike_strip"})
 
     # Item icons.
-    for iid, grid in ICONS.items():
+    for iid, grid in list(ICONS.items()) + list(GEN_ICONS.items()):
         _save(draw(grid), os.path.join(assets, "textures/item", iid + ".png"))
         _json(os.path.join(models, "item", iid + ".json"),
               {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (MODID, iid)}})

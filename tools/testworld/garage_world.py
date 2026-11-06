@@ -92,3 +92,6 @@ write("trip", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "tri
 
 # 0.27 decorations, a burner and a rig with every gadget.
 write("deco", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "deco.txt")).read().splitlines())
+
+# Rank capes (Veteran, Elite, Legend) and a worn golem.
+write("ranks", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ranks.txt")).read().splitlines())

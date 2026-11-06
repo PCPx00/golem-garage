@@ -20,7 +20,7 @@ import net.minecraft.world.phys.Vec3;
  * wall, a spinning exhaust fan and a bench grinder.
  */
 final class GarageProps {
-    static final int CAR_BODY = 23, CAR_GLASS = 24, GEAR = 25, GAUGE = 26, CHROME = 27, GRILLE = 28;
+    static final int CAR_BODY = 23, CAR_GLASS = 24, GEAR = 25, GAUGE = 26, CHROME = 27, GRILLE = 28, HEADLIGHT = 38;
 
     private GarageProps() {
     }
@@ -40,6 +40,20 @@ final class GarageProps {
         car(garage, blocks, time, s, pose, buffers, light, origin);
         wallMachinery(garage, time, s, pose, buffers, light, origin, min, max);
         grinder(garage, time, s, pose, buffers, light, origin);
+        switch (garage.style()) {
+            case SHOWROOM -> toolWall(garage, s, pose, buffers, light, origin, min, max);
+            case BARN -> barn(garage, blocks, time, pose, buffers, light, origin, min, max);
+            case BUNKER -> searchlights(garage, time, pose, buffers, origin, min, max);
+            default -> {
+            }
+        }
+    }
+
+    /** Showroom: the car sits on a two-post lift that slowly raises it and lets it down again. */
+    private static float liftHeight(float time) {
+        float t = (time % 1200f) / 1200f;
+        float up = Mth.clamp((float) Math.sin(t * Math.PI * 2) * 1.6f, 0f, 1f);
+        return up * 0.55f;
     }
 
     private static VertexConsumer vc(MultiBufferSource buffers) {
@@ -60,8 +74,24 @@ final class GarageProps {
         pose.translate(c.x - origin.getX(), c.y - origin.getY(), c.z - origin.getZ());
         pose.mulPose(Axis.YP.rotation((float) Math.atan2(-f.getStepZ(), f.getStepX())));
         pose.scale(s, s, s);
+        float lift = 0f;
+        if (garage.style() == com.xtrip.golemgarage.block.GarageStyle.SHOWROOM) {
+            lift = liftHeight(time);
+            // Two posts either side of the car, with arms reaching under the sills.
+            for (int side = -1; side <= 1; side += 2) {
+                float z = 0.78f * side;
+                box(buffers, pose, -0.08f, 0f, z - 0.06f, 0.08f, 1.45f, z + 0.06f, GarageSkin.JERRY, GarageSkin.SOOT, light);
+                box(buffers, pose, -0.2f, 0f, z - 0.14f, 0.2f, 0.05f, z + 0.14f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+                float zi = side > 0 ? 0.42f : -0.7f;
+                box(buffers, pose, -0.5f, 0.2f + lift, zi, -0.42f, 0.25f + lift, zi + 0.28f, CHROME, CHROME, light);
+                box(buffers, pose, 0.42f, 0.2f + lift, zi, 0.5f, 0.25f + lift, zi + 0.28f, CHROME, CHROME, light);
+                box(buffers, pose, -0.5f, 0.2f + lift, side > 0 ? 0.7f : -0.7f, 0.5f, 0.27f + lift,
+                        side > 0 ? 0.78f : -0.62f, CHROME, CHROME, light);
+            }
+            pose.translate(0, lift, 0);
+        }
 
-        CarModel.render(blocks, pose, buffers, light, time, new CarModel.Options(true, false, false, 0f, 0f, true,
+        CarModel.render(blocks, pose, buffers, light, time, new CarModel.Options(true, false, false, 0f, 0f, lift <= 0.01f,
                 (long) time % 140 < 3));
         pose.popPose();
     }
@@ -193,6 +223,136 @@ final class GarageProps {
         }
         box(buffers, pose, -0.06f, -0.06f, -0.04f, 0.06f, 0.06f, 0.05f, CHROME, CHROME, light);
         pose.popPose();
+    }
+
+    // =================================================================== style props
+    /**
+     * A corner away from the car and the grinder: the nearest such corner, or the farthest. Null if every corner is
+     * taken.
+     */
+    private static Vec3 freeCorner(GarageControllerBlockEntity garage, BlockPos min, BlockPos max, boolean far) {
+        java.util.List<Vec3> corners = garage.corners();
+        Direction car = garage.carSide();
+        double cx = (min.getX() + max.getX() + 1) / 2.0, cz = (min.getZ() + max.getZ() + 1) / 2.0;
+        Vec3 pick = null;
+        for (int i = 1; i < corners.size(); i++) {
+            Vec3 c = corners.get(i);
+            if ((c.x - cx) * car.getStepX() + (c.z - cz) * car.getStepZ() < 0) {
+                pick = c;
+                if (!far) {
+                    break;
+                }
+            }
+        }
+        return pick;
+    }
+
+    /** The corner a style prop stands in (Showroom tool cabinet, Barn crates), or null. */
+    static Vec3 styleCorner(GarageControllerBlockEntity garage) {
+        BlockPos min = garage.getBayMin(), max = garage.getBayMax();
+        if (min == null || max == null || !garage.roomyEnough()) {
+            return null;
+        }
+        return switch (garage.style()) {
+            case SHOWROOM -> freeCorner(garage, min, max, false);
+            case BARN -> freeCorner(garage, min, max, true);
+            default -> null;
+        };
+    }
+
+    /** Showroom: a red rolling tool cabinet in a free corner, with a pegboard of outlined tools above it. */
+    private static void toolWall(GarageControllerBlockEntity garage, float s, PoseStack pose, MultiBufferSource buffers,
+                                 int light, BlockPos origin, BlockPos min, BlockPos max) {
+        Vec3 c = freeCorner(garage, min, max, false);
+        if (c == null) {
+            return;
+        }
+        Direction wall = garage.carSide().getOpposite();
+        pose.pushPose();
+        pose.translate(c.x - origin.getX(), c.y - origin.getY(), c.z - origin.getZ());
+        // Face into the room, away from the wall behind.
+        pose.mulPose(Axis.YP.rotationDegrees(-wall.getOpposite().toYRot()));
+        // Local space: z toward the room, the wall at z = -0.5.
+        box(buffers, pose, -0.36f, 0.06f, -0.46f, 0.36f, 0.95f, -0.02f, GarageSkin.JERRY, GarageSkin.SOOT, light);
+        for (int k = 0; k < 5; k++) {
+            float y = 0.14f + k * 0.16f;
+            box(buffers, pose, -0.32f, y + 0.11f, -0.02f, 0.32f, y + 0.12f, 0.0f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+            box(buffers, pose, -0.1f, y + 0.05f, -0.02f, 0.1f, y + 0.07f, 0.02f, CHROME, CHROME, light);
+        }
+        for (float x : new float[]{-0.3f, 0.3f}) {
+            box(buffers, pose, x - 0.04f, 0f, -0.3f, x + 0.04f, 0.06f, -0.22f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+        }
+        // Pegboard on the wall above.
+        float y0 = 1.05f, y1 = 1.85f;
+        box(buffers, pose, -0.45f, y0, -0.5f, 0.45f, y1, -0.47f, GarageSkin.PLANKS, GarageSkin.PLANKS, light);
+        for (int k = 0; k < 3; k++) {
+            float x = -0.36f + k * 0.1f;
+            float len = 0.25f + k * 0.07f;
+            box(buffers, pose, x - 0.015f, y1 - 0.1f - len, -0.47f, x + 0.015f, y1 - 0.1f, -0.45f, CHROME, CHROME, light);
+            box(buffers, pose, x - 0.035f, y1 - 0.14f, -0.47f, x + 0.035f, y1 - 0.08f, -0.45f, CHROME, CHROME, light);
+        }
+        box(buffers, pose, 0.0f, y1 - 0.55f, -0.47f, 0.03f, y1 - 0.12f, -0.45f, GarageSkin.BEAM_PLANKS, GarageSkin.BEAM_PLANKS, light);
+        box(buffers, pose, -0.07f, y1 - 0.2f, -0.47f, 0.1f, y1 - 0.12f, -0.43f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+        box(buffers, pose, 0.17f, y1 - 0.5f, -0.47f, 0.38f, y1 - 0.25f, -0.46f, CHROME, CHROME, light);
+        box(buffers, pose, 0.34f, y1 - 0.27f, -0.47f, 0.4f, y1 - 0.12f, -0.44f, GarageSkin.BEAM_PLANKS, GarageSkin.BEAM_PLANKS, light);
+        pose.popPose();
+    }
+
+    /** Barn: stacked crates in the far corner and lanterns swinging from the rafters. */
+    private static void barn(GarageControllerBlockEntity garage, BlockRenderDispatcher blocks, float time, PoseStack pose,
+                             MultiBufferSource buffers, int light, BlockPos origin, BlockPos min, BlockPos max) {
+        Vec3 c = freeCorner(garage, min, max, true);
+        if (c != null) {
+            float x = (float) (c.x - origin.getX()), y = (float) (c.y - origin.getY()), z = (float) (c.z - origin.getZ());
+            box(buffers, pose, x - 0.42f, y, z - 0.42f, x + 0.38f, y + 0.6f, z + 0.38f, GarageSkin.PLANKS, GarageSkin.BEAM_PLANKS, light);
+            box(buffers, pose, x - 0.3f, y + 0.6f, z - 0.3f, x + 0.22f, y + 1.0f, z + 0.22f, GarageSkin.BEAM_PLANKS, GarageSkin.PLANKS, light);
+            box(buffers, pose, x + 0.05f, y + 1.0f, z - 0.2f, x + 0.2f, y + 1.18f, z - 0.05f, GarageSkin.JERRY, GarageSkin.JERRY, light);
+        }
+        Direction in = garage.inward();
+        float cx = (min.getX() + max.getX() + 1) / 2f - origin.getX();
+        float cz = (min.getZ() + max.getZ() + 1) / 2f - origin.getZ();
+        float roof = max.getY() + 1 - origin.getY();
+        float halfIn = (in.getAxis() == Direction.Axis.X ? max.getX() - min.getX() + 1 : max.getZ() - min.getZ() + 1) / 2f;
+        for (int k = -1; k <= 1; k += 2) {
+            float off = k * halfIn * 0.5f;
+            pose.pushPose();
+            pose.translate(cx + in.getStepX() * off, roof, cz + in.getStepZ() * off);
+            pose.mulPose(Axis.ZP.rotationDegrees(5f * Mth.sin(time * 0.05f + k)));
+            pose.mulPose(Axis.XP.rotationDegrees(4f * Mth.cos(time * 0.04f + k)));
+            pose.translate(-0.5, -1.0, -0.5);
+            blocks.renderSingleBlock(Blocks.LANTERN.defaultBlockState().setValue(
+                    net.minecraft.world.level.block.LanternBlock.HANGING, true), pose, buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
+            pose.popPose();
+        }
+    }
+
+    /** Bunker: two searchlights on the roof, sweeping the yard. */
+    private static void searchlights(GarageControllerBlockEntity garage, float time, PoseStack pose,
+                                     MultiBufferSource buffers, BlockPos origin, BlockPos min, BlockPos max) {
+        float top = max.getY() + 2 - origin.getY();
+        float[][] spots = {{min.getX() + 0.5f, min.getZ() + 0.5f}, {max.getX() + 0.5f, max.getZ() + 0.5f}};
+        int light = 0xF000F0;
+        for (int i = 0; i < 2; i++) {
+            float x = spots[i][0] - origin.getX(), z = spots[i][1] - origin.getZ();
+            pose.pushPose();
+            pose.translate(x, top, z);
+            box(buffers, pose, -0.2f, 0, -0.2f, 0.2f, 0.08f, 0.2f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+            box(buffers, pose, -0.04f, 0.08f, -0.04f, 0.04f, 0.32f, 0.04f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+            pose.mulPose(Axis.YP.rotationDegrees(time * 1.2f + i * 180f));
+            pose.translate(0, 0.4f, 0);
+            pose.mulPose(Axis.ZP.rotationDegrees(18f));
+            box(buffers, pose, -0.18f, -0.14f, -0.14f, 0.16f, 0.14f, 0.14f, GarageSkin.SOOT, GarageSkin.SOOT, light);
+            box(buffers, pose, 0.16f, -0.12f, -0.12f, 0.19f, 0.12f, 0.12f, HEADLIGHT, CHROME, light);
+            VertexConsumer glow = buffers.getBuffer(GlowRenderType.GLOW);
+            GarageControllerRenderer.softGlow(glow, pose.last().pose(), new Vec3(0.24, 0, 0), 0.32f,
+                    new float[]{1f, 0.97f, 0.85f}, 0.9f);
+            for (int k = 1; k <= 7; k++) {
+                float d = k * 0.9f;
+                GarageControllerRenderer.softGlow(glow, pose.last().pose(), new Vec3(0.2 + d, 0, 0), 0.18f + k * 0.11f,
+                        new float[]{1f, 0.97f, 0.85f}, 0.32f - k * 0.035f);
+            }
+            pose.popPose();
+        }
     }
 
     // =================================================================== bench grinder

@@ -326,10 +326,20 @@ final class GarageSkin {
             List<float[]> corners = new ArrayList<>(List.of(new float[]{ix0 + 0.5f, iz0 + 0.5f},
                     new float[]{ix1 - 0.5f, iz0 + 0.5f}, new float[]{ix0 + 0.5f, iz1 - 0.5f}, new float[]{ix1 - 0.5f, iz1 - 0.5f}));
             corners.sort(Comparator.comparingDouble(cn -> (cn[0] - 0.5) * (cn[0] - 0.5) + (cn[1] - 0.5) * (cn[1] - 0.5)));
-            workbench(blocks, pose, buffers, corners.get(0)[0], floor, corners.get(0)[1], s, light);
-            tyres(pose, buffers, corners.get(1)[0], floor, corners.get(1)[1], s, light);
-            drums(pose, buffers, corners.get(2)[0], floor, corners.get(2)[1], s, light);
-            cans(pose, buffers, corners.get(3)[0], floor, corners.get(3)[1], s, light);
+            // A Showroom's tool cabinet or a Barn's crates take one corner instead of the clutter.
+            net.minecraft.world.phys.Vec3 taken = GarageProps.styleCorner(garage);
+            for (int k = 0; k < 4; k++) {
+                float[] cn = corners.get(k);
+                if (taken != null && Math.abs(taken.x - origin.getX() - cn[0]) < 0.1 && Math.abs(taken.z - origin.getZ() - cn[1]) < 0.1) {
+                    continue;
+                }
+                switch (k) {
+                    case 0 -> workbench(blocks, pose, buffers, cn[0], floor, cn[1], s, light);
+                    case 1 -> tyres(pose, buffers, cn[0], floor, cn[1], s, light);
+                    case 2 -> drums(pose, buffers, cn[0], floor, cn[1], s, light);
+                    default -> cans(pose, buffers, cn[0], floor, cn[1], s, light);
+                }
+            }
         }
 
         // Spikes along the roof edge.

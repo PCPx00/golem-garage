@@ -64,17 +64,23 @@ public class GolemGarageJei implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration reg) {
         reg.addRecipeCategories(new GarageRepairCategory(reg.getJeiHelpers().getGuiHelper()));
+        reg.addRecipeCategories(new FabricatorCategory(reg.getJeiHelpers().getGuiHelper()));
+        reg.addRecipeCategories(new BurnerCategory(reg.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration reg) {
         reg.addRecipeCatalysts(GarageRepairCategory.TYPE, ModItems.GARAGE_CONTROLLER.get(),
                 ModItems.LASER_EMITTER.get(), ModItems.STEEL_EMITTER.get());
+        reg.addRecipeCatalysts(FabricatorCategory.TYPE, ModItems.FABRICATOR.get());
+        reg.addRecipeCatalysts(BurnerCategory.TYPE, com.xtrip.golemgarage.power.PowerBlocks.BURNER_ITEM.get());
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration reg) {
         reg.addRecipes(GarageRepairCategory.TYPE, repairExamples());
+        reg.addRecipes(FabricatorCategory.TYPE, fabricatorWelds());
+        reg.addRecipes(BurnerCategory.TYPE, burnerFuels());
 
         info(reg, ModItems.MANUAL.get(), "manual");
         info(reg, ModItems.GOLEM.get(), "golem");
@@ -166,6 +172,50 @@ public class GolemGarageJei implements IModPlugin {
             out.add(new GarageRepairCategory.Repair(GolemItem.stackFromTag(broken), per == 0 ? List.of() : mats,
                     GolemItem.stackFromTag(fixed)));
         }
+        return out;
+    }
+
+    /** Every part shape in every craftable material, at the Fabricator's price. */
+    private static List<FabricatorCategory.Weld> fabricatorWelds() {
+        List<FabricatorCategory.Weld> out = new ArrayList<>();
+        for (GolemMaterial m : GolemMaterials.CRAFTABLE) {
+            if (m.tagKey() == null || m.isBlocked()) {
+                continue;
+            }
+            List<ItemStack> raw = Arrays.asList(Ingredient.of(m.tagKey()).getItems());
+            if (raw.isEmpty()) {
+                continue;
+            }
+            for (com.xtrip.golemgarage.golem.PartShape shape : com.xtrip.golemgarage.golem.PartShapes.ALL) {
+                int n = com.xtrip.golemgarage.block.entity.FabricatorBlockEntity.cost(shape.slot());
+                out.add(new FabricatorCategory.Weld(raw.stream().map(st -> st.copyWithCount(n)).toList(),
+                        PartItem.create(shape, m)));
+            }
+        }
+        return out;
+    }
+
+    /** Burner fuels grouped by burn time, plus lava from the tank. */
+    private static List<BurnerCategory.Fuel> burnerFuels() {
+        Map<Integer, List<ItemStack>> byTime = new java.util.TreeMap<>(java.util.Comparator.reverseOrder());
+        for (net.minecraft.world.item.Item item : net.minecraft.core.registries.BuiltInRegistries.ITEM) {
+            ItemStack st = new ItemStack(item);
+            if (st.is(net.minecraft.world.item.Items.LAVA_BUCKET)) {
+                continue;
+            }
+            int t = st.getBurnTime(net.minecraft.world.item.crafting.RecipeType.SMELTING);
+            if (t > 0) {
+                byTime.computeIfAbsent(t, k -> new ArrayList<>()).add(st);
+            }
+        }
+        List<BurnerCategory.Fuel> out = new ArrayList<>();
+        int rate = com.xtrip.golemgarage.power.BurnerGeneratorBlockEntity.ITEM_RATE;
+        int lava = com.xtrip.golemgarage.power.BurnerGeneratorBlockEntity.LAVA_RATE;
+        int lavaSeconds = 1000 / com.xtrip.golemgarage.power.BurnerGeneratorBlockEntity.LAVA_SIP
+                * com.xtrip.golemgarage.power.BurnerGeneratorBlockEntity.LAVA_TICKS / 20;
+        out.add(new BurnerCategory.Fuel(List.of(new ItemStack(net.minecraft.world.item.Items.LAVA_BUCKET)),
+                (long) lava * lavaSeconds * 20, lava, lavaSeconds));
+        byTime.forEach((t, items) -> out.add(new BurnerCategory.Fuel(items, (long) t * rate, rate, Math.max(1, t / 20))));
         return out;
     }
 
